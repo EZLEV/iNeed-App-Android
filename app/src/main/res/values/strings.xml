@@ -2,7 +2,22 @@
 
     <!-- A -->
     <string name="app_name">iNeed</string>
+    <string name="account">Minha conta</string>
+    <string name="about">Sobre</string>
+
+    <!-- F -->
+    <string name="favorites">Favoritos</string>
+
+    <!-- H -->
+    <string name="home">Home</string>
+    <string name="help">Ajuda</string>
 
     <!-- S -->
     <string name="splash_title">iNeed - 2017</string>
+    <string name="settings">Configurações</string>
+    <string name="search">Pesquisar</string>
+
+    <!-- P -->
+    <string name="products">Produtos</string>
+
 </resources>
