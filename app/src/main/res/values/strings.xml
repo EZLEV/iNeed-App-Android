@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">INeed</string>
+
+    <!-- A -->
+    <string name="app_name">iNeed</string>
+
+    <!-- S -->
+    <string name="splash_title">iNeed - 2017</string>
 </resources>
