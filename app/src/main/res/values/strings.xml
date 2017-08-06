@@ -5,6 +5,9 @@
     <string name="account">Minha conta</string>
     <string name="about">Sobre</string>
 
+    <!-- E -->
+    <string name="email">E-Mail</string>
+
     <!-- F -->
     <string name="favorites">Favoritos</string>
 
@@ -16,8 +19,18 @@
     <string name="splash_title">iNeed - 2017</string>
     <string name="settings">Configurações</string>
     <string name="search">Pesquisar</string>
+    <string name="sign_in">Entrar</string>
+    <string name="sign_in_error">Error</string>
+    <string name="sign_in_complete">OK</string>
+    <string name="sign_up">Cadastrar-se</string>
+    <string name="sign_up_error">Error</string>
+    <string name="sign_up_complete">OK</string>
+    <!-- N -->
+    <string name="full_name">Nome completo</string>
+    <string name="next">Próximo</string>
 
     <!-- P -->
     <string name="products">Produtos</string>
+    <string name="password">Senha</string>
 
 </resources>
