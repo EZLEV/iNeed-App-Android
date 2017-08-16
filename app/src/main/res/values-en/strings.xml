@@ -22,4 +22,10 @@
     <string name="products">Products</string>
 
 
+    <string name="sign_in_with_email">Sign in with email</string>
+    <string name="or">OR</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_in_as_guest">Sign in as guest</string>
+    <string name="terms_of_use">Terms of use</string>
 </resources>

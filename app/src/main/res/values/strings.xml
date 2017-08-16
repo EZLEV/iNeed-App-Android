@@ -33,4 +33,11 @@
     <string name="products">Produtos</string>
     <string name="password">Senha</string>
 
+    <string name="sign_in_with_email">Entrar com e-mail</string>
+    <string name="or">OU</string>
+    <string name="sign_in_with_facebook">Entrar com o Facebook</string>
+    <string name="sign_in_with_google">Entrar com o Google</string>
+    <string name="sign_in_as_guest">Entrar como convidado</string>
+    <string name="terms_of_use">Termos de uso</string>
+
 </resources>

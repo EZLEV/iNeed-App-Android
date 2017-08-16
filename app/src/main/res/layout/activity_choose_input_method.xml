@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/colorPrimary"
+    tools:context="shop.ineed.app.ineed.activity.ChooseInputMethodActivity">
+
+
+    <Button
+        android:id="@+id/withEmail"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:theme="@style/AppTheme.Button"
+        android:drawableLeft="@drawable/ic_email"
+        android:text="@string/sign_in_with_email"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="74dp" />
+
+    <TextView android:id="@+id/or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="@string/or"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/withEmail"
+        android:layout_centerHorizontal="true" />
+
+    <View android:id="@+id/leftLine"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#FFFFFF"
+        android:layout_alignLeft="@id/withEmail"
+        android:layout_toLeftOf="@id/or"
+        android:layout_alignTop="@id/or"
+        android:layout_marginTop="7dp"/>
+
+    <View android:id="@+id/rightLine"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#FFFFFF"
+        android:layout_toRightOf="@id/or"
+        android:layout_alignRight="@id/withEmail"
+        android:layout_alignTop="@id/or"
+        android:layout_marginTop="7dp"/>
+
+    <Button
+        android:id="@+id/withFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:theme="@style/AppTheme.Button"
+        android:drawableLeft="@drawable/ic_facebook"
+        android:text="@string/sign_in_with_facebook"
+        android:layout_below="@+id/or"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp" />
+
+    <Button
+        android:id="@+id/withGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:theme="@style/AppTheme.Button"
+        android:drawableLeft="@drawable/ic_google"
+        android:text="@string/sign_in_with_google"
+        android:layout_marginTop="7dp"
+        android:layout_below="@+id/withFacebook"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/btnSignInGuest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_in_as_guest"
+        android:textColor="#FFFFFF"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_below="@+id/withGoogle"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:onClick="btnSignInGuest"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/borderlessButtonStyle"
+        android:text="@string/terms_of_use"
+        android:textColor="#FFFFFF"
+        android:textSize="11sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
