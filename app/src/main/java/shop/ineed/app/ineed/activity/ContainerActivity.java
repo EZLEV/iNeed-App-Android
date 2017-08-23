@@ -1,6 +1,5 @@
 package shop.ineed.app.ineed.activity;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -45,8 +44,6 @@ public class ContainerActivity extends AppCompatActivity implements BottomNaviga
         switch (item.getItemId()){
             case R.id.ic_action_search:
                 Toast.makeText(this, "ic_action_search", Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(this, SignInActivity.class);
-                startActivity(intent);
                 break;
             case R.id.ic_action_settings:
                 Toast.makeText(this, "ic_action_settings", Toast.LENGTH_LONG).show();

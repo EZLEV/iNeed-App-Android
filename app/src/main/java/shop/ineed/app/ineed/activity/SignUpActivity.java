@@ -1,40 +1,160 @@
 package shop.ineed.app.ineed.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
-import com.dd.CircularProgressButton;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Password;
+
+import java.util.List;
 
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.domain.User;
+import shop.ineed.app.ineed.util.FirebaseError;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends CommonSubscriberActivity implements DatabaseReference.CompletionListener, Validator.ValidationListener {
 
-    private CircularProgressButton buttonSignUp;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private User user;
+    @NotEmpty(message = "Preencha o campo nome.")
+    private EditText name;
+    private String TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        buttonSignUp = (CircularProgressButton) findViewById(R.id.btn_sign_up);
-        buttonSignUp.setIndeterminateProgressMode(true);
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        // Firebase
+        mAuth = FirebaseAuth.getInstance();
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View view) {
-                if (buttonSignUp.getProgress() == 0) {
-                    buttonSignUp.setProgress(50);
-                } else if (buttonSignUp.getProgress() == 100) {
-                    buttonSignUp.setProgress(0);
-                } else {
-                    buttonSignUp.setProgress(100);
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+                if (firebaseUser == null || user.getUid() != null) {
+                    return;
                 }
+                user.setUid(firebaseUser.getUid());
+                user.saveUserLogged(SignUpActivity.this);
+            }
+        };
+
+        validator = new Validator(this);
+        validator.setValidationListener(this);
+
+        initViews();
+    }
+
+
+    private void saveUser() {
+        FirebaseCrash.log(TAG + ":saveUser");
+        mAuth.createUserWithEmailAndPassword(
+                user.getEmail(),
+                user.getPassword()
+        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                closeProgressDialog();
+                if (task.isSuccessful()) {
+                    showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
+                    finish();
+                } else {
+                    String messageError = FirebaseError.verify(SignUpActivity.this, task);
+                    showSnackbar(findViewById(android.R.id.content), messageError);
+                }
+            }
+        }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(SignUpActivity.class.getSimpleName(), e.getMessage());
+                FirebaseCrash.report(e);
             }
         });
     }
 
+    @Override
+    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+        FirebaseCrash.log(TAG + ":onComplete");
+        mAuth.signOut();
+        closeProgressDialog();
+    }
+
+    public void btnSignUp(View view) {
+        validator.validate();
+    }
+
     public void onClickClose(View view) {
         finish();
+    }
+
+    private void signUp() {
+        FirebaseCrash.log(TAG + ":signUp");
+        openProgressDialog(this);
+        initUser();
+        saveUser();
+    }
+
+    @Override
+    public void onValidationSucceeded() {
+        signUp();
+    }
+
+    @Override
+    public void onValidationFailed(List<ValidationError> errors) {
+        for (ValidationError error : errors) {
+            View view = error.getView();
+            String message = error.getCollatedErrorMessage(this);
+            if (view instanceof EditText) {
+                ((EditText) view).setError(message);
+            }
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthStateListener != null) {
+            mAuth.removeAuthStateListener(mAuthStateListener);
+        }
+    }
+
+    @Override
+    protected void initViews() {
+        name = (EditText) findViewById(R.id.full_name);
+        email = (EditText) findViewById(R.id.email);
+        password = (EditText) findViewById(R.id.password);
+    }
+
+    @Override
+    protected void initUser() {
+        user = new User();
+        user.setName(name.getText().toString());
+        user.setEmail(email.getText().toString());
+        user.setPassword(password.getText().toString());
     }
 
     @Override

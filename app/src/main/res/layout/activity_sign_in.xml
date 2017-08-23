@@ -111,30 +111,28 @@
                 android:layout_height="50dp"
                 android:text="@string/sign_in" /-->
 
-            <com.dd.CircularProgressButton
+            <Button
                 android:id="@+id/btn_sign_in"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:cpb_cornerRadius="2dp"
-                app:cpb_iconError="@drawable/ic_close"
-                app:cpb_selectorComplete="@drawable/subscriber_complete_state_selector"
-                app:cpb_selectorError="@drawable/subscriber_error_state_selector"
-                app:cpb_selectorIdle="@drawable/subscriber_idle_state_selector"
-                app:cpb_textComplete="@string/sign_in_complete"
-                app:cpb_textError="@string/sign_in_error"
-                app:cpb_textIdle="@string/sign_in" />
+                android:onClick="btnSignIn"
+                android:text="@string/sign_in" />
 
 
-            <TextView
+            <Button
+                android:id="@+id/resetPassword"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:textColor="#9a9a9a"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"
+                android:onClick="resetPassword"
+                android:text="@string/reset_password"
+                android:textColor="@color/colorAccent"
                 android:textSize="12sp" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
