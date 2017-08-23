@@ -1,3 +1,65 @@
 <resources>
-    <string name="app_name">INeed</string>
+
+    <!-- A -->
+    <string name="app_name">iNeed</string>
+    <string name="account">Minha conta</string>
+    <string name="about">Sobre</string>
+
+    <!-- E -->
+    <string name="email">E-Mail</string>
+    <string name="error_connection_google_services">Erro na conexão com o Google Play services.</string>
+
+    <!-- F -->
+    <string name="favorites">Favoritos</string>
+    <string name="firebase_email_already_registered">E-mail já registrado.</string>
+    <string name="firebase_email_invalid">O e-mail não corresponde a um endereço de e-mail valido.</string>
+    <string name="firebase_password_invalid">A senha deve ter no mínimo 6 caracteres alpha numéricos e um caractere especial.</string>
+    <string name="firebase_other">Não foi possível completar a ação. Tente novamente!</string>
+
+    <!-- H -->
+    <string name="home">Home</string>
+    <string name="help">Ajuda</string>
+
+    <!-- S -->
+    <string name="splash_title">iNeed - 2017</string>
+    <string name="settings">Configurações</string>
+    <string name="search">Pesquisar</string>
+    <string name="sign_in">Entrar</string>
+    <string name="sign_in_error">Error</string>
+    <string name="sign_in_complete">OK</string>
+    <string name="sign_up">Cadastrar-se</string>
+    <string name="sign_up_error">Error</string>
+    <string name="sign_up_complete">OK</string>
+    <string name="sign_in_with_email">Entrar com e-mail</string>
+    <string name="sign_in_with_facebook">Entrar com o Facebook</string>
+    <string name="sign_in_with_google">Entrar com o Google</string>
+    <string name="sign_in_as_guest">Entrar como convidado</string>
+
+    <!-- N -->
+    <string name="full_name">Nome completo</string>
+    <string name="next">Próximo</string>
+
+    <!-- P -->
+    <string name="products">Produtos</string>
+    <string name="password">Senha</string>
+
+
+    <string name="or">OU</string>
+
+    <string name="terms_of_use">Termos de uso</string>
+
+    <string name="incorrect_email">E-mail incorreto</string>
+
+    <string name="wait">Aguarde...</string>
+
+    <string name="reset_password">Esqueceu a senha?</string>
+    <string name="password_recovery">Recuperação de senha</string>
+    <string name="text_recovery_password">Preencha seu endereço de email no campo abaixo para receber as
+        instruções necessárias na sua caixa de e-mail e criar uma nova senha na iNeed.</string>
+    <string name="send">Enviar</string>
+
+    <!-- Strings de configurações -->
+    <string name="facebook_app_id">1957695561168827</string>
+    <string name="fb_login_protocol_scheme">fb1957695561168827</string>
+
 </resources>
