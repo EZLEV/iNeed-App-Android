@@ -42,6 +42,7 @@ dependencies {
     compile 'com.mobsandgeeks:android-saripaar:2.0.2'
     compile 'com.google.android.gms:play-services-auth:11.0.2'
     compile 'com.facebook.android:facebook-android-sdk:4.24.0'
+    compile 'com.github.sharish:ShimmerRecyclerView:v1.1'
     testCompile 'junit:junit:4.12'
 }
 
