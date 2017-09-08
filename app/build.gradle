@@ -43,8 +43,11 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:11.0.2'
     compile 'com.facebook.android:facebook-android-sdk:4.24.0'
     compile 'com.github.sharish:ShimmerRecyclerView:v1.1'
+    compile 'org.parceler:parceler:1.0.3'
+    compile 'org.parceler:parceler-api:1.0.3'
     testCompile 'junit:junit:4.12'
 }
+
 
 
 

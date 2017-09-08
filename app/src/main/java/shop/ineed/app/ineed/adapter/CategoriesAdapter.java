@@ -12,6 +12,7 @@ import java.util.List;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.Category;
+import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
 /**
  * Created by Jose on 8/27/2017.
@@ -22,10 +23,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     private String TAG = this.getClass().getSimpleName();
     private List<Category> categories;
     private Context context;
+    private RecyclerClickListener mRecyclerClickListener;
 
-    public CategoriesAdapter(Context context, List<Category> categories) {
+    public CategoriesAdapter(Context context, List<Category> categories, RecyclerClickListener recyclerClickListener) {
         this.context = context;
         this.categories = categories;
+        this.mRecyclerClickListener = recyclerClickListener;
     }
 
     @Override
@@ -38,11 +41,20 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     }
 
     @Override
-    public void onBindViewHolder(CategoriesViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoriesViewHolder holder, final int position) {
 
         Category category = categories.get(position);
 
         holder.txtCategory.setText(category.getValue());
+
+        if(mRecyclerClickListener != null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position);
+                }
+            });
+        }
 
     }
 
@@ -58,7 +70,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
 
         CategoriesViewHolder(View view) {
             super(view);
-
             txtCategory = (TextView) view.findViewById(R.id.txtTitleCategory);
         }
 

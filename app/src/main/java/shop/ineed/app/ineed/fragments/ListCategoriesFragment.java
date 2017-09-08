@@ -1,6 +1,7 @@
 package shop.ineed.app.ineed.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,13 +16,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.activity.ProductsActivity;
 import shop.ineed.app.ineed.adapter.CategoriesAdapter;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
+import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +46,7 @@ public class ListCategoriesFragment extends Fragment {
 
         recyclerView = (ShimmerRecyclerView) view.findViewById(R.id.recyclerCategories);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final CategoriesAdapter adapter = new CategoriesAdapter(getActivity(), categories);
+        final CategoriesAdapter adapter = new CategoriesAdapter(getActivity(), categories, onCategoryClickListener());
         recyclerView.setAdapter(adapter);
         recyclerView.showShimmerAdapter();
 
@@ -68,5 +73,17 @@ public class ListCategoriesFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private RecyclerClickListener onCategoryClickListener (){
+        return new RecyclerClickListener() {
+            @Override
+            public void onClickRecyclerListener(View view, int idx) {
+                Category category = categories.get(idx);
+                Intent intent = new Intent(getContext(), ProductsActivity.class);
+                intent.putExtra("category", Parcels.wrap(category));
+                startActivity(intent);
+            }
+        };
     }
 }

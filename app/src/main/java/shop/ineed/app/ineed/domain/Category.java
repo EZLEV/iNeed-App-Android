@@ -7,6 +7,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
  * Created by Jose on 8/27/2017.
  */
 
+@org.parceler.Parcel
 @IgnoreExtraProperties
 public class Category {
 
@@ -15,7 +16,6 @@ public class Category {
     private String key;
 
     public Category(){
-
     }
 
     public  Category(String value){
