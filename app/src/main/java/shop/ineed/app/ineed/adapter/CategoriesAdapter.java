@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
+import shop.ineed.app.ineed.util.Base64;
 
 /**
  * Created by Jose on 8/27/2017.
@@ -46,6 +48,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         Category category = categories.get(position);
 
         holder.txtCategory.setText(category.getValue());
+        holder.ivIconCategory.setImageBitmap(Base64.convertToBitmap(category.getIcon()));
 
         if(mRecyclerClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -66,11 +69,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     static class CategoriesViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtCategory;
+        ImageView ivIconCategory;
         ProgressBar progressBar;
 
         CategoriesViewHolder(View view) {
             super(view);
             txtCategory = (TextView) view.findViewById(R.id.txtTitleCategory);
+            ivIconCategory = (ImageView) view.findViewById(R.id.ivIconCategory);
         }
 
     }

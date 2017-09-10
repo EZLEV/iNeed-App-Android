@@ -10,8 +10,6 @@
         android:id="@+id/recyclerCategories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
         app:shimmer_demo_child_count="10"
         app:shimmer_demo_layout="@layout/adapter_loading_item_categories" />
 </FrameLayout>

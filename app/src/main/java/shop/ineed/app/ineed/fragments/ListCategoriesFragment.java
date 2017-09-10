@@ -4,6 +4,8 @@ package shop.ineed.app.ineed.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,6 +50,8 @@ public class ListCategoriesFragment extends Fragment {
         recyclerView = (ShimmerRecyclerView) view.findViewById(R.id.recyclerCategories);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         final CategoriesAdapter adapter = new CategoriesAdapter(getActivity(), categories, onCategoryClickListener());
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
         recyclerView.showShimmerAdapter();
 

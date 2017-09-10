@@ -12,14 +12,16 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Category {
 
     private String value;
+    private String icon;
     @Exclude
     private String key;
 
     public Category(){
     }
 
-    public  Category(String value){
+    public  Category(String value, String icon){
         this.value = value;
+        this.icon = icon;
     }
 
     public String getValue() {
@@ -28,6 +30,14 @@ public class Category {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Exclude
