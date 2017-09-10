@@ -52,19 +52,20 @@
             android:label="@string/sign_up"
             android:parentActivityName=".activity.SignInActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ResetPasswordActivity"
             android:label="@string/password_recovery"
             android:parentActivityName=".activity.SignInActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ChooseInputMethodActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.ContainerActivity" />
-
+        <activity android:name=".activity.ProductsActivity" />
+        <activity
+            android:name=".activity.DetailsProductsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

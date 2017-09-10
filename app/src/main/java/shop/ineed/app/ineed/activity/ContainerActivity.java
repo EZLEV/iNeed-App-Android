@@ -12,7 +12,7 @@ import android.widget.Toast;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.fragments.AccountFragment;
 import shop.ineed.app.ineed.fragments.HomeFragment;
-import shop.ineed.app.ineed.fragments.ListProductsFragment;
+import shop.ineed.app.ineed.fragments.ListCategoriesFragment;
 
 public class ContainerActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -70,7 +70,7 @@ public class ContainerActivity extends AppCompatActivity implements BottomNaviga
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 return true;
             case R.id.navigation_list_products:
-                fragment = new ListProductsFragment();
+                fragment = new ListCategoriesFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 return true;
             case R.id.navigation_account:

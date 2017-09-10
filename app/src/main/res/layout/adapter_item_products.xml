@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="255dp"
+    android:padding="5dp"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="160dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shadow" />
+
+        <ImageView
+            android:id="@+id/ivProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:transitionName="imageProduct"
+            android:src="@drawable/ic_facebook"
+            android:scaleType="centerCrop" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/priceProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="R$ 2000"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/descriptionProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Este é um texto muito grande para testarmos o ellipsize,
+vamos escrever mais para que a quebra sejá melhor e a reticência sejá
+adicionada corretamente."
+            android:textColor="@android:color/darker_gray" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
