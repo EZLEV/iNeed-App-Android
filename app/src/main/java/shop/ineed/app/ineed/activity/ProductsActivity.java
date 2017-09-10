@@ -1,6 +1,11 @@
 package shop.ineed.app.ineed.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +17,10 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.google.firebase.database.DataSnapshot;
@@ -32,43 +40,44 @@ import shop.ineed.app.ineed.adapter.ProductsAdapter;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
+import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
 public class ProductsActivity extends AppCompatActivity {
 
     private List<Product> mProducts = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private Category category;
+    private Category mCategory;
     private ProductsAdapter mAdapter;
     private SwipeRefreshLayout mSwipeLayout;
-    private ProgressBar progress;
+    private ProgressBar mProgress;
+    public static final String EXTRA_PRODUCT_IMAGE_TRANSITION_NAME = "product_image_transition";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_products);
 
-        category = Parcels.unwrap(getIntent().getParcelableExtra("category"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(category.getValue());
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerProducts);
-        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        }else{
-            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        mCategory = Parcels.unwrap(getIntent().getParcelableExtra("category"));
+        getSupportActionBar().setTitle(mCategory.getValue());
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerProducts);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         }
-        mAdapter = new ProductsAdapter(this, mProducts);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new ProductsAdapter(this, mProducts, onProductClickListener());
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
 
-        progress = (ProgressBar) findViewById(R.id.progress);
-        progress.setVisibility(View.VISIBLE);
+        mProgress = (ProgressBar) findViewById(R.id.progress);
+        mProgress.setVisibility(View.VISIBLE);
 
-        Log.d("TAG", category.getKey());
-
-        if(mProducts.size() == 0){
+        if (mProducts.size() == 0) {
             loadData();
         }
 
@@ -92,14 +101,21 @@ public class ProductsActivity extends AppCompatActivity {
                     loadData();
                 } else {
                     mSwipeLayout.setRefreshing(false);
-                    // snack(mRecyclerView, R.string.error_conexao_indisponivel);
+                    snack("Não foi possivel acessar a internet");
                 }
             }
         };
     }
 
-    private void loadData(){
-        DatabaseReference reference = LibraryClass.getFirebase().child("products-categories").child(category.getKey());
+    private void snack(String msg){
+        Snackbar mySnackbar = Snackbar.make(findViewById(R.id.activityProducts),
+                msg, Snackbar.LENGTH_SHORT);
+        mySnackbar.setAction("OK", null);
+        mySnackbar.show();
+    }
+
+    private void loadData() {
+        DatabaseReference reference = LibraryClass.getFirebase().child("products-categories").child(mCategory.getKey());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -112,7 +128,7 @@ public class ProductsActivity extends AppCompatActivity {
                 }
                 mAdapter.notifyDataSetChanged();
                 mSwipeLayout.setRefreshing(false);
-                progress.setVisibility(View.GONE);
+                mProgress.setVisibility(View.GONE);
                 Log.i("ValueList: ", mProducts.size() + "");
             }
 
@@ -120,22 +136,35 @@ public class ProductsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("TAG", databaseError.getMessage());
                 mSwipeLayout.setRefreshing(false);
-                progress.setVisibility(View.GONE);
+                mProgress.setVisibility(View.GONE);
             }
         });
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    private RecyclerClickListener onProductClickListener() {
+        return new RecyclerClickListener() {
+            @Override
+            public void onClickRecyclerListener(View view, int idx) {
+            }
+
+            @Override
+            public void onClickRecyclerListener(View view, int position, ImageView imageView) {
+                Toast.makeText(getBaseContext(), "Position:" + position, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ProductsActivity.this, DetailsProductsActivity.class);
+                intent.putExtra("product", Parcels.wrap(mProducts.get(position)));
+                intent.putExtra(EXTRA_PRODUCT_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
+
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(ProductsActivity.this, imageView, ViewCompat.getTransitionName(imageView));
+                ActivityCompat.startActivity(ProductsActivity.this, intent, optionsCompat.toBundle());
+            }
+        };
     }
 }

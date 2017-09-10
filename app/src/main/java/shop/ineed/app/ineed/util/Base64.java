@@ -9,13 +9,13 @@ import android.graphics.BitmapFactory;
 
 public class Base64 {
 
-    public static Bitmap convertToBitmap(String encodedString){
+    public static Bitmap convertToBitmap(String encodedString) {
         String pureBase64Encoded;
-        if(encodedString.contains("data:image/png;base64,")){
+        if (encodedString.contains("data:image/png;base64,")) {
             pureBase64Encoded = encodedString.replace("data:image/png;base64,", "");
-        }else if(encodedString.contains("data:image/jpeg;base64,")){
+        } else if (encodedString.contains("data:image/jpeg;base64,")) {
             pureBase64Encoded = encodedString.replace("data:image/jpeg;base64,", "");
-        }else{
+        } else {
             pureBase64Encoded = encodedString;
         }
         byte[] decodedString = android.util.Base64.decode(pureBase64Encoded, android.util.Base64.CRLF);

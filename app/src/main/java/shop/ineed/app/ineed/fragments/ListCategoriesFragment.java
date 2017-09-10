@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.google.firebase.database.DataSnapshot;
@@ -83,6 +84,11 @@ public class ListCategoriesFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ProductsActivity.class);
                 intent.putExtra("category", Parcels.wrap(category));
                 startActivity(intent);
+            }
+
+            @Override
+            public void onClickRecyclerListener(View view, int position, ImageView imageView) {
+
             }
         };
     }

@@ -63,6 +63,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.ContainerActivity" />
         <activity android:name=".activity.ProductsActivity" />
+        <activity
+            android:name=".activity.DetailsProductsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

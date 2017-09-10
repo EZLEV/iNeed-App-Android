@@ -8,6 +8,7 @@ import java.util.List;
  * Created by Jose on 9/5/2017.
  */
 
+@org.parceler.Parcel
 @IgnoreExtraProperties
 public class Product {
     private List<String> categories = null;

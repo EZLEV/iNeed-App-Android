@@ -18,4 +18,9 @@
         <item name="colorButtonNormal">@color/white</item>
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <!-- Temas para a Toolbar, ver include_toolbar.xml -->
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

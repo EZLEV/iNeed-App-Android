@@ -3,6 +3,7 @@ package shop.ineed.app.ineed.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.Product;
+import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 import shop.ineed.app.ineed.util.Base64;
 
 /**
@@ -27,12 +29,13 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     private List<Product> mProducts;
     private Context mContext;
+    private RecyclerClickListener mRecyclerClickListener;
 
-    public ProductsAdapter(Context mContext, List<Product> mProducts) {
+    public ProductsAdapter(Context mContext, List<Product> mProducts, RecyclerClickListener recyclerClickListener) {
         this.mProducts = mProducts;
         this.mContext = mContext;
+        this.mRecyclerClickListener = recyclerClickListener;
     }
-
 
     @Override
     public ProductsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,8 +44,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     }
 
     @Override
-    public void onBindViewHolder(ProductsViewHolder holder, int position) {
+    public void onBindViewHolder(final ProductsViewHolder holder, final int position) {
         holder.setData(mProducts.get(position));
+
+        if(mRecyclerClickListener != null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position, holder.ivProduct);
+                }
+            });
+        }
     }
 
     @Override
@@ -69,6 +81,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
             List<String> image = product.getPictures();
             ivProduct.setImageBitmap(Base64.convertToBitmap(image.get(0)));
+            ViewCompat.setTransitionName(ivProduct, product.getName());
         }
     }
 }
