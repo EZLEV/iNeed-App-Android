@@ -15,6 +15,8 @@ import shop.ineed.app.ineed.R;
 
 /**
  * Created by jose on 9/9/17.
+ *
+ * Class gerenciadora, slide.
  */
 
 public class SlideAdapter extends PagerAdapter {

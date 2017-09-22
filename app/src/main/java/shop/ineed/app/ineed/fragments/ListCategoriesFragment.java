@@ -1,17 +1,14 @@
 package shop.ineed.app.ineed.fragments;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.google.firebase.database.DataSnapshot;
@@ -32,44 +29,53 @@ import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Lista todas as categoria existente no Firebase iNeed.
  */
-public class ListCategoriesFragment extends Fragment {
+public class ListCategoriesFragment extends BaseFragment {
 
+    private List<Category> mCategories;
+    private ShimmerRecyclerView mRecyclerView;
+    private CategoriesAdapter mAdapter;
 
-    private DatabaseReference reference;
-    private List<Category> categories = new ArrayList<>();
-    private ShimmerRecyclerView recyclerView;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mCategories = new ArrayList<>();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list_categories, container, false);
+        mRecyclerView = (ShimmerRecyclerView) view.findViewById(R.id.recyclerCategories);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter = new CategoriesAdapter(getActivity(), mCategories, onCategoryClickListener());
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.showShimmerAdapter();
+        return view;
+    }
 
-        recyclerView = (ShimmerRecyclerView) view.findViewById(R.id.recyclerCategories);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        final CategoriesAdapter adapter = new CategoriesAdapter(getActivity(), categories, onCategoryClickListener());
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
-        recyclerView.showShimmerAdapter();
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        reference = LibraryClass.getFirebase().child("categories");
+        // Faz a chamada ao Firebase
+        DatabaseReference reference = LibraryClass.getFirebase().child("categories");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                categories.removeAll(categories);
+                mCategories.removeAll(mCategories);
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.i("TAG", "key" + snapshot.getKey() + " " + snapshot.getValue());
                     Category category = snapshot.getValue(Category.class);
                     category.setKey(snapshot.getKey());
-                    categories.add(category);
+                    mCategories.add(category);
                 }
 
-                adapter.notifyDataSetChanged();
-                recyclerView.hideShimmerAdapter();
-                Log.i("ValueList: ", categories.size() + "");
+                mAdapter.notifyDataSetChanged();
+                mRecyclerView.hideShimmerAdapter();
+                Log.i("ValueList: ", mCategories.size() + "");
             }
 
             @Override
@@ -77,22 +83,19 @@ public class ListCategoriesFragment extends Fragment {
                 Log.e("TAG", databaseError.getMessage());
             }
         });
-        return view;
     }
 
     private RecyclerClickListener onCategoryClickListener (){
         return new RecyclerClickListener() {
             @Override
             public void onClickRecyclerListener(View view, int idx) {
-                Category category = categories.get(idx);
+                Category category = mCategories.get(idx);
                 Intent intent = new Intent(getContext(), ProductsActivity.class);
                 intent.putExtra("category", Parcels.wrap(category));
                 startActivity(intent);
             }
-
             @Override
-            public void onClickRecyclerListener(View view, int position, ImageView imageView) {
-
+            public void onClickRecyclerListener(View view, int position, View viewAnimation) {
             }
         };
     }

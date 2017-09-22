@@ -5,6 +5,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 /**
  * Created by Jose on 8/27/2017.
+ *
+ * Class domain Category
  */
 
 @org.parceler.Parcel

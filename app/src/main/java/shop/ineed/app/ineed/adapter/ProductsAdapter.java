@@ -23,6 +23,8 @@ import shop.ineed.app.ineed.util.Base64;
 
 /**
  * Created by Jose on 9/5/2017.
+ *
+ * Class Adapter Products
  */
 
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
@@ -47,13 +49,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public void onBindViewHolder(final ProductsViewHolder holder, final int position) {
         holder.setData(mProducts.get(position));
 
-        if(mRecyclerClickListener != null){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position, holder.ivProduct);
-                }
-            });
+        if (mRecyclerClickListener != null) {
+            holder.itemView.setOnClickListener(view -> mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position, holder.ivProduct));
         }
     }
 
@@ -75,7 +72,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             ivProduct = (ImageView) view.findViewById(R.id.ivProduct);
         }
 
-        private void setData(Product product){
+        private void setData(Product product) {
             txtPrice.setText(String.valueOf(product.getPrice()));
             txtDescription.setText(product.getDescription());
 

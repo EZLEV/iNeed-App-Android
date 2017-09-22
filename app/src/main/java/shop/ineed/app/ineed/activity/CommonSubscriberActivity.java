@@ -24,7 +24,7 @@ import shop.ineed.app.ineed.R;
  * Classe que contem métodos e atributos comuns entre a Activity SignIn e SignUp.
  */
 
-public abstract class CommonSubscriberActivity extends AppCompatActivity {
+public abstract class CommonSubscriberActivity extends BaseActivity {
 
     @NotEmpty
     @Email(message = "O e-mail não corresponde a um endereço de e-mail valido.")

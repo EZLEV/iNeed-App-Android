@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.Password;
 
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
     private FloatingActionButton fab;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private User user;
+    private User mUser;
     protected EditText email;
 
     @Override
@@ -45,15 +44,12 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser == null || user.getUid() != null) {
-                    return;
-                }
-                user.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser == null || mUser.getUid() != null) {
+                return;
             }
+            mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
         };
 
         validator = new Validator(this);
@@ -84,8 +80,8 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
     }
 
     private void signIn() {
-        user.saveProviderUserLogged(SignInActivity.this, "");
-        mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
+        mUser.saveProviderUserLogged(SignInActivity.this, "");
+        mAuth.signInWithEmailAndPassword(mUser.getEmail(), mUser.getPassword())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -135,9 +131,9 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
 
     @Override
     protected void initUser() {
-        user = new User();
-        user.setEmail(email.getText().toString());
-        user.setPassword(password.getText().toString());
+        mUser = new User();
+        mUser.setEmail(email.getText().toString());
+        mUser.setPassword(password.getText().toString());
     }
 
     @Override

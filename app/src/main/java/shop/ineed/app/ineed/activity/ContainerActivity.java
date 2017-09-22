@@ -3,7 +3,6 @@ package shop.ineed.app.ineed.activity;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,17 +13,14 @@ import shop.ineed.app.ineed.fragments.AccountFragment;
 import shop.ineed.app.ineed.fragments.HomeFragment;
 import shop.ineed.app.ineed.fragments.ListCategoriesFragment;
 
-public class ContainerActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
-
-    private BottomNavigationView mNavigation;
+public class ContainerActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        mNavigation = (BottomNavigationView) findViewById(R.id.navigation);
-        mNavigation.setOnNavigationItemSelectedListener(this);
+        ((BottomNavigationView) findViewById(R.id.navigation)).setOnNavigationItemSelectedListener(this);
 
         if(savedInstanceState == null){
             HomeFragment fragment = new HomeFragment();

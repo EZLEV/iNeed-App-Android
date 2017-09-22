@@ -42,7 +42,7 @@ import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
-public class ProductsActivity extends AppCompatActivity {
+public class ProductsActivity extends BaseActivity {
 
     private List<Product> mProducts = new ArrayList<>();
     private Category mCategory;
@@ -156,13 +156,13 @@ public class ProductsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onClickRecyclerListener(View view, int position, ImageView imageView) {
+            public void onClickRecyclerListener(View view, int position, View viewAnimation) {
                 Toast.makeText(getBaseContext(), "Position:" + position, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(ProductsActivity.this, DetailsProductsActivity.class);
                 intent.putExtra("product", Parcels.wrap(mProducts.get(position)));
-                intent.putExtra(EXTRA_PRODUCT_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(imageView));
+                intent.putExtra(EXTRA_PRODUCT_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(viewAnimation));
 
-                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(ProductsActivity.this, imageView, ViewCompat.getTransitionName(imageView));
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(ProductsActivity.this, viewAnimation, ViewCompat.getTransitionName(viewAnimation));
                 ActivityCompat.startActivity(ProductsActivity.this, intent, optionsCompat.toBundle());
             }
         };

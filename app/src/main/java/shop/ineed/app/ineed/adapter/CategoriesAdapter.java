@@ -18,24 +18,26 @@ import shop.ineed.app.ineed.util.Base64;
 
 /**
  * Created by Jose on 8/27/2017.
+ *
+ * Class Adapter Categories
  */
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoriesViewHolder> {
 
     private String TAG = this.getClass().getSimpleName();
-    private List<Category> categories;
-    private Context context;
+    private List<Category> mCategories;
+    private Context mContext;
     private RecyclerClickListener mRecyclerClickListener;
 
     public CategoriesAdapter(Context context, List<Category> categories, RecyclerClickListener recyclerClickListener) {
-        this.context = context;
-        this.categories = categories;
+        this.mContext = context;
+        this.mCategories = categories;
         this.mRecyclerClickListener = recyclerClickListener;
     }
 
     @Override
     public CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_item_categories, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.adapter_item_categories, parent, false);
 
         CategoriesViewHolder holder = new CategoriesViewHolder(view);
 
@@ -45,32 +47,25 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     @Override
     public void onBindViewHolder(final CategoriesViewHolder holder, final int position) {
 
-        Category category = categories.get(position);
+        Category category = mCategories.get(position);
 
         holder.txtCategory.setText(category.getValue());
         holder.ivIconCategory.setImageBitmap(Base64.convertToBitmap(category.getIcon()));
 
-        if(mRecyclerClickListener != null){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position);
-                }
-            });
+        if (mRecyclerClickListener != null) {
+            holder.itemView.setOnClickListener(view -> mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position));
         }
-
     }
 
     @Override
     public int getItemCount() {
-        return this.categories != null ? this.categories.size() : 0;
+        return this.mCategories != null ? this.mCategories.size() : 0;
     }
 
     static class CategoriesViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtCategory;
         ImageView ivIconCategory;
-        ProgressBar progressBar;
 
         CategoriesViewHolder(View view) {
             super(view);

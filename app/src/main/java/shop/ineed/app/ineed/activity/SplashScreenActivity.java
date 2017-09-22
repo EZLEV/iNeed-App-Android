@@ -18,7 +18,7 @@ import shop.ineed.app.ineed.R;
  * Execução de alguma lógica, verificar acesso a internet entre outros.
  */
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends BaseActivity {
 
     private static final long SPLASH_DISPLAY_LENGTH = 3000;
     private String TAG = this.getClass().getSimpleName();

@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 import shop.ineed.app.ineed.R;
 
-public class HomeFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+public class HomeFragment extends BaseFragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
 
     private SliderLayout mSlideHome;
 

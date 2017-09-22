@@ -1,15 +1,16 @@
 package shop.ineed.app.ineed.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import shop.ineed.app.ineed.R;
 
 /**
  * Created by jose on 9/8/17.
+ *
+ * Class comum para todas as Activities
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
 
     private Toolbar mToolbar;
 

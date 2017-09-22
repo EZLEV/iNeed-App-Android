@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by Jose on 9/5/2017.
+ *
+ * Class domain Product
  */
 
 @org.parceler.Parcel

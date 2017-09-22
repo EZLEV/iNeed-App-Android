@@ -1,13 +1,9 @@
 package shop.ineed.app.ineed.activity;
 
-import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.mobsandgeeks.saripaar.ValidationError;
@@ -48,26 +44,18 @@ public class ResetPasswordActivity extends CommonSubscriberActivity implements V
 
     private void reset() {
         mAuth.sendPasswordResetEmail(mUser.getEmail())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        closeProgressDialog();
-                        if (task.isSuccessful()) {
-                            email.setText("");
-                            showToast(ResetPasswordActivity.this, "E-mail enviado para " + mUser.getEmail());
-                            finish();
-                        } else {
-                            showToast(ResetPasswordActivity.this, "Falhou! Tente novamente. ");
-                        }
+                .addOnCompleteListener(task -> {
+                    closeProgressDialog();
+                    if (task.isSuccessful()) {
+                        email.setText("");
+                        showToast(ResetPasswordActivity.this, "E-mail enviado para " + mUser.getEmail());
+                        finish();
+                    } else {
+                        showToast(ResetPasswordActivity.this, "Falhou! Tente novamente. ");
+                    }
 
-                    }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        FirebaseCrash.report(e);
-                    }
-                });
+                .addOnFailureListener(e -> FirebaseCrash.report(e));
     }
 
     @Override
