@@ -13,6 +13,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         jackOptions {
+            additionalParameters("jack.incremental": "true")
             enabled true
         }
     }
@@ -69,6 +70,9 @@ dependencies {
 
     // Test
     testCompile 'junit:junit:4.12'
+
+    // JackOptions
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.0'
 }
 
 
