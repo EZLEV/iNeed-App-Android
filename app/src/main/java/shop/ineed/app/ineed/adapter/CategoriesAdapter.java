@@ -53,7 +53,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         holder.ivIconCategory.setImageBitmap(Base64.convertToBitmap(category.getIcon()));
 
         if (mRecyclerClickListener != null) {
-            holder.itemView.setOnClickListener(view -> mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position);
+                }
+            });
         }
     }
 

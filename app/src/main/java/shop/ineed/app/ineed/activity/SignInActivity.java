@@ -44,12 +44,15 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = firebaseAuth -> {
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            if (currentUser == null || mUser.getUid() != null) {
-                return;
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                if (currentUser == null || mUser.getUid() != null) {
+                    return;
+                }
+                mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
             }
-            mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
         };
 
         validator = new Validator(this);

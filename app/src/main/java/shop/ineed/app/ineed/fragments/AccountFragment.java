@@ -33,9 +33,12 @@ public class AccountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         Button btn = (Button) view.findViewById(R.id.button);
-        btn.setOnClickListener(onClick ->
-                mAuth.signOut()
-        );
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+            }
+        });
 
         return view;
     }
