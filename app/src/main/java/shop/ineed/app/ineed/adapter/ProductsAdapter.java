@@ -50,7 +50,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         holder.setData(mProducts.get(position));
 
         if (mRecyclerClickListener != null) {
-            holder.itemView.setOnClickListener(view -> mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position, holder.ivProduct));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mRecyclerClickListener.onClickRecyclerListener(holder.itemView, position, holder.ivProduct);
+                }
+            });
         }
     }
 
@@ -60,6 +65,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     }
 
     class ProductsViewHolder extends RecyclerView.ViewHolder {
+        private TextView txtTitle;
         private TextView txtPrice;
         private TextView txtDescription;
         private ImageView ivProduct;
@@ -67,13 +73,15 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
         ProductsViewHolder(View view) {
             super(view);
-            txtPrice = (TextView) view.findViewById(R.id.priceProduct);
-            txtDescription = (TextView) view.findViewById(R.id.descriptionProduct);
-            ivProduct = (ImageView) view.findViewById(R.id.ivProduct);
+            txtTitle= (TextView) view.findViewById(R.id.titleProductAdapter);
+            txtPrice = (TextView) view.findViewById(R.id.priceProductAdapter);
+            txtDescription = (TextView) view.findViewById(R.id.descriptionProductAdapter);
+            ivProduct = (ImageView) view.findViewById(R.id.imageProductAdapter);
         }
 
         private void setData(Product product) {
-            txtPrice.setText(String.valueOf(product.getPrice()));
+            txtTitle.setText(product.getName());
+            txtPrice.setText("R$" + String.valueOf(product.getPrice()));
             txtDescription.setText(product.getDescription());
 
             List<String> image = product.getPictures();

@@ -2,6 +2,9 @@ package shop.ineed.app.ineed.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -42,7 +45,7 @@ import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
-public class ProductsActivity extends BaseActivity {
+public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener{
 
     private List<Product> mProducts = new ArrayList<>();
     private Category mCategory;
@@ -57,6 +60,13 @@ public class ProductsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_products);
+
+        enableToolbar();
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitleEnabled(false);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -166,5 +176,20 @@ public class ProductsActivity extends BaseActivity {
                 ActivityCompat.startActivity(ProductsActivity.this, intent, optionsCompat.toBundle());
             }
         };
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int scrollRange = -1;
+        //Initialize the size of the scroll
+        if (scrollRange == -1) {
+            scrollRange = appBarLayout.getTotalScrollRange();
+        }
+        //Check if the view is collapsed
+        if (scrollRange + verticalOffset == 0) {
+            getToolbar().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        } else {
+            getToolbar().setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 }
