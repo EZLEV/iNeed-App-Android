@@ -1,10 +1,13 @@
 package shop.ineed.app.ineed.fragments;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +51,11 @@ public class ListCategoriesFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_categories, container, false);
         mRecyclerView = (ShimmerRecyclerView) view.findViewById(R.id.recyclerCategories);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        }
         mAdapter = new CategoriesAdapter(getActivity(), mCategories, onCategoryClickListener());
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
