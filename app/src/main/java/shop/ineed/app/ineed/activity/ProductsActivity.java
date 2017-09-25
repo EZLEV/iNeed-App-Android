@@ -182,4 +182,10 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
             getToolbar().setBackgroundColor(Color.TRANSPARENT);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAdapter.cleanup();
+    }
 }
