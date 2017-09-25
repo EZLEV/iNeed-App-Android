@@ -10,26 +10,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import org.parceler.Parcels;
 
@@ -38,22 +31,22 @@ import java.util.List;
 
 import livroandroid.lib.utils.AndroidUtils;
 import shop.ineed.app.ineed.R;
-import shop.ineed.app.ineed.adapter.CategoriesAdapter;
-import shop.ineed.app.ineed.adapter.ProductsAdapter;
+import shop.ineed.app.ineed.adapter.ProductsViewHolder;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
-public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener{
+public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private List<Product> mProducts = new ArrayList<>();
     private Category mCategory;
-    private ProductsAdapter mAdapter;
     private SwipeRefreshLayout mSwipeLayout;
-    private ProgressBar mProgress;
+    private AVLoadingIndicatorView mProgress;
     public static final String EXTRA_PRODUCT_IMAGE_TRANSITION_NAME = "product_image_transition";
-
+    private final String TAG = this.getClass().getSimpleName();
+    private FirebaseRecyclerAdapter<Product, ProductsViewHolder> mAdapter;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +56,7 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
 
         enableToolbar();
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitleEnabled(false);
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
         appBarLayout.addOnOffsetChangedListener(this);
@@ -72,24 +65,20 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mCategory = Parcels.unwrap(getIntent().getParcelableExtra("category"));
+        Log.i(TAG, mCategory.getKey());
         getSupportActionBar().setTitle(mCategory.getValue());
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerProducts);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerProducts);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         } else {
-            recyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+            mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         }
-        mAdapter = new ProductsAdapter(this, mProducts, onProductClickListener());
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        loadData();
 
-        mProgress = (ProgressBar) findViewById(R.id.progress);
-        mProgress.setVisibility(View.VISIBLE);
-
-        if (mProducts.size() == 0) {
-            loadData();
-        }
+        //ProgressBar
+        mProgress = (AVLoadingIndicatorView) findViewById(R.id.progress);
+        mProgress.show();
 
         // Swipe to Refresh
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipeToRefreshProducts);
@@ -101,14 +90,15 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
         );
     }
 
+
     private SwipeRefreshLayout.OnRefreshListener OnRefreshListener() {
         return new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Valida se existe conexão ao fazer o gesto de Pull to Refresh
                 if (AndroidUtils.isNetworkAvailable(getBaseContext())) {
-                    // // taskCarros(true);
-                    loadData();
+                    mAdapter.notifyDataSetChanged();
+                    mSwipeLayout.setRefreshing(false);
                 } else {
                     mSwipeLayout.setRefreshing(false);
                     snack("Não foi possivel acessar a internet");
@@ -117,7 +107,7 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
         };
     }
 
-    private void snack(String msg){
+    private void snack(String msg) {
         Snackbar mySnackbar = Snackbar.make(findViewById(R.id.activityProducts),
                 msg, Snackbar.LENGTH_SHORT);
         mySnackbar.setAction("OK", null);
@@ -126,29 +116,29 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
 
     private void loadData() {
         DatabaseReference reference = LibraryClass.getFirebase().child("products-categories").child(mCategory.getKey());
-        reference.addValueEventListener(new ValueEventListener() {
+        mAdapter = new FirebaseRecyclerAdapter<Product, ProductsViewHolder>(
+                Product.class,
+                R.layout.adapter_item_products,
+                ProductsViewHolder.class,
+                reference
+        ) {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mProducts.removeAll(mProducts);
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.i("TAG", "key" + snapshot.getKey() + " " + snapshot.getValue());
-                    Product p = snapshot.getValue(Product.class);
-                    // Log.d("Valor", snapshot.getValue(Product.class).toString());
-                    mProducts.add(p);
+            protected void populateViewHolder(ProductsViewHolder viewHolder, Product model, int position) {
+                if (mProgress.getVisibility() == View.VISIBLE) {
+                    mProgress.hide();
                 }
-                mAdapter.notifyDataSetChanged();
-                mSwipeLayout.setRefreshing(false);
-                mProgress.setVisibility(View.GONE);
-                Log.i("ValueList: ", mProducts.size() + "");
+                viewHolder.setData(model);
+                mProducts.add(model);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("TAG", databaseError.getMessage());
-                mSwipeLayout.setRefreshing(false);
-                mProgress.setVisibility(View.GONE);
+            public ProductsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                ProductsViewHolder holder = super.onCreateViewHolder(parent, viewType);
+                holder.setOnClickListener(onProductClickListener());
+                return holder;
             }
-        });
+        };
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override

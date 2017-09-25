@@ -6,10 +6,18 @@
     android:orientation="vertical"
     tools:context="shop.ineed.app.ineed.fragments.ListCategoriesFragment">
 
-    <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerCategories"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:shimmer_demo_child_count="10"
-        app:shimmer_demo_layout="@layout/adapter_loading_item_categories" />
+        android:layout_height="match_parent" />
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/progressListCategories"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        app:indicatorColor="@color/colorAccent"
+        app:indicatorName="BallClipRotateMultipleIndicator" />
 </FrameLayout>
