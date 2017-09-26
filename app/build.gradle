@@ -50,7 +50,7 @@ dependencies {
     // Facebook
     compile 'com.facebook.android:facebook-android-sdk:4.24.0'
 
-    // Butter Knife
+    //Butter Knife
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 

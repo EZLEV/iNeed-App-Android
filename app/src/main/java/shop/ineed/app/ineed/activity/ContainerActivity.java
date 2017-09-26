@@ -12,6 +12,8 @@ import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.fragments.AccountFragment;
 import shop.ineed.app.ineed.fragments.HomeFragment;
 import shop.ineed.app.ineed.fragments.ListCategoriesFragment;
+import shop.ineed.app.ineed.fragments.StoresFragment;
+import shop.ineed.app.ineed.util.BottomNavigationViewHelper;
 
 public class ContainerActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -20,7 +22,9 @@ public class ContainerActivity extends BaseActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
 
-        ((BottomNavigationView) findViewById(R.id.navigation)).setOnNavigationItemSelectedListener(this);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(this);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
 
         if(savedInstanceState == null){
             HomeFragment fragment = new HomeFragment();
@@ -67,6 +71,10 @@ public class ContainerActivity extends BaseActivity implements BottomNavigationV
                 return true;
             case R.id.navigation_list_products:
                 fragment = new ListCategoriesFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                return true;
+            case R.id.navigation_stores:
+                fragment = new StoresFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 return true;
             case R.id.navigation_account:
