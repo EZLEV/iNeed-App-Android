@@ -1,6 +1,8 @@
 package shop.ineed.app.ineed;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 /**
@@ -30,5 +32,11 @@ public class INeedApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         Log.d(TAG, "INeedApplication.onTerminate");
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(INeedApplication.this);
     }
 }

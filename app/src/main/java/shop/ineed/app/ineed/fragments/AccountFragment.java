@@ -14,18 +14,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import shop.ineed.app.ineed.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ *
  */
-public class AccountFragment extends Fragment {
-
-
-    public AccountFragment() {
-        // Required empty public constructor
-    }
-
+public class AccountFragment extends BaseFragment {
 
     private FirebaseAuth mAuth;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

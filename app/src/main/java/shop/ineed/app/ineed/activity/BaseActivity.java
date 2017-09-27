@@ -7,6 +7,8 @@ import shop.ineed.app.ineed.R;
 
 /**
  * Created by jose on 9/8/17.
+ *
+ * Class comum para todas as Activities
  */
 
 public class BaseActivity extends AppCompatActivity {

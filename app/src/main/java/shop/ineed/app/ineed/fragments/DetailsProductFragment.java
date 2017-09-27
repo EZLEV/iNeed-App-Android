@@ -31,23 +31,17 @@ import shop.ineed.app.ineed.util.Base64;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetailsProductFragment extends Fragment implements ViewPager.OnPageChangeListener {
-
+public class DetailsProductFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     private Product mProduct;
     private ViewPager mPager;
-    private static int currentPage = 0;
+    private static int CURRENT_PAGE = 0;
     private static int NUM_PAGES = 0;
-
-    public DetailsProductFragment() {
-        // Required empty public constructor
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_details_product, container, false);
         mProduct = Parcels.unwrap(getArguments().getParcelable("product"));
 
@@ -95,10 +89,10 @@ public class DetailsProductFragment extends Fragment implements ViewPager.OnPage
         final Handler handler = new Handler();
         final Runnable Update = new Runnable() {
             public void run() {
-                if (currentPage == NUM_PAGES) {
-                    currentPage = 0;
+                if (CURRENT_PAGE == NUM_PAGES) {
+                    CURRENT_PAGE = 0;
                 }
-                mPager.setCurrentItem(currentPage++, true);
+                mPager.setCurrentItem(CURRENT_PAGE++, true);
             }
         };
         Timer swipeTimer = new Timer();
@@ -110,12 +104,11 @@ public class DetailsProductFragment extends Fragment implements ViewPager.OnPage
         }, 4000, 4000);
 
         indicator.setOnPageChangeListener(this);
-
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        currentPage = position;
+        CURRENT_PAGE = position;
     }
 
     @Override

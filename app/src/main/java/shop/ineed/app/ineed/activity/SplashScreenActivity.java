@@ -2,8 +2,6 @@ package shop.ineed.app.ineed.activity;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -18,7 +16,7 @@ import shop.ineed.app.ineed.R;
  * Execução de alguma lógica, verificar acesso a internet entre outros.
  */
 
-public class SplashScreenActivity extends AppCompatActivity {
+public class SplashScreenActivity extends BaseActivity {
 
     private static final long SPLASH_DISPLAY_LENGTH = 3000;
     private String TAG = this.getClass().getSimpleName();
@@ -33,26 +31,20 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user != null){
-                    isLogged = true;
-                    Log.d(TAG, "SplashScreenActivity.Handler().showContainer");
-                }else{
-                    isLogged = false;
-                    Log.d(TAG, "SplashScreenActivity.Handler().showChooseMethod");
-                }
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if(user != null){
+                isLogged = true;
+                Log.d(TAG, "SplashScreenActivity.Handler().showContainer");
+            }else{
+                isLogged = false;
+                Log.d(TAG, "SplashScreenActivity.Handler().showChooseMethod");
             }
         };
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "SplashScreenActivity.Handler().postDelayed");
-                verifyMethod();
-            }
+        new Handler().postDelayed(() -> {
+            Log.d(TAG, "SplashScreenActivity.Handler().postDelayed");
+            verifyMethod();
         }, SPLASH_DISPLAY_LENGTH);
     }
 
@@ -99,12 +91,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         dialog.setTitleText("Atenção")
                .setContentText("Fé é como WI-FI: invisível, mas tem o poder de te conectar com o que você precisa. iNeed s2\n Tente estabelecer uma conexão com a internet")
                .setCustomImage(R.drawable.ic_portable_wifi_off)
-               .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                   @Override
-                   public void onClick(SweetAlertDialog sweetAlertDialog) {
-                       dialog.dismiss();
-                       verifyMethod();
-                   }
+               .setConfirmClickListener(sweetAlertDialog -> {
+                   dialog.dismiss();
+                   verifyMethod();
                })
                .show();
     }

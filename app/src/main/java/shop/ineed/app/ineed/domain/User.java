@@ -1,7 +1,6 @@
 package shop.ineed.app.ineed.domain;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -14,6 +13,8 @@ import shop.ineed.app.ineed.domain.util.LibraryClass;
 
 /**
  * Created by antonio on 8/16/17.
+ * <p>
+ * Class domain user
  */
 
 public class User {
@@ -70,64 +71,62 @@ public class User {
         this.newPassword = newPassword;
     }
 
-    private void setEmailInMap( Map<String, Object> map ) {
-        if( getEmail() != null ){
-            map.put( "email", getEmail() );
+    private void setEmailInMap(Map<String, Object> map) {
+        if (getEmail() != null) {
+            map.put("email", getEmail());
         }
     }
 
-    private void setNameInMap( Map<String, Object> map ) {
-        if( getName() != null ){
-            map.put( "name", getName() );
+    private void setNameInMap(Map<String, Object> map) {
+        if (getName() != null) {
+            map.put("name", getName());
         }
     }
 
-    public boolean isSocialNetworkLogged(Context context){
+    public boolean isSocialNetworkLogged(Context context) {
         String token = getProviderUserLogged(context);
         return (token.contains("facebook") || token.contains("google"));
     }
 
-    public void saveProviderUserLogged(Context context, String token){
+    public void saveProviderUserLogged(Context context, String token) {
         LibraryClass.saveUserLogged(context, PROVIDER, token);
     }
 
-    public String getProviderUserLogged(Context context){
+    public String getProviderUserLogged(Context context) {
         return (LibraryClass.getUserLogged(context, PROVIDER));
     }
 
-    public void saveUserLogged(DatabaseReference.CompletionListener... completionListeners ){
+    public void saveUserLogged(DatabaseReference.CompletionListener... completionListeners) {
         DatabaseReference firebase = LibraryClass.getFirebase().child("consumers").child(getUid());
 
-        if(completionListeners.length == 0){
+        if (completionListeners.length == 0) {
             firebase.setValue(this);
-        }else{
+        } else {
             firebase.setValue(this, completionListeners[0]);
         }
     }
 
-    public void updateUserLogged(DatabaseReference.CompletionListener... completionListeners ){
+    public void updateUserLogged(DatabaseReference.CompletionListener... completionListeners) {
         DatabaseReference firebase = LibraryClass.getFirebase().child("consumers").child(getUid());
 
         Map<String, Object> map = new HashMap<>();
         setEmailInMap(map);
         setNameInMap(map);
 
-        if(map.isEmpty()){
+        if (map.isEmpty()) {
             return;
         }
 
-        if(completionListeners.length > 0){
+        if (completionListeners.length > 0) {
             firebase.updateChildren(map, completionListeners[0]);
-        }else{
+        } else {
             firebase.updateChildren(map);
         }
     }
 
-    public void contectDataDB(Context context){
+    public void contectDataDB(Context context) {
         DatabaseReference firebase = LibraryClass.getFirebase().child("consumers").child(getUid());
 
         firebase.addListenerForSingleValueEvent((ValueEventListener) context);
     }
-
-
 }

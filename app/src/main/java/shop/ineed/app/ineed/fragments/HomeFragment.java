@@ -1,28 +1,46 @@
 package shop.ineed.app.ineed.fragments;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.wang.avi.AVLoadingIndicatorView;
 
-import java.util.HashMap;
+import org.parceler.Parcels;
 
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.activity.DetailsProductsActivity;
+import shop.ineed.app.ineed.activity.ProductsActivity;
+import shop.ineed.app.ineed.adapter.CategoriesViewHolder;
+import shop.ineed.app.ineed.adapter.ProductsViewHolder;
+import shop.ineed.app.ineed.domain.Category;
+import shop.ineed.app.ineed.domain.Product;
+import shop.ineed.app.ineed.domain.util.LibraryClass;
+import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
-public class HomeFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+import static shop.ineed.app.ineed.activity.ProductsActivity.EXTRA_PRODUCT_IMAGE_TRANSITION_NAME;
 
-    private SliderLayout mSlideHome;
+public class HomeFragment extends BaseFragment {
+
+    private RecyclerView mRecyclerViewCategories;
+    private AVLoadingIndicatorView mProgressCategories;
+    private FirebaseRecyclerAdapter<Category, CategoriesViewHolder> mAdapterCategory;
+    private RecyclerView mRecyclerViewProducts;
+    private AVLoadingIndicatorView mProgressProducts;
+    private FirebaseRecyclerAdapter<Product, ProductsViewHolder> mAdapterProducts;
 
     public HomeFragment() {
     }
@@ -32,62 +50,104 @@ public class HomeFragment extends Fragment implements BaseSliderView.OnSliderCli
                              Bundle savedInstanceState) {
         View viewRoot = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mSlideHome = (SliderLayout) viewRoot.findViewById(R.id.slider);
+        // Categories
+        mRecyclerViewCategories = (RecyclerView) viewRoot.findViewById(R.id.recyclerHomeCategories);
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerViewCategories.setLayoutManager(layoutManager);
+        mProgressCategories = (AVLoadingIndicatorView) viewRoot.findViewById(R.id.progressCategories);
 
-        HashMap<String, String> url_maps = new HashMap<String, String>();
-        url_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        url_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        url_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        url_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        for (String name : url_maps.keySet()) {
-            TextSliderView txtSliderView = new TextSliderView(getActivity());
-
-            txtSliderView.description(name)
-                    .image(url_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            txtSliderView.bundle(new Bundle());
-            txtSliderView.getBundle()
-                    .putString("extra", name);
-
-            mSlideHome.addSlider(txtSliderView);
+        // Products
+        mRecyclerViewProducts = (RecyclerView) viewRoot.findViewById(R.id.recyclerHomeProducts);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mRecyclerViewProducts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        } else {
+            mRecyclerViewProducts.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         }
-
-        mSlideHome.setPresetTransformer(SliderLayout.Transformer.ZoomOutSlide);
-        mSlideHome.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mSlideHome.setCustomAnimation(new DescriptionAnimation());
-        mSlideHome.setDuration(4000);
-        mSlideHome.addOnPageChangeListener(this);
-        mSlideHome.setCustomIndicator((PagerIndicator) viewRoot.findViewById(R.id.custom_indicator));
+        mRecyclerViewProducts.setNestedScrollingEnabled(false);
+        mProgressProducts = (AVLoadingIndicatorView) viewRoot.findViewById(R.id.progressProducts);
 
         return viewRoot;
     }
 
+
     @Override
-    public void onStop() {
-        mSlideHome.stopAutoCycle();
-        super.onStop();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        DatabaseReference referenceCategories = LibraryClass.getFirebase().child("categories");
+        mAdapterCategory = new FirebaseRecyclerAdapter<Category, CategoriesViewHolder>(
+                Category.class,
+                R.layout.adapter_recycler_categories_home,
+                CategoriesViewHolder.class,
+                referenceCategories
+        ) {
+            @Override
+            protected void populateViewHolder(CategoriesViewHolder viewHolder, final Category model, int position) {
+                viewHolder.setDate(model);
+                if (mProgressCategories.getVisibility() == View.VISIBLE) {
+                    mProgressCategories.hide();
+                }
+
+                DatabaseReference ref = mAdapterCategory.getRef(position);
+                model.setKey(ref.getKey());
+
+                viewHolder.setOnClickListener(new RecyclerClickListener() {
+                    @Override
+                    public void onClickRecyclerListener(View view, int position) {
+                        Intent intent = new Intent(getActivity(), ProductsActivity.class);
+                        intent.putExtra("category", Parcels.wrap(model));
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onClickRecyclerListener(View view, int position, View viewAnimation) {
+                    }
+                });
+            }
+        };
+        mRecyclerViewCategories.setAdapter(mAdapterCategory);
+
+        DatabaseReference referenceProducts = LibraryClass.getFirebase().child("products");
+        mAdapterProducts = new FirebaseRecyclerAdapter<Product, ProductsViewHolder>(
+                Product.class,
+                R.layout.adapter_item_products,
+                ProductsViewHolder.class,
+                referenceProducts
+        ) {
+            @Override
+            protected void populateViewHolder(ProductsViewHolder viewHolder, final Product model, int position) {
+                viewHolder.setData(model);
+                if (mProgressProducts.getVisibility() == View.VISIBLE) {
+                    mProgressProducts.hide();
+                }
+
+                viewHolder.setOnClickListener(new RecyclerClickListener() {
+                    @Override
+                    public void onClickRecyclerListener(View view, int position) {
+
+                    }
+
+                    @Override
+                    public void onClickRecyclerListener(View view, int position, View viewAnimation) {
+                        Toast.makeText(getActivity(), "Position:" + position, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), DetailsProductsActivity.class);
+                        intent.putExtra("product", Parcels.wrap(model));
+                        intent.putExtra(EXTRA_PRODUCT_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(viewAnimation));
+
+                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), viewAnimation, ViewCompat.getTransitionName(viewAnimation));
+                        ActivityCompat.startActivity(getActivity(), intent, optionsCompat.toBundle());
+                    }
+                });
+            }
+        };
+        mRecyclerViewProducts.setAdapter(mAdapterProducts);
     }
 
     @Override
-    public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(getActivity(),slider.getBundle().get("extra") + "", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        Log.d("Slider Demo", "Page Changed: " + position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
+    public void onDestroy() {
+        super.onDestroy();
+        mAdapterCategory.cleanup();
+        mAdapterProducts.cleanup();
     }
 }

@@ -2,7 +2,6 @@ package shop.ineed.app.ineed.util;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

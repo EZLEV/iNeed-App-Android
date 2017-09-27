@@ -30,7 +30,7 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private User user;
+    private User mUser;
     @NotEmpty(message = "Preencha o campo nome.")
     private EditText name;
     private String TAG = this.getClass().getSimpleName();
@@ -44,17 +44,14 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if (firebaseUser == null || user.getUid() != null) {
-                    return;
-                }
-                user.setUid(firebaseUser.getUid());
-                user.saveUserLogged(SignUpActivity.this);
+            if (firebaseUser == null || mUser.getUid() != null) {
+                return;
             }
+            mUser.setUid(firebaseUser.getUid());
+            mUser.saveUserLogged(SignUpActivity.this);
         };
 
         validator = new Validator(this);
@@ -67,26 +64,20 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
     private void saveUser() {
         FirebaseCrash.log(TAG + ":saveUser");
         mAuth.createUserWithEmailAndPassword(
-                user.getEmail(),
-                user.getPassword()
-        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                closeProgressDialog();
-                if (task.isSuccessful()) {
-                    showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
-                    finish();
-                } else {
-                    String messageError = FirebaseError.verify(SignUpActivity.this, task);
-                    showSnackbar(findViewById(android.R.id.content), messageError);
-                }
+                mUser.getEmail(),
+                mUser.getPassword()
+        ).addOnCompleteListener(task -> {
+            closeProgressDialog();
+            if (task.isSuccessful()) {
+                showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
+                finish();
+            } else {
+                String messageError = FirebaseError.verify(SignUpActivity.this, task);
+                showSnackbar(findViewById(android.R.id.content), messageError);
             }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(SignUpActivity.class.getSimpleName(), e.getMessage());
-                FirebaseCrash.report(e);
-            }
+        }).addOnFailureListener(this, e -> {
+            Log.e(SignUpActivity.class.getSimpleName(), e.getMessage());
+            FirebaseCrash.report(e);
         });
     }
 
@@ -151,10 +142,10 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
 
     @Override
     protected void initUser() {
-        user = new User();
-        user.setName(name.getText().toString());
-        user.setEmail(email.getText().toString());
-        user.setPassword(password.getText().toString());
+        mUser = new User();
+        mUser.setName(name.getText().toString());
+        mUser.setEmail(email.getText().toString());
+        mUser.setPassword(password.getText().toString());
     }
 
     @Override
