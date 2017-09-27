@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
@@ -10,45 +9,42 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/categories_home"
-        >
+        android:background="@drawable/categories_home">
 
         <ImageView
             android:id="@+id/ivIconCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/com_facebook_button_icon_blue"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" />
+            app:srcCompat="@drawable/com_facebook_button_icon_blue" />
     </android.support.constraint.ConstraintLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="2dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp">
 
         <TextView
             android:id="@+id/txtTitleCategory"
             android:layout_width="100dp"
-            android:justificationMode="inter_word"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:justificationMode="inter_word"
             android:lineSpacingMultiplier="1.1"
             android:maxLines="2"
-            android:gravity="center"
-            android:layout_gravity="center"
             android:text="asdasdfsdfsdfsdfsdfsd"
-            />
-
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </FrameLayout>
 
 </LinearLayout>
