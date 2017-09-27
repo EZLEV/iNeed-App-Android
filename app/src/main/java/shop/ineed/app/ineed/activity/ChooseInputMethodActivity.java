@@ -3,7 +3,6 @@ package shop.ineed.app.ineed.activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,11 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,11 +88,8 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
                 Snackbar.make(findViewById(R.id.choose_container),
                         "Erro ao tentar fazer login usando a sua conta do Facebook.\n",
                         Snackbar.LENGTH_LONG)
-                        .setAction("OK", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
+                        .setAction("OK", view -> {
 
-                            }
                         }).show();
             }
         });
@@ -106,23 +98,20 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
 
     // Monitora a alteração do status do usuário
     private FirebaseAuth.AuthStateListener getFirebaseResultHandle() {
-        FirebaseAuth.AuthStateListener callback = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
+        FirebaseAuth.AuthStateListener callback = firebaseAuth -> {
+            FirebaseUser userFirebase = firebaseAuth.getCurrentUser();
 
-                if (userFirebase == null) {
-                    return;
-                }
-
-                if (mUser.getUid() == null && isNameOk(mUser, userFirebase)) {
-                    mUser.setUid(userFirebase.getUid());
-                    mUser.setName(userFirebase.getDisplayName());
-                    mUser.setEmail(userFirebase.getEmail());
-                    mUser.saveUserLogged();
-                }
-                callContainerActivity();
+            if (userFirebase == null) {
+                return;
             }
+
+            if (mUser.getUid() == null && isNameOk(mUser, userFirebase)) {
+                mUser.setUid(userFirebase.getUid());
+                mUser.setName(userFirebase.getDisplayName());
+                mUser.setEmail(userFirebase.getEmail());
+                mUser.saveUserLogged();
+            }
+            callContainerActivity();
         };
         return (callback);
     }
@@ -154,23 +143,15 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
 
             mUser.saveProviderUserLogged(ChooseInputMethodActivity.this, provider);
             mAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                String messageError = FirebaseError.verify(ChooseInputMethodActivity.this, task);
-                                showSnackbar(R.id.choose_container, messageError);
-                                return;
-                            }
-                            callContainerActivity();
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            String messageError = FirebaseError.verify(ChooseInputMethodActivity.this, task);
+                            showSnackbar(R.id.choose_container, messageError);
+                            return;
                         }
+                        callContainerActivity();
                     })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            FirebaseCrash.report(e);
-                        }
-                    });
+                    .addOnFailureListener(e -> FirebaseCrash.report(e));
         } else {
             mAuth.signOut();
         }
@@ -219,11 +200,8 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
         Snackbar.make(findViewById(idContainer),
                 message,
                 Snackbar.LENGTH_LONG)
-                .setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                .setAction("OK", view -> {
 
-                    }
                 }).show();
     }
 

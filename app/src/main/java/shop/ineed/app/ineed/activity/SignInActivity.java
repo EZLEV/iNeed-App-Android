@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,15 +43,12 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                if (currentUser == null || mUser.getUid() != null) {
-                    return;
-                }
-                mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser == null || mUser.getUid() != null) {
+                return;
             }
+            mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
         };
 
         validator = new Validator(this);
@@ -98,12 +94,7 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
                         callHomeContainer();
                     }
                 })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        FirebaseCrash.report(e);
-                    }
-                });
+                .addOnFailureListener(this, e -> FirebaseCrash.report(e));
     }
 
     private void callHomeContainer() {

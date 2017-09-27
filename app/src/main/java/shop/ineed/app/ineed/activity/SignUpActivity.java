@@ -44,17 +44,14 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-                if (firebaseUser == null || mUser.getUid() != null) {
-                    return;
-                }
-                mUser.setUid(firebaseUser.getUid());
-                mUser.saveUserLogged(SignUpActivity.this);
+            if (firebaseUser == null || mUser.getUid() != null) {
+                return;
             }
+            mUser.setUid(firebaseUser.getUid());
+            mUser.saveUserLogged(SignUpActivity.this);
         };
 
         validator = new Validator(this);
@@ -69,24 +66,18 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
         mAuth.createUserWithEmailAndPassword(
                 mUser.getEmail(),
                 mUser.getPassword()
-        ).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                closeProgressDialog();
-                if (task.isSuccessful()) {
-                    showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
-                    finish();
-                } else {
-                    String messageError = FirebaseError.verify(SignUpActivity.this, task);
-                    showSnackbar(findViewById(android.R.id.content), messageError);
-                }
+        ).addOnCompleteListener(task -> {
+            closeProgressDialog();
+            if (task.isSuccessful()) {
+                showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
+                finish();
+            } else {
+                String messageError = FirebaseError.verify(SignUpActivity.this, task);
+                showSnackbar(findViewById(android.R.id.content), messageError);
             }
-        }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(SignUpActivity.class.getSimpleName(), e.getMessage());
-                FirebaseCrash.report(e);
-            }
+        }).addOnFailureListener(this, e -> {
+            Log.e(SignUpActivity.class.getSimpleName(), e.getMessage());
+            FirebaseCrash.report(e);
         });
     }
 

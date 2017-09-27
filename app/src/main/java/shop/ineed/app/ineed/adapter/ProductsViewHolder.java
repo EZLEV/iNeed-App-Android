@@ -34,12 +34,7 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder {
         txtDescription = (TextView) view.findViewById(R.id.descriptionProductAdapter);
         ivProduct = (ImageView) view.findViewById(R.id.imageProductAdapter);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mClickListener.onClickRecyclerListener(view, getAdapterPosition(), ivProduct);
-            }
-        });
+        itemView.setOnClickListener(view1 -> mClickListener.onClickRecyclerListener(view1, getAdapterPosition(), ivProduct));
     }
 
     public void setData(Product product) {

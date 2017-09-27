@@ -26,12 +26,7 @@ public class CategoriesViewHolder extends RecyclerView.ViewHolder {
         super(view);
         txtCategory = (TextView) view.findViewById(R.id.txtTitleCategory);
         ivIconCategory = (ImageView) view.findViewById(R.id.ivIconCategory);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mClickListener.onClickRecyclerListener(view, getAdapterPosition());
-            }
-        });
+        itemView.setOnClickListener(view1 -> mClickListener.onClickRecyclerListener(view1, getAdapterPosition()));
     }
 
     public void setDate(Category category){

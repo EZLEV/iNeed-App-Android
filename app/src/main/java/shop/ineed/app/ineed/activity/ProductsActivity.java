@@ -92,17 +92,14 @@ public class ProductsActivity extends BaseActivity implements AppBarLayout.OnOff
 
 
     private SwipeRefreshLayout.OnRefreshListener OnRefreshListener() {
-        return new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Valida se existe conexão ao fazer o gesto de Pull to Refresh
-                if (AndroidUtils.isNetworkAvailable(getBaseContext())) {
-                    mAdapter.notifyDataSetChanged();
-                    mSwipeLayout.setRefreshing(false);
-                } else {
-                    mSwipeLayout.setRefreshing(false);
-                    snack("Não foi possivel acessar a internet");
-                }
+        return () -> {
+            // Valida se existe conexão ao fazer o gesto de Pull to Refresh
+            if (AndroidUtils.isNetworkAvailable(getBaseContext())) {
+                mAdapter.notifyDataSetChanged();
+                mSwipeLayout.setRefreshing(false);
+            } else {
+                mSwipeLayout.setRefreshing(false);
+                snack("Não foi possivel acessar a internet");
             }
         };
     }

@@ -48,26 +48,18 @@ public class ResetPasswordActivity extends CommonSubscriberActivity implements V
 
     private void reset() {
         mAuth.sendPasswordResetEmail(mUser.getEmail())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        closeProgressDialog();
-                        if (task.isSuccessful()) {
-                            email.setText("");
-                            showToast(ResetPasswordActivity.this, "E-mail enviado para " + mUser.getEmail());
-                            finish();
-                        } else {
-                            showToast(ResetPasswordActivity.this, "Falhou! Tente novamente. ");
-                        }
+                .addOnCompleteListener(task -> {
+                    closeProgressDialog();
+                    if (task.isSuccessful()) {
+                        email.setText("");
+                        showToast(ResetPasswordActivity.this, "E-mail enviado para " + mUser.getEmail());
+                        finish();
+                    } else {
+                        showToast(ResetPasswordActivity.this, "Falhou! Tente novamente. ");
+                    }
 
-                    }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        FirebaseCrash.report(e);
-                    }
-                });
+                .addOnFailureListener(e -> FirebaseCrash.report(e));
     }
 
     @Override
