@@ -1,13 +1,14 @@
 package shop.ineed.app.ineed.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -21,12 +22,12 @@ import shop.ineed.app.ineed.R;
 
 public class SlideAdapter extends PagerAdapter {
 
-    private List<Bitmap> mImages;
+    private List<String> mImages;
     private LayoutInflater mInflater;
     private Context mContext;
 
 
-    public SlideAdapter(Context context, List<Bitmap> images) {
+    public SlideAdapter(Context context, List<String> images) {
         this.mContext = context;
         this.mImages = images;
         this.mInflater = LayoutInflater.from(mContext);
@@ -48,7 +49,7 @@ public class SlideAdapter extends PagerAdapter {
 
         ImageView imageSlide = (ImageView) view.findViewById(R.id.imageSlide);
 
-        imageSlide.setImageBitmap(mImages.get(position));
+        Picasso.with(mContext).load(mImages.get(position)).into(imageSlide);
 
         container.addView(view, 0);
 

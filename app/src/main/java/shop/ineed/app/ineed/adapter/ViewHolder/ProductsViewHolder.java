@@ -1,10 +1,12 @@
-package shop.ineed.app.ineed.adapter;
+package shop.ineed.app.ineed.adapter.ViewHolder;
 
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -43,7 +45,8 @@ public class ProductsViewHolder extends RecyclerView.ViewHolder {
         txtDescription.setText(product.getDescription());
 
         List<String> image = product.getPictures();
-        ivProduct.setImageBitmap(Base64.convertToBitmap(image.get(0)));
+        //ivProduct.setImageBitmap(Base64.convertToBitmap(image.get(0)));
+        Picasso.with(itemView.getContext()).load(image.get(0)).into(ivProduct);
         ViewCompat.setTransitionName(ivProduct, product.getName());
     }
 

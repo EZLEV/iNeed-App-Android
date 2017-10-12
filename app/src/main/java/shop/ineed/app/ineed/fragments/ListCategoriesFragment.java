@@ -22,7 +22,7 @@ import java.util.List;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.ProductsActivity;
-import shop.ineed.app.ineed.adapter.CategoriesViewHolder;
+import shop.ineed.app.ineed.adapter.ViewHolder.CategoriesViewHolder;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
@@ -95,7 +95,6 @@ public class ListCategoriesFragment extends BaseFragment {
                         intent.putExtra("category", Parcels.wrap(category));
                         startActivity(intent);
                     }
-
                     @Override
                     public void onClickRecyclerListener(View view, int position, View viewAnimation) {
                         Toast.makeText(getActivity(), "asdas", Toast.LENGTH_LONG).show();

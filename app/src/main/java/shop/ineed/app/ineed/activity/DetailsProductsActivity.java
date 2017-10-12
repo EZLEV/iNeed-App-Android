@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.graphics.Palette;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
@@ -20,8 +23,7 @@ import shop.ineed.app.ineed.util.Base64;
 
 public class DetailsProductsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
 
-    private Palette.Swatch mVibrantSwatch;
-    private Bitmap mImageProduct;
+    private String mImageProduct;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,25 +33,20 @@ public class DetailsProductsActivity extends BaseActivity implements AppBarLayou
         enableToolbar();
 
         Product product = Parcels.unwrap(getIntent().getParcelableExtra("product"));
-        mImageProduct = Base64.convertToBitmap(product.getPictures().get(0));
+        mImageProduct = product.getPictures().get(0);
 
         getSupportActionBar().setTitle(product.getName());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Palette.Builder builder = new Palette.Builder(mImageProduct);
-        Palette palette = builder.generate();
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        mVibrantSwatch = palette.getVibrantSwatch();
-        if (mVibrantSwatch != null) {
-            getToolbar().setBackgroundColor(mVibrantSwatch.getRgb());
+
+
             if (Build.VERSION.SDK_INT >= 21) {
                 Window window = getWindow();
-                appBarLayout.setBackgroundColor(mVibrantSwatch.getRgb());
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(mVibrantSwatch.getRgb());
                 appBarLayout.addOnOffsetChangedListener(this);
             }
-        }
+
 
         if (savedInstanceState == null) {
             DetailsProductFragment productFragment = new DetailsProductFragment();
@@ -62,7 +59,7 @@ public class DetailsProductsActivity extends BaseActivity implements AppBarLayou
 
     private void initViews() {
         ImageView ivProduct = (ImageView) findViewById(R.id.ivProduct);
-        ivProduct.setImageBitmap(mImageProduct);
+        Picasso.with(this).load(mImageProduct).into(ivProduct);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String imageTransitionName = getIntent().getExtras().getString(ProductsActivity.EXTRA_PRODUCT_IMAGE_TRANSITION_NAME);
@@ -79,7 +76,7 @@ public class DetailsProductsActivity extends BaseActivity implements AppBarLayou
         }
         //Check if the view is collapsed
         if (scrollRange + verticalOffset == 0) {
-            getToolbar().setBackgroundColor(mVibrantSwatch.getRgb());
+            getToolbar().setBackgroundColor(ActivityCompat.getColor(this, R.color.colorPrimary));
         } else {
             getToolbar().setBackgroundColor(Color.TRANSPARENT);
         }

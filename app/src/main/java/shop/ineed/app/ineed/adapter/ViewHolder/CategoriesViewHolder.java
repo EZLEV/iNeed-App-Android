@@ -1,4 +1,4 @@
-package shop.ineed.app.ineed.adapter;
+package shop.ineed.app.ineed.adapter.ViewHolder;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

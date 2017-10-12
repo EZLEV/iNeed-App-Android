@@ -1,7 +1,5 @@
 package shop.ineed.app.ineed.fragments;
 
-
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -16,17 +14,13 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import me.gujun.android.taggroup.TagGroup;
 import shop.ineed.app.ineed.R;
-import shop.ineed.app.ineed.activity.DetailsProductsActivity;
 import shop.ineed.app.ineed.adapter.SlideAdapter;
 import shop.ineed.app.ineed.domain.Product;
-import shop.ineed.app.ineed.util.Base64;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,12 +59,8 @@ public class DetailsProductFragment extends BaseFragment implements ViewPager.On
     }
 
     private void initSlide(View view) {
-        List<Bitmap> images = new ArrayList<>();
-        for (int i = 0; i < mProduct.getPictures().size(); i++) {
-            images.add(Base64.convertToBitmap(mProduct.getPictures().get(i)));
-        }
         mPager = (ViewPager) view.findViewById(R.id.sliderDetailsProductFragment);
-        mPager.setAdapter(new SlideAdapter(getActivity(), images));
+        mPager.setAdapter(new SlideAdapter(getActivity(), mProduct.getPictures()));
 
 
         CirclePageIndicator indicator = (CirclePageIndicator)
