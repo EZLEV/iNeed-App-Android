@@ -60,8 +60,13 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    // Picasso
+    compile 'com.github.florent37:picassopalette:2.0.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
     // Outros
-    compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'
     compile ('br.com.livroandroid:android-utils:5.0.1'){
