@@ -1,5 +1,7 @@
 package shop.ineed.app.ineed.adapter.ViewHolder;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -32,6 +34,7 @@ public class CategoriesViewHolder extends RecyclerView.ViewHolder {
     public void setDate(Category category){
         txtCategory.setText(category.getValue());
         ivIconCategory.setImageBitmap(Base64.convertToBitmap(category.getIcon()));
+        ivIconCategory.setColorFilter(Color.parseColor(category.getColor()));
     }
 
     public void setOnClickListener(RecyclerClickListener onClickListener){

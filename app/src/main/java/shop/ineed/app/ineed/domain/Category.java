@@ -15,6 +15,7 @@ public class Category {
 
     private String value;
     private String icon;
+    private String color;
     @Exclude
     private String key;
 
@@ -40,6 +41,14 @@ public class Category {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Exclude
