@@ -25,67 +25,116 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageButton
-                android:id="@+id/btnUpProduct"
-                style="?android:attr/borderlessButtonStyle"
+            <LinearLayout
+                android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/btnSharedProduct"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/thumb_up" />
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="32dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="0dp"
+                <ImageButton
+                    android:id="@+id/btnUpProduct"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_thumb_up" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="1000"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="0dp"
-                android:text="1244"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.428"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/btnUpProduct"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <ImageButton
-                android:id="@+id/btnSharedProduct"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="171dp"
-                android:layout_marginTop="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/share" />
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textView6"
+                <ImageButton
+                    android:id="@+id/btnDownProduct"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_thumb_down" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="1000"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginRight="174dp"
-                android:layout_marginTop="0dp"
-                android:text="Compartilhar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnSharedProduct"
-                app:layout_constraintVertical_bias="0.0" />
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
 
-        </android.support.constraint.ConstraintLayout>
+                <ImageButton
+                    android:id="@+id/btnSendMessageProduct"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_message" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Mensagem"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/btnRouteProduct"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintHorizontal_bias="0.4"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_directions" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:text="Rota"
+                    android:gravity="center"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
     </LinearLayout>
 
     <View
@@ -119,11 +168,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -159,18 +203,66 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="16dp">
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#eeeeee">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajude a divulgar esse produto" />
+
+        <LinearLayout
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/btnShareProduct"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_share" />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:text="Compartilhe com os seus amigos!!"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"
-            android:text="Tags" />
+            android:text="Tags"
+            android:textStyle="bold" />
 
         <me.gujun.android.taggroup.TagGroup
             android:id="@+id/tag_group"
@@ -181,5 +273,69 @@
             app:atg_textColor="@android:color/white" />
     </LinearLayout>
 
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerStoreDetailsProduct"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:background="@android:color/holo_red_dark">
+
+        <TextView
+            android:id="@+id/txtNameStoreDetailsProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="NomeLoja"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/white"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivStoreDetailsProduct" />
+
+        <Button
+            android:id="@+id/buttonStore"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/button_flat"
+            android:text="Mais"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameStoreDetailsProduct"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivStoreDetailsProduct"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_facebook"
+            app:civ_border_color="#ffffff"
+            app:civ_border_width="2dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 
 </LinearLayout>

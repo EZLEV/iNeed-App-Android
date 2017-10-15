@@ -1,15 +1,24 @@
 package shop.ineed.app.ineed.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.parceler.Parcels;
@@ -21,6 +30,8 @@ import me.gujun.android.taggroup.TagGroup;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.adapter.SlideAdapter;
 import shop.ineed.app.ineed.domain.Product;
+import shop.ineed.app.ineed.domain.Store;
+import shop.ineed.app.ineed.domain.util.LibraryClass;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +64,30 @@ public class DetailsProductFragment extends BaseFragment implements ViewPager.On
 
         TagGroup mTagGroup = (TagGroup) view.findViewById(R.id.tag_group);
         mTagGroup.setTags(mProduct.getCategories());
+
+        // Store
+
+        ImageView ivStore = view.findViewById(R.id.ivStoreDetailsProduct);
+        TextView txtNameStoreDetailsProduct = view.findViewById(R.id.txtNameStoreDetailsProduct);
+        ConstraintLayout containerStoreDetailsProduct = view.findViewById(R.id.containerStoreDetailsProduct);
+
+        DatabaseReference reference = LibraryClass.getFirebase().child("stores").child(mProduct.getStore());
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Store store = dataSnapshot.getValue(Store.class);
+                Log.i("STORE", store.getName());
+                Picasso.with(view.getContext()).load(store.getPictures().get(0)).into(ivStore);
+                txtNameStoreDetailsProduct.setText(store.getName());
+                containerStoreDetailsProduct.setBackgroundColor(Color.parseColor(store.getColor()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         initSlide(view);
 

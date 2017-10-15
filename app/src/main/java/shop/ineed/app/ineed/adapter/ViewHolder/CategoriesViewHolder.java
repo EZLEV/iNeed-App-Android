@@ -34,7 +34,7 @@ public class CategoriesViewHolder extends RecyclerView.ViewHolder {
     public void setDate(Category category){
         txtCategory.setText(category.getValue());
         ivIconCategory.setImageBitmap(Base64.convertToBitmap(category.getIcon()));
-        ivIconCategory.setColorFilter(Color.parseColor(category.getColor()));
+        //ivIconCategory.setColorFilter(Color.parseColor(category.getColor()));
     }
 
     public void setOnClickListener(RecyclerClickListener onClickListener){

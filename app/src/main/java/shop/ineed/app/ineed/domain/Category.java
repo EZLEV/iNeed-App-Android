@@ -15,7 +15,7 @@ public class Category {
 
     private String value;
     private String icon;
-    private String color;
+    //private String color;
     @Exclude
     private String key;
 
@@ -43,13 +43,13 @@ public class Category {
         this.icon = icon;
     }
 
-    public String getColor() {
-        return color;
-    }
+    //public String getColor() {
+    //    return color;
+    //}
 
-    public void setColor(String color) {
-        this.color = color;
-    }
+    //public void setColor(String color) {
+    //    this.color = color;
+    //}
 
     @Exclude
     public String getKey() {
