@@ -3,6 +3,7 @@ package shop.ineed.app.ineed.adapter;
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ public class SlideAdapter extends PagerAdapter {
         this.mContext = context;
         this.mImages = images;
         this.mInflater = LayoutInflater.from(mContext);
+
+        Log.d("SLIDE", "" + images.size());
     }
 
     @Override
@@ -48,7 +51,7 @@ public class SlideAdapter extends PagerAdapter {
         View view = mInflater.inflate(R.layout.slide_adapter, container, false);
 
         ImageView imageSlide = (ImageView) view.findViewById(R.id.imageSlide);
-
+        Log.d("SLIDE", mImages.get(position));
         Picasso.with(mContext).load(mImages.get(position)).into(imageSlide);
 
         container.addView(view, 0);

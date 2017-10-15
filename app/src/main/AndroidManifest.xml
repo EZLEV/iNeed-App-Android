@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="shop.ineed.app.ineed">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- GPS por hardware -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Obter a localização por Wi-Fi ou triangulação de antenas -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Mapas V2 depende da OpenGL ES V2 -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:name=".INeedApplication"
         android:allowBackup="true"
@@ -12,6 +23,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+
+        <!-- Google Play Services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <!-- Chave de acesso (API Key) criada na página de Console. -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/API_KEY" />
+
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -62,10 +83,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.ContainerActivity" />
-        <activity android:name=".activity.ProductsActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".activity.ProductsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.DetailsProductsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.StoreActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

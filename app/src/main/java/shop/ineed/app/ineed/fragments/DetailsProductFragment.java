@@ -1,5 +1,6 @@
 package shop.ineed.app.ineed.fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import java.util.TimerTask;
 
 import me.gujun.android.taggroup.TagGroup;
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.activity.StoreActivity;
 import shop.ineed.app.ineed.adapter.SlideAdapter;
 import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.Store;
@@ -89,7 +92,21 @@ public class DetailsProductFragment extends BaseFragment implements ViewPager.On
             }
         });
 
+
+        ((Button) view.findViewById(R.id.buttonStore)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("STORE", "onClickOK");
+                Intent intent = new Intent(getActivity(), StoreActivity.class);
+                intent.putExtra("store", mProduct.getStore());
+                getActivity().startActivity(intent);
+            }
+        });
+
         initSlide(view);
+    }
+
+    public void onClickPlusStore(View view){
 
     }
 
