@@ -82,6 +82,7 @@
     <string name="store">Lojas</string>
     <string name="send">Enviar</string>
     <string name="share_friends">Compartilhe com os seus amigos!!</string>
+    <string name="search_powered_by_algolia">Search powered by Algolia</string>
 
     <!-- T -->
     <string name="text_recovery_password">Preencha seu endereço de email no campo abaixo para receber as

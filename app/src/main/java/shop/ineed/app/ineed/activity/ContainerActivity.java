@@ -1,5 +1,6 @@
 package shop.ineed.app.ineed.activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class ContainerActivity extends BaseActivity implements BottomNavigationV
         switch (item.getItemId()) {
             case R.id.ic_action_search:
                 Toast.makeText(this, "ic_action_search", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.ic_action_settings:
                 Toast.makeText(this, "ic_action_settings", Toast.LENGTH_LONG).show();

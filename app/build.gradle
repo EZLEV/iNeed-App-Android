@@ -66,9 +66,15 @@ dependencies {
     compile 'com.github.florent37:picassopalette:2.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-
+    // Geolocation
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
+
+    // MaterialSearch
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
+
+    // Algolia
+    compile 'com.algolia:algoliasearch-android:3.11.0'
 
     // Outros
     compile 'com.nineoldandroids:library:2.4.0'

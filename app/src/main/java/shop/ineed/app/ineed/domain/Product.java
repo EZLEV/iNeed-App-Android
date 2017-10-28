@@ -1,18 +1,21 @@
 package shop.ineed.app.ineed.domain;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.List;
 
 /**
  * Created by Jose on 9/5/2017.
- *
+ * <p>
  * Class domain Product
  */
 
 @org.parceler.Parcel
 @IgnoreExtraProperties
 public class Product {
+    @Exclude
+    private String id;
     private List<String> categories = null;
     private String description;
     private String name;
@@ -20,15 +23,27 @@ public class Product {
     private String store;
     private double price;
 
-    public Product(){}
+    public Product() {
+    }
 
-    public Product(List<String> categories, String description, String name, List<String> pictures, String store, double price) {
+    public Product(String id, List<String> categories, String description, String name, List<String> pictures, String store, double price) {
+        this.id = id;
         this.categories = categories;
         this.description = description;
         this.name = name;
         this.pictures = pictures;
         this.store = store;
         this.price = price;
+    }
+
+    @Exclude
+    public String getId() {
+        return id;
+    }
+
+    @Exclude
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<String> getCategories() {
