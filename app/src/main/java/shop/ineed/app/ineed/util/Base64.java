@@ -3,6 +3,9 @@ package shop.ineed.app.ineed.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
 /**
  * Created by jose on 9/8/17.
  *
@@ -30,5 +33,17 @@ public class Base64 {
         }
         byte[] decodedString = android.util.Base64.decode(pureBase64Encoded, android.util.Base64.CRLF);
         return (BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+    }
+
+    public static String convertToBase64(Bitmap bitmap){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+        byte[] imageBytes = baos.toByteArray();
+
+        String base64String = android.util.Base64.encodeToString(imageBytes, android.util.Base64.NO_WRAP);
+
+        return base64String;
     }
 }

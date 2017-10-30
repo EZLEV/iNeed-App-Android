@@ -76,6 +76,9 @@ dependencies {
     // Algolia
     compile 'com.algolia:algoliasearch-android:3.11.0'
 
+    // ArcLayout
+    compile 'com.github.florent37:arclayout:1.0.2'
+
     // Outros
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5@aar'

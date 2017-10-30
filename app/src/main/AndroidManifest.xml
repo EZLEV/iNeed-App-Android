@@ -95,6 +95,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.UpdatePersonalDataActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.FavoritesActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

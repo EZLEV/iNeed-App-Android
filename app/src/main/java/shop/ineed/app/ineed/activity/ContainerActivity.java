@@ -12,7 +12,9 @@ import android.widget.Toast;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.adapter.ViewPagerAdapter;
 import shop.ineed.app.ineed.components.ViewPagerCustom;
+import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.fragments.AccountFragment;
+import shop.ineed.app.ineed.fragments.DisconnectedFromAccountFragment;
 import shop.ineed.app.ineed.fragments.HomeFragment;
 import shop.ineed.app.ineed.fragments.ListCategoriesFragment;
 import shop.ineed.app.ineed.fragments.StoresFragment;
@@ -94,7 +96,13 @@ public class ContainerActivity extends BaseActivity implements BottomNavigationV
         adapter.addFragment(new HomeFragment());
         adapter.addFragment(new ListCategoriesFragment());
         adapter.addFragment(new StoresFragment());
-        adapter.addFragment(new AccountFragment());
+
+        if (LibraryClass.isUserLogged(this)) {
+            adapter.addFragment(new AccountFragment());
+        } else {
+            adapter.addFragment(new DisconnectedFromAccountFragment());
+        }
+
         viewPager.setAdapter(adapter);
     }
 }
