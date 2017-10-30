@@ -141,7 +141,7 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
             AuthCredential credential = FacebookAuthProvider.getCredential(tokens[0]);
             credential = provider.equalsIgnoreCase("google") ? GoogleAuthProvider.getCredential(tokens[0], null) : credential;
 
-            mUser.saveProviderUserLogged(ChooseInputMethodActivity.this, provider);
+            mUser.saveProviderUserLogged(ChooseInputMethodActivity.this, "");
             mAuth.signInWithCredential(credential)
                     .addOnCompleteListener(task -> {
                         if (!task.isSuccessful()) {
@@ -149,6 +149,8 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
                             showSnackbar(R.id.choose_container, messageError);
                             return;
                         }
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                        mUser.saveProviderUserLogged(ChooseInputMethodActivity.this, currentUser.getUid());
                         callContainerActivity();
                     })
                     .addOnFailureListener(e -> FirebaseCrash.report(e));
