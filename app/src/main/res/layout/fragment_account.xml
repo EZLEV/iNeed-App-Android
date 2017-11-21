@@ -16,9 +16,9 @@
 
             <com.github.florent37.arclayout.ArcLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="200dp"
                 app:arc_cropDirection="cropInside"
-                app:arc_height="50dp">
+                app:arc_height="60dp">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -38,28 +38,25 @@
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="150dp"
+                    android:layout_marginTop="100dp"
                     android:src="@drawable/ic_profile"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <ImageView
                     android:id="@+id/ivLogOut"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="200dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:layout_marginTop="235dp"
                     android:tint="@color/colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0.831"
@@ -71,18 +68,16 @@
 
                 <ImageView
                     android:id="@+id/ivSettings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="235dp"
+                    android:layout_marginTop="200dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:tint="@color/colorAccent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.191"
+                    app:layout_constraintHorizontal_bias="0.168"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -94,36 +89,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/edit_profile"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.115"
+                    app:layout_constraintHorizontal_bias="0.121"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ivSettings"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.076" />
 
                 <TextView
                     android:id="@+id/txtLogOut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:text="@string/log_out"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHorizontal_bias="0.831"
+                    app:layout_constraintHorizontal_bias="0.876"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ivLogOut"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="0.076" />
 
 
             </android.support.constraint.ConstraintLayout>
@@ -135,8 +126,7 @@
         <ListView
             android:id="@+id/listSettingsAccount"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:layout_weight="1"
+            android:layout_height="400dp"
             android:visibility="invisible"
             android:scrollbars="vertical"/>
 

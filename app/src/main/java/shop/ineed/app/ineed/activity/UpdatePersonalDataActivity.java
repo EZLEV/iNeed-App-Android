@@ -40,7 +40,6 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
 
     @NotEmpty(message = "Nome inválido")
     private EditText name;
-    @NotEmpty(message = "Número Telefone Inválido ")
     private TextInputEditText phone;
     private ImageView ivProfile;
 
@@ -152,7 +151,7 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
             cursor.close();
 
             Bitmap img = BitmapFactory.decodeFile(picturePath);
-            ivProfileBitmap = Bitmap.createScaledBitmap(img, 200, 200, false);
+            ivProfileBitmap = Bitmap.createScaledBitmap(img, 300, 300, false);
 
             ivProfile.setImageBitmap(ivProfileBitmap);
             Log.d("IMAGE", picturePath);

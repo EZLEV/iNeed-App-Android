@@ -1,5 +1,7 @@
 package shop.ineed.app.ineed.domain;
 
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -9,9 +11,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
  * Class domain Category
  */
 
-@org.parceler.Parcel
 @IgnoreExtraProperties
-public class Category {
+public class Category implements Parcelable {
 
     private String value;
     private String icon;
@@ -60,4 +61,35 @@ public class Category {
     public void setKey(String key) {
         this.key = key;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(android.os.Parcel dest, int flags) {
+        dest.writeString(this.value);
+        dest.writeString(this.icon);
+        dest.writeString(this.key);
+    }
+
+    protected Category(android.os.Parcel in) {
+        this.value = in.readString();
+        this.icon = in.readString();
+        this.key = in.readString();
+    }
+
+    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
+        @Override
+        public Category createFromParcel(android.os.Parcel source) {
+            return new Category(source);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
 }

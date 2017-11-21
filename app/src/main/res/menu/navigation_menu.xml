@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/menuOne" android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home" />
 
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home"
-        android:title="@string/home" />
+        <item
+            android:id="@+id/navigation_navigation"
+            android:icon="@drawable/ic_compass"
+            android:title="@string/navigation" />
 
-    <item
-        android:id="@+id/navigation_list_products"
-        android:icon="@drawable/ic_format_list_bulleted"
-        android:title="@string/products" />
+        <item
+            android:id="@+id/navigation_search"
+            android:icon="@drawable/ic_search"
+            android:title="@string/search" />
 
-    <item
-        android:id="@+id/navigation_stores"
-        android:icon="@drawable/ic_store"
-        android:title="@string/store" />
+        <item
+            android:id="@+id/navigation_favorites"
+            android:icon="@drawable/ic_heart"
+            android:title="@string/favorites" />
 
-    <item
-        android:id="@+id/navigation_account"
-        android:icon="@drawable/ic_account"
-        android:title="@string/account" />
+    </group>
 
+    <group
+        android:id="@+id/menuTwo" android:checkableBehavior="none">
+        <item
+            android:id="@+id/navigation_help"
+            android:title="@string/help" />
+
+        <item
+            android:id="@+id/navigation_about"
+            android:title="@string/about" />
+    </group>
 </menu>

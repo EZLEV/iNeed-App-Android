@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -34,8 +35,9 @@ import java.util.Arrays;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.User;
 import shop.ineed.app.ineed.util.FirebaseError;
+import shop.ineed.app.ineed.util.PreferenceUtils;
 
-public class ChooseInputMethodActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class ChooseInputMethodActivity extends CommonSubscriberActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_SIGN_IN_GOOGLE = 7859;
 
@@ -151,9 +153,18 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
                         }
                         FirebaseUser currentUser = mAuth.getCurrentUser();
                         mUser.saveProviderUserLogged(ChooseInputMethodActivity.this, currentUser.getUid());
+
+                        PreferenceUtils.setUserId(getBaseContext(), currentUser.getUid());
+                        PreferenceUtils.setNickname(getBaseContext(), currentUser.getDisplayName());
+
+                        connectToSendBird(currentUser.getUid(), currentUser.getDisplayName(), getBaseContext());
+
                         callContainerActivity();
                     })
-                    .addOnFailureListener(e -> FirebaseCrash.report(e));
+                    .addOnFailureListener(e -> {
+                        FirebaseCrash.report(e);
+                        Log.e(TAG, e.getMessage());
+                    });
         } else {
             mAuth.signOut();
         }
@@ -178,13 +189,13 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
     }
 
     public void btnSignInGuest(View view) {
-        Intent intent = new Intent(this, ContainerActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     private void callContainerActivity() {
-        Intent intent = new Intent(this, ContainerActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -225,6 +236,7 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
                 accessGoogleLoginData(account.getIdToken());
             }
         } else {
+            Log.i(TAG, data.getData() + "");
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -249,5 +261,16 @@ public class ChooseInputMethodActivity extends BaseActivity implements GoogleApi
         if (mAuthStateListener != null) {
             mAuth.removeAuthStateListener(mAuthStateListener);
         }
+    }
+
+    @Override
+    protected void initViews() {
+        email = new EditText(getBaseContext());
+        password = new EditText(getBaseContext());
+    }
+
+    @Override
+    protected void initUser() {
+
     }
 }

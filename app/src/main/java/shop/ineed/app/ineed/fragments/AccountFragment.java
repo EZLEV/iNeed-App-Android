@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,10 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import shop.ineed.app.ineed.R;
-import shop.ineed.app.ineed.activity.ContainerActivity;
+import shop.ineed.app.ineed.activity.GroupChannelActivity;
+import shop.ineed.app.ineed.activity.HomeActivity;
 import shop.ineed.app.ineed.activity.FavoritesActivity;
 import shop.ineed.app.ineed.activity.ResetPasswordActivity;
 import shop.ineed.app.ineed.activity.UpdatePersonalDataActivity;
@@ -53,8 +57,6 @@ public class AccountFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
 
-        ((ContainerActivity) getActivity()).getSupportActionBar().setTitle("Perfil");
-
         settingsList = new ArrayList<>();
     }
 
@@ -70,7 +72,7 @@ public class AccountFragment extends BaseFragment {
             mAuth.signOut();
             LibraryClass.saveUserLogged(getActivity(), User.PROVIDER, "");
 
-            Intent intent = new Intent(getContext(), ContainerActivity.class);
+            Intent intent = new Intent(getContext(), HomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             getActivity().startActivity(intent);
 
@@ -105,9 +107,12 @@ public class AccountFragment extends BaseFragment {
 
         switch (position) {
             case 3:
-                getActivity().startActivity(new Intent(getContext(), FavoritesActivity.class));
+                getActivity().startActivity(new Intent(getContext(), GroupChannelActivity.class));
                 break;
             case 4:
+                getActivity().startActivity(new Intent(getContext(), FavoritesActivity.class));
+                break;
+            case 5:
                 getActivity().startActivity(new Intent(getContext(), ResetPasswordActivity.class));
                 break;
         }
@@ -123,29 +128,34 @@ public class AccountFragment extends BaseFragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 user = dataSnapshot.getValue(User.class);
+
                 if (user.getImage() != null) {
                     ivProfileUser.setImageBitmap(Base64.convertToBitmap(user.getImage()));
+                }
 
-                    settingsList.clear();
+                settingsList.clear();
 
-                    settingsList.add(new Settings(user.getName(), R.drawable.ic_account_circle, 0));
-                    settingsList.add(new Settings(user.getEmail(), R.drawable.ic_email, 0));
+                settingsList.add(new Settings(user.getName(), R.drawable.ic_account_circle, 0));
+                settingsList.add(new Settings(user.getEmail(), R.drawable.ic_email, 0));
+                if(user.getPhone() != null && user.getPhone().length() > 0){
                     settingsList.add(new Settings(user.getPhone(), R.drawable.ic_phone, 0));
-                    settingsList.add(new Settings(getActivity().getResources().getString(R.string.favorites), R.drawable.ic_heart, R.drawable.ic_chevron_right));
-                    settingsList.add(new Settings(getActivity().getResources().getString(R.string.password_recovery), R.drawable.ic_lock, R.drawable.ic_chevron_right));
-                    settingsList.add(new Settings(getActivity().getResources().getString(R.string.help), R.drawable.ic_help_circle, R.drawable.ic_chevron_right));
+                }
+                settingsList.add(new Settings("Mensagens", R.drawable.ic_message,  R.drawable.ic_chevron_right));
+                settingsList.add(new Settings(getActivity().getResources().getString(R.string.favorites), R.drawable.ic_heart, R.drawable.ic_chevron_right));
+                settingsList.add(new Settings(getActivity().getResources().getString(R.string.password_recovery), R.drawable.ic_lock, R.drawable.ic_chevron_right));
+                settingsList.add(new Settings(getActivity().getResources().getString(R.string.help), R.drawable.ic_help_circle, R.drawable.ic_chevron_right));
 
-                    settingsAdapter.notifyDataSetChanged();
+                settingsAdapter.notifyDataSetChanged();
 
-                    if(progressAccount.getVisibility() == View.VISIBLE){
-                        progressAccount.setVisibility(View.GONE);
-                        listSettings.setVisibility(View.VISIBLE);
-                    }
+                if (progressAccount.getVisibility() == View.VISIBLE) {
+                    progressAccount.setVisibility(View.GONE);
+                    listSettings.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                FirebaseCrash.log(databaseError.getMessage());
             }
         });
     }

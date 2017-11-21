@@ -14,14 +14,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.parceler.Parcels;
 
 import java.util.Collection;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.DetailsProductsActivity;
-import shop.ineed.app.ineed.ui.HighlightRenderer;
-import shop.ineed.app.ineed.util.HighlightedResult;
+import shop.ineed.app.ineed.domain.Product;
+import shop.ineed.app.ineed.util.HighlightRenderer;
 
 /**
  * Created by jose on 10/27/17.
@@ -30,7 +29,7 @@ import shop.ineed.app.ineed.util.HighlightedResult;
  *
  */
 
-public class ProductSearchAdapter extends ArrayAdapter<HighlightedResult> {
+public class ProductSearchAdapter extends ArrayAdapter<Product> {
 
     private Context context;
     private HighlightRenderer highlightRenderer;
@@ -58,18 +57,18 @@ public class ProductSearchAdapter extends ArrayAdapter<HighlightedResult> {
         ImageView ivProductSearch = (ImageView) cell.findViewById(R.id.ivProductSearch);
 
         // Result
-        HighlightedResult result = getItem(position);
+        Product result = getItem(position);
 
         // Set values
-        txtName.setText(highlightRenderer.renderHighlights(result.getHighlight("name").getHighlightedValue()));
-        txtDescription.setText(result.getResult().getDescription());
-        txtPriceProductSearch.setText("R$ " + result.getResult().getPrice());
-        Picasso.with(context).load(result.getResult().getPictures().get(0)).into(ivProductSearch);
+        txtName.setText(highlightRenderer.renderHighlights(result.getName()));
+        txtDescription.setText(result.getDescription());
+        txtPriceProductSearch.setText("R$ " + result.getPrice());
+        Picasso.with(context).load(result.getPictures().get(0)).into(ivProductSearch);
 
         // OnClick -> Chamada para activity de detalhe do produto
         cell.setOnClickListener(view -> {
             Intent intent = new Intent(context, DetailsProductsActivity.class);
-            intent.putExtra("product", Parcels.wrap(result.getResult()));
+            intent.putExtra("product", result);
             context.startActivity(intent);
         });
 
@@ -77,11 +76,11 @@ public class ProductSearchAdapter extends ArrayAdapter<HighlightedResult> {
     }
 
     @Override
-    public void addAll(@NonNull Collection<? extends HighlightedResult> collection) {
+    public void addAll(@NonNull Collection<? extends Product> collection) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             super.addAll(collection);
         } else {
-            for (HighlightedResult item : collection) {
+            for (Product item : collection) {
                 add(item);
             }
         }

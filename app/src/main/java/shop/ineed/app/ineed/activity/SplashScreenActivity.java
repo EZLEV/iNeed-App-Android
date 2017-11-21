@@ -7,10 +7,11 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import livroandroid.lib.utils.AndroidUtils;
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.util.PreferenceUtils;
 
 /**
  * Execução de alguma lógica, verificar acesso a internet entre outros.
@@ -35,6 +36,11 @@ public class SplashScreenActivity extends BaseActivity {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if(user != null){
                 isLogged = true;
+
+                if(PreferenceUtils.getConnected(this)) {
+                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), getBaseContext());
+                }
+
                 Log.d(TAG, "SplashScreenActivity.Handler().showContainer");
             }else{
                 isLogged = false;
@@ -63,7 +69,7 @@ public class SplashScreenActivity extends BaseActivity {
     }
 
     private void showContainer(){
-        Intent intent = new Intent(SplashScreenActivity.this, ContainerActivity.class);
+        Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
         startActivity(intent);
         finish();
     }

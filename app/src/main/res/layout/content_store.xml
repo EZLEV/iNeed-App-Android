@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ns"
     android:layout_width="match_parent"
+    android:fillViewport="true"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activity.StoreActivity"
@@ -55,88 +56,77 @@
 
         </android.support.constraint.ConstraintLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginBottom="16dp"
+            android:columnCount="3"
+            android:columnWidth="100dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:horizontalSpacing="10dp"
+            android:orientation="horizontal"
+            android:rowCount="2"
+            android:stretchMode="spacingWidthUniform"
+            android:verticalSpacing="10dp">
 
-            <LinearLayout
+            <ImageButton
+                android:id="@+id/btnSendMessageStore"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_message" />
+
+
+            <ImageButton
+                android:id="@+id/btnRouteStore"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_directions" />
+
+
+            <ImageButton
+                android:id="@+id/btnRatingsStore"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:layout_constraintHorizontal_bias="0.4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_comment_text" />
+
+
+            <TextView
+                android:id="@+id/txtSendMessageStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:text="@string/message" />
 
-                <ImageButton
-                    android:id="@+id/btnSendMessageProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_message" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/message" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtRouterStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:text="@string/route" />
 
-                <ImageButton
-                    android:id="@+id/btnCommentaryStore"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_directions" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/route" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtRatingsStore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/btnRouteProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_comment_text" />
-
-                <TextView
-                    android:id="@+id/textView15"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/assessments" />
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:text="@string/assessments" />
+        </GridLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -248,8 +238,8 @@
             <ImageView
                 android:id="@+id/iconComment"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
@@ -278,24 +268,20 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <ListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/listViewContainerStore"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                android:scrollbars="vertical"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtTitlePaymentMethodsContainerStore"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toBottomOf="@+id/txtTitlePaymentMethodsContainerStore" />
 
             <TextView
                 android:id="@+id/txtTitlePaymentMethodsContainerStore"
@@ -383,6 +369,51 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_phone" />
+
+            <ImageView
+                android:id="@+id/iconOperatingHoursContainerStore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/listOperatingHoursContainerStore"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/listViewContainerStore"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_credit_card" />
+
+            <TextView
+                android:id="@+id/txtOperatingHoursContainerStore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:textStyle="bold"
+                android:text="Horario de funcionamento"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.029"
+                app:layout_constraintStart_toEndOf="@+id/iconOperatingHoursContainerStore"
+                app:layout_constraintTop_toBottomOf="@+id/listViewContainerStore" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listOperatingHoursContainerStore"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtOperatingHoursContainerStore"
+                app:layout_constraintVertical_bias="0.0" />
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

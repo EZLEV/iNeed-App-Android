@@ -1,7 +1,13 @@
 package shop.ineed.app.ineed.util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.support.v4.content.ContextCompat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,12 +44,41 @@ public class Base64 {
     public static String convertToBase64(Bitmap bitmap){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
 
         byte[] imageBytes = baos.toByteArray();
 
         String base64String = android.util.Base64.encodeToString(imageBytes, android.util.Base64.NO_WRAP);
 
         return base64String;
+    }
+
+    public static Bitmap convertDrawableToBitmap (Context context, int drawableID) {
+
+            Drawable drawable = ContextCompat.getDrawable(context, drawableID);
+            if (drawable instanceof BitmapDrawable) {
+                return ((BitmapDrawable) drawable).getBitmap();
+            } else if (drawable instanceof VectorDrawable) {
+                return getBitmap((VectorDrawable) drawable);
+            } else {
+                throw new IllegalArgumentException("unsupported drawable type");
+            }
+
+    }
+
+    private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
+    {
+        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
+        image.compress(compressFormat, quality, byteArrayOS);
+        return  android.util.Base64.encodeToString(byteArrayOS.toByteArray(), android.util.Base64.DEFAULT);
     }
 }

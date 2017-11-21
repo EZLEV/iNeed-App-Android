@@ -38,4 +38,12 @@
         <item name="android:hint">@string/search_hint</item>
     </style>
 
+    <!-- Tema base + NoActionBar -->
+    <style name="AppTheme.NoActionBar.NavDrawer">
+
+    </style>
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@android:color/white</item>
+    </style>
 </resources>

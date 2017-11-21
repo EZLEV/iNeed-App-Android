@@ -4,9 +4,7 @@
     android:id="@+id/cardProductAdapter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
     android:foreground="?attr/selectableItemBackground"
-    android:padding="5dp"
     card_view:cardCornerRadius="4dp">
 
     <LinearLayout
@@ -20,11 +18,10 @@
             android:background="@drawable/shadow">
 
             <ImageView
-                android:id="@+id/imageProductAdapter"
+                android:id="@+id/ivProductAdapter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="8dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_facebook"
                 android:transitionName="imageProduct" />

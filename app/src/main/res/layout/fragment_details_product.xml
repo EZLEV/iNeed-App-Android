@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/detailsProductFragment"
     tools:context="shop.ineed.app.ineed.fragments.DetailsProductFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtTitleProduct"
+            android:id="@+id/txtTitleProductDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
@@ -25,110 +25,104 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="4"
+            android:columnWidth="100dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:horizontalSpacing="10dp"
+            android:orientation="horizontal"
+            android:rowCount="2"
+            android:stretchMode="spacingWidthUniform"
+            android:verticalSpacing="10dp">
 
-            <LinearLayout
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnUpProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_thumb_up" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnDownProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_thumb_down" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnSendMessageProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_message" />
+
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnRouteProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_directions" />
+
+            <TextView
+                android:id="@+id/txtUpProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="" />
 
-                <ImageButton
-                    android:id="@+id/btnUpProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_thumb_up" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="1000" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtDownProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="" />
 
-                <ImageButton
-                    android:id="@+id/btnDownProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_thumb_down" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="1000" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtSendMessageProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/message" />
 
-                <ImageButton
-                    android:id="@+id/btnSendMessageProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_message" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/message" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/txtRouteProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/btnRouteProduct"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    app:layout_constraintHorizontal_bias="0.4"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_directions" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/route" />
-            </LinearLayout>
-        </LinearLayout>
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/route" />
+        </GridLayout>
     </LinearLayout>
 
     <View
@@ -143,7 +137,7 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/txtDescription"
+            android:id="@+id/txtDescriptionDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
@@ -154,7 +148,7 @@
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/txtPriceProduct"
+            android:id="@+id/txtPriceProductDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -170,7 +164,7 @@
         android:padding="16dp">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/sliderDetailsProductFragment"
+            android:id="@+id/sliderProductDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             custom:auto_cycle="true"
@@ -179,7 +173,7 @@
             custom:pager_animation_span="1100" />
 
         <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicatorDetailsSlideFragment"
+            android:id="@+id/indicatorSlideProductDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -219,7 +213,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnShareProduct"
+                android:id="@+id/btnShareProductDetails"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -254,7 +248,7 @@
             android:textStyle="bold" />
 
         <me.gujun.android.taggroup.TagGroup
-            android:id="@+id/tag_group"
+            android:id="@+id/groupTags"
             style="@style/TagGroup"
             app:atg_backgroundColor="@color/colorAccent"
             app:atg_borderColor="@color/colorAccent"
@@ -271,7 +265,7 @@
         android:background="@android:color/holo_red_dark">
 
         <TextView
-            android:id="@+id/txtNameStoreDetailsProduct"
+            android:id="@+id/txtNameStoreProductDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -283,7 +277,7 @@
             app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivStoreDetailsProduct" />
+            app:layout_constraintTop_toBottomOf="@+id/ivStoreProductDetails" />
 
         <Button
             android:id="@+id/buttonStore"
@@ -301,11 +295,11 @@
             app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtNameStoreDetailsProduct"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameStoreProductDetails"
             app:layout_constraintVertical_bias="0.0" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ivStoreDetailsProduct"
+            android:id="@+id/ivStoreProductDetails"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_gravity="left"

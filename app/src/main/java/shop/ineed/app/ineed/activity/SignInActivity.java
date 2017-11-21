@@ -25,6 +25,7 @@ import java.util.List;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.User;
 import shop.ineed.app.ineed.util.FirebaseError;
+import shop.ineed.app.ineed.util.PreferenceUtils;
 
 public class SignInActivity extends CommonSubscriberActivity implements Validator.ValidationListener {
 
@@ -91,6 +92,11 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
                             showSnackbar(findViewById(android.R.id.content), messageError);
                             return;
                         }
+
+                        PreferenceUtils.setUserId(getBaseContext(), email.getText().toString());
+                        PreferenceUtils.setNickname(getBaseContext(), email.getText().toString());
+
+                        connectToSendBird(email.getText().toString(), email.getText().toString(), getBaseContext());
                         callHomeContainer();
                     }
                 })
@@ -98,7 +104,7 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
     }
 
     private void callHomeContainer() {
-        Intent intent = new Intent(this, ContainerActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

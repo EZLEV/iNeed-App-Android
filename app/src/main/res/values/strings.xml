@@ -5,6 +5,7 @@
     <string name="account">Minha conta</string>
     <string name="about">Sobre</string>
     <string name="assessments">Avaliações</string>
+    <string name="all_categories">Todas as categorias</string>
 
     <!-- B -->
 
@@ -13,6 +14,7 @@
     <string name="cancel">Cancelar</string>
 
     <!-- D -->
+    <string name="dialog_ok">OK</string>
 
     <!-- E -->
     <string name="email">E-Mail</string>
@@ -45,16 +47,18 @@
     <!-- K -->
 
     <!-- L -->
-    <string name="log_out">Sair</string>
+    <string name="log_out">Sair do iNeed</string>
 
     <!-- M -->
     <string name="message">Mensagem</string>
     <string name="more">Mais</string>
+    <string name="more_categories">Mais Categorias</string>
 
     <!-- N -->
     <string name="full_name">Nome completo</string>
     <string name="next">Próximo</string>
     <string name="name">Nome</string>
+    <string name="navigation">Navegar</string>
 
     <!-- O -->
     <string name="or">OU</string>
@@ -93,6 +97,7 @@
     <string name="share_friends">Compartilhe com os seus amigos!!</string>
     <string name="search_powered_by_algolia">Search powered by Algolia</string>
     <string name="update_success_account">Sucesso na atualização!</string>
+    <string name="search_edit">Procure por produtos, lojas....</string>
 
     <!-- T -->
     <string name="text_recovery_password">Preencha seu endereço de email no campo abaixo para receber as
@@ -116,5 +121,54 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Z -->
+
+
+    <!-- all -->
+    <string name="all_app_version">Sample UI v%1$s / SDK v%2$s</string>
+
+    <string name="all_create">Create</string>
+    <string name="all_invite">Invite</string>
+
+    <string name="all_group_channels">Group Channels</string>
+    <string name="all_open_channels">Open Channels</string>
+
+    <!-- main -->
+    <string name="main_drawer_open">Open navigation drawer</string>
+    <string name="main_drawer_close">Close navigation drawer</string>
+    <string name="select_channel_type">Select channel type</string>
+
+    <!-- login -->
+    <string name="login_user_id">User ID</string>
+    <string name="login_user_nickname">Nickname</string>
+    <string name="login_connect">Connect</string>
+
+    <!-- Open Channel List -->
+    <string name="open_channel_list_participant_count">%1$d participants</string>
+
+    <string name="create_open_channel">Create Open Channel</string>
+    <string name="participant_list">Participants</string>
+
+    <!-- Group Channel List -->
+    <string name="group_channel_list_file_message_text">%1$s has uploaded a file.</string>
+
+    <string name="create_group_channel">Create Group Channel</string>
+    <string name="member_list">Members</string>
+    <string name="invite_member">Invite members</string>
+
+    <!-- Content descriptions -->
+    <string name="open_channel_chat_content_desc_profile">Profile image</string>
+
+    <!-- Menu actions -->
+    <string name="action_create_channel">Create channel</string>
+
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="resend_message">Resend</string>
+    <string name="delete_message">Delete</string>
+
+    <!-- Message Status -->
+    <string name="message_sending">Sending</string>
+    <string name="message_failed">Failed</string>
+    <string name="title_activity_comments">Comentários</string>
 
 </resources>

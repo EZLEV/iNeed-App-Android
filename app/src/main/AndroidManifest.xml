@@ -4,6 +4,8 @@
     package="shop.ineed.app.ineed">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- GPS por hardware -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -82,7 +84,11 @@
             android:name=".activity.ChooseInputMethodActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ContainerActivity" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NavDrawer"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".activity.ProductsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -101,7 +107,25 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.FavoritesActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GroupChannelActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.PhotoViewerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.MediaPlayerActivity" />
+        <activity
+            android:name=".activity.ListCategoriesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.AccountActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.CommentsActivity"
+            android:label="@string/title_activity_comments"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.CreateCommentActivity"></activity>
     </application>
 
 </manifest>

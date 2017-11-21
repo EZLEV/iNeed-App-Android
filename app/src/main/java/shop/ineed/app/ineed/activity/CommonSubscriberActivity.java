@@ -2,22 +2,23 @@ package shop.ineed.app.ineed.activity;
 
 import android.content.Context;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.Email;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Password;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
+import com.sendbird.android.SendBird;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import shop.ineed.app.ineed.R;
-
+import shop.ineed.app.ineed.util.PreferenceUtils;
 
 /**
  * Created by antonio on 8/17/17.
@@ -26,6 +27,8 @@ import shop.ineed.app.ineed.R;
 
 public abstract class CommonSubscriberActivity extends BaseActivity {
 
+    private String TAG = this.getClass().getSimpleName();
+
     @NotEmpty
     @Email(message = "O e-mail não corresponde a um endereço de e-mail valido.")
     protected EditText email;
@@ -33,7 +36,6 @@ public abstract class CommonSubscriberActivity extends BaseActivity {
     protected EditText password;
     protected SweetAlertDialog dialogProgress;
     protected Validator validator;
-
 
     protected void showSnackbar(View view, String message) {
         Snackbar.make(view,
@@ -63,4 +65,49 @@ public abstract class CommonSubscriberActivity extends BaseActivity {
     abstract protected void initViews();
 
     abstract protected void initUser();
+
+    // SendBird
+
+    public static void connectToSendBird(final String userUID, final String userNickName, Context context){
+        SendBird.connect(userUID, (user, e) -> {
+            if(e != null){
+                Log.e("connectToSendBird", e.getMessage());
+
+            }
+
+            PreferenceUtils.setConnected(context, true);
+
+            updateCurrentUserInfo(userNickName);
+            updateCurrentUserPushToken();
+        });
+    }
+
+    public static void updateCurrentUserPushToken(){
+        SendBird.registerPushTokenForCurrentUser(FirebaseInstanceId.getInstance().getToken(), (pushTokenRegistrationStatus, e) -> {
+
+            if(e != null){
+                //Error
+                //Log.e(TAG, "Update user nickname failed");
+                return;
+            }
+
+            //Log.i(TAG, "Push token registered.");
+
+
+        });
+    }
+
+    public static void updateCurrentUserInfo(String userNickName){
+        SendBird.updateCurrentUserInfo(userNickName, null, e -> {
+            if(e != null){
+                //Error
+
+                //Log.e(TAG, "Update user nickname failed");
+
+                return;
+            }
+        });
+    }
+
+
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="shop.ineed.app.ineed.activity.UpdatePersonalDataActivity">
 
     <include layout="@layout/include_toolbar" />

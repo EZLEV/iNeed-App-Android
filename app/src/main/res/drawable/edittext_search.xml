@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <!-- left is icon size + 2x side padding around icon-->
+        <!-- 18 + 8 + 8 -->
+        <shape>
+            <solid android:color="@android:color/white" />
+            <padding
+                android:bottom="16dp"
+                android:left="16dp"
+                android:right="16dp"
+                android:top="16dp" />
+            <corners android:radius="2dp" />
+        </shape>
+    </item>
+</layer-list>

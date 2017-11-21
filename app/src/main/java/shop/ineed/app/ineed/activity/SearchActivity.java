@@ -21,8 +21,8 @@ import java.util.List;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.adapter.ProductSearchAdapter;
-import shop.ineed.app.ineed.io.SearchResultsJsonParser;
-import shop.ineed.app.ineed.util.HighlightedResult;
+import shop.ineed.app.ineed.domain.Product;
+import shop.ineed.app.ineed.domain.SearchResultsJsonParser;
 
 public class SearchActivity extends AppCompatActivity implements MaterialSearchView.OnQueryTextListener, AbsListView.OnScrollListener {
 
@@ -60,7 +60,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchV
         productsListView.setOnScrollListener(this);
 
         // Config Algolia
-        Client client = new Client("LSKTUJMO74", "3ec9ca11abcf247554a6cd9ed8596ba6");
+        Client client = new Client("K3C3FZBI6P", "37baed209b1fbd4c3fe061fef6e33966");
         index = client.getIndex("products");
 
         // Query Algolia
@@ -84,7 +84,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchV
                 if (currentSearchSeqNo <= lastDisplayedSeqNo) {
                     return;
                 }
-                List<HighlightedResult> results = resultsParser.parseResults(content);
+                List<Product> results = resultsParser.parseResults(content);
                 if (results.isEmpty()) {
                     endReached = true;
                 } else {
@@ -109,7 +109,7 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchV
                 if (lastDisplayedSeqNo != currentSearchSeqNo) {
                     return;
                 }
-                List<HighlightedResult> results = resultsParser.parseResults(content);
+                List<Product> results = resultsParser.parseResults(content);
                 if (results.isEmpty()) {
                     endReached = true;
                 } else {
