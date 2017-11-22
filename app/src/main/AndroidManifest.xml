@@ -125,8 +125,7 @@
             android:name=".activity.CommentsActivity"
             android:label="@string/title_activity_comments"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.CreateCommentActivity"></activity>
-
+        <activity android:name=".activity.CreateCommentActivity" />
         <service android:name=".fcm.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

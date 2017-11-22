@@ -71,6 +71,7 @@ public class ProductsActivity extends BaseActivity {
         initViews();
 
         mCategory = getIntent().getParcelableExtra("category");
+        Log.i(TAG, mCategory.getKey());
         getSupportActionBar().setTitle(mCategory.getValue());
 
         StaggeredGridLayoutManager manager;

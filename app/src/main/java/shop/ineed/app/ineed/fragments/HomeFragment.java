@@ -88,15 +88,12 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         );
         mSwipeToRefreshHome.setRefreshing(true);
 
-        mEditSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().startActivity(new Intent(getContext(), SearchActivity.class));
-                Log.i(TAG, "editSearchProductsHomeFragment");
-            }
+        mEditSearch.setOnClickListener(view -> {
+            getActivity().startActivity(new Intent(getContext(), SearchActivity.class));
+            Log.i(TAG, "editSearchProductsHomeFragment");
         });
-        ViewCompat.setElevation(mEditSearch, 10);
 
+        ViewCompat.setElevation(mEditSearch, 10);
 
         return viewRoot;
     }
@@ -117,15 +114,7 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void loadCategories() {
         mCategories.clear();
-        mDatabase.child("categories").addListenerForSingleValueEvent(this);
-
-        HashMap<String, Object> ad = new HashMap<>();
-        mDatabase.updateChildren(ad).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-            }
-        });
+        mDatabase.child("categories").limitToFirst(5).addListenerForSingleValueEvent(this);
     }
 
 
@@ -155,12 +144,12 @@ public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
-        for (int count = 0; count < dataSnapshot.getChildrenCount(); count++) {
-            Category category = iterator.next().getValue(Category.class);
+        //Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            Category category = snapshot.getValue(Category.class);
 
             Log.d(TAG, category.getValue());
-            category.setKey(dataSnapshot.getKey());
+            category.setKey(snapshot.getKey());
             mCategories.add(category);
 
             mContentHome.setVisibility(View.VISIBLE);

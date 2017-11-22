@@ -3,6 +3,7 @@ package shop.ineed.app.ineed.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -12,19 +13,29 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
+import org.jetbrains.annotations.NotNull;
+
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.util.ImageUtils;
 
 
-public class PhotoViewerActivity extends AppCompatActivity {
+public class PhotoViewerActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_viewer);
 
+        enableToolbar();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         String url = getIntent().getStringExtra("url");
         String type = getIntent().getStringExtra("type");
+        String title = getIntent().getStringExtra("title");
+
+        if(title != null){
+            getSupportActionBar().setTitle(title);
+        }
 
         ImageView imageView = (ImageView) findViewById(R.id.main_image_view);
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -61,5 +72,13 @@ public class PhotoViewerActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
+        if(item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

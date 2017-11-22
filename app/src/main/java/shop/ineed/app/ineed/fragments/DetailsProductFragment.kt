@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_details_product.*
 import org.jetbrains.anko.design.snackbar
 
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.activity.CommonSubscriberActivity
 import shop.ineed.app.ineed.activity.GroupChannelActivity
@@ -103,13 +104,34 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         }
 
         btnUpProductDetails.setOnClickListener {
-            if (product.upVotes != null) {
-                if (product.upVotes.contains(uid)) {
-                    verifyUpVotes()
+            if (LibraryClass.isUserLogged(activity)) {
+                if (product.upVotes != null) {
+                    if (product.upVotes.contains(uid)) {
+                        verifyUpVotes()
+                    } else {
+                        val value = HashMap<String, Any>()
+                        product.upVotes.add(uid)
+                        value.put("upVotes", product.upVotes)
+                        value.put("upVotesCount", product.upVotesCount.inc())
+                        if (product.downVotes != null) {
+                            product.downVotes.remove(uid)
+                        }
+                        value.put("downVotes", product.downVotes)
+                        if (product.downVotesCount > 0) {
+                            value.put("downVotesCount", product.downVotesCount.dec())
+                        }
+                        reference.updateChildren(value).addOnCompleteListener {
+                            verifyUpVotes()
+                        }
+                    }
                 } else {
                     val value = HashMap<String, Any>()
-                    product.upVotes.add(uid)
-                    value.put("upVotes", product.upVotes)
+                    if (product.upVotes != null) {
+                        product.upVotes.add(uid)
+                        value.put("upVotes", product.upVotes)
+                    } else {
+                        value.put("upVotes", mutableListOf(uid))
+                    }
                     value.put("upVotesCount", product.upVotesCount.inc())
                     if (product.downVotes != null) {
                         product.downVotes.remove(uid)
@@ -122,37 +144,41 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
                         verifyUpVotes()
                     }
                 }
+                snackbar(detailsProductFragment, "Adicionado aos produtos marcados como \"Gostei\"")
             } else {
-                val value = HashMap<String, Any>()
-                if (product.upVotes != null) {
-                    product.upVotes.add(uid)
-                    value.put("upVotes", product.upVotes)
-                } else {
-                    value.put("upVotes", mutableListOf(uid))
-                }
-                value.put("upVotesCount", product.upVotesCount.inc())
-                if (product.downVotes != null) {
-                    product.downVotes.remove(uid)
-                }
-                value.put("downVotes", product.downVotes)
-                if (product.downVotesCount > 0) {
-                    value.put("downVotesCount", product.downVotesCount.dec())
-                }
-                reference.updateChildren(value).addOnCompleteListener {
-                    verifyUpVotes()
-                }
+                activity.toast("Nao logado")
             }
-            snackbar(detailsProductFragment, "Adicionado aos produtos marcados como \"Gostei\"")
         }
 
         btnDownProductDetails.setOnClickListener {
-            if (product.downVotes != null) {
-                if (product.downVotes.contains(uid)) {
-                    verifyDownVotes()
+            if (LibraryClass.isUserLogged(activity)) {
+                if (product.downVotes != null) {
+                    if (product.downVotes.contains(uid)) {
+                        verifyDownVotes()
+                    } else {
+                        val value = HashMap<String, Any>()
+                        product.downVotes.add(uid)
+                        value.put("downVotes", product.downVotes)
+                        value.put("downVotesCount", product.downVotesCount.inc())
+                        if (product.upVotes != null) {
+                            product.upVotes.remove(uid)
+                        }
+                        value.put("upVotes", product.upVotes)
+                        if (product.upVotesCount > 0) {
+                            value.put("upVotesCount", product.upVotesCount.dec())
+                        }
+                        reference.updateChildren(value).addOnCompleteListener {
+                            verifyDownVotes()
+                        }
+                    }
                 } else {
                     val value = HashMap<String, Any>()
-                    product.downVotes.add(uid)
-                    value.put("downVotes", product.downVotes)
+                    if (product.downVotes != null) {
+                        product.downVotes.add(uid)
+                        value.put("downVotes", product.downVotes)
+                    } else {
+                        value.put("downVotes", mutableListOf(uid))
+                    }
                     value.put("downVotesCount", product.downVotesCount.inc())
                     if (product.upVotes != null) {
                         product.upVotes.remove(uid)
@@ -165,48 +191,35 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
                         verifyDownVotes()
                     }
                 }
+                snackbar(detailsProductFragment, "Removido dos produtos marcados como \"Gostei\"")
             } else {
-                val value = HashMap<String, Any>()
-                if (product.downVotes != null) {
-                    product.downVotes.add(uid)
-                    value.put("downVotes", product.downVotes)
-                } else {
-                    value.put("downVotes", mutableListOf(uid))
-                }
-                value.put("downVotesCount", product.downVotesCount.inc())
-                if (product.upVotes != null) {
-                    product.upVotes.remove(uid)
-                }
-                value.put("upVotes", product.upVotes)
-                if (product.upVotesCount > 0) {
-                    value.put("upVotesCount", product.upVotesCount.dec())
-                }
-                reference.updateChildren(value).addOnCompleteListener {
-                    verifyDownVotes()
-                }
+                activity.toast("Nao logado")
             }
-            snackbar(detailsProductFragment, "Removido dos produtos marcados como \"Gostei\"")
         }
 
 
 
         btnSendMessageProductDetails.setOnClickListener {
-            Log.d("STORE", "btnSendMessageProduct")
-            val userIds = ArrayList<String>()
-            userIds.add(product.store)
-            userIds.add(LibraryClass.getUserLogged(activity, User.PROVIDER))
+            if (LibraryClass.isUserLogged(activity)) {
+                Log.d("STORE", "btnSendMessageProduct")
+                val userIds = ArrayList<String>()
+                userIds.add(product.store)
+                userIds.add(LibraryClass.getUserLogged(activity, User.PROVIDER))
 
-            if (PreferenceUtils.getConnected(activity)) {
-                CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(activity), PreferenceUtils.getNickname(activity), activity)
-            }
-
-            GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
-                if (e != null) {
-                    snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
+                if (PreferenceUtils.getConnected(activity)) {
+                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(activity), PreferenceUtils.getNickname(activity), activity)
                 }
-                Log.i("SEND", userIds[1] + "_" + userIds[0])
-                Log.i("SEND",  groupChannel.name)
-                activity.startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
+
+                GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
+                    if (e != null) {
+                        snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
+                    }
+                    Log.i("SEND", userIds[1] + "_" + userIds[0])
+                    Log.i("SEND", groupChannel.name)
+                    activity.startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
+                }
+            } else {
+                activity.toast("Nao logado")
             }
         }
 

@@ -38,8 +38,20 @@
         <item name="android:hint">@string/search_hint</item>
     </style>
 
-    <!-- Tema base + NoActionBar -->
-    <style name="AppTheme.NoActionBar.NavDrawer">
+    <style name="TextLabel">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorHighlight">@android:color/white</item>
+        <item name="android:textColorLink">@color/white</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+    <!-- Nav Drawer em tela cheia para API Level 21 -->
+    <style name="AppTheme.NavDrawer" parent="AppTheme.NoActionBar">
 
     </style>
 

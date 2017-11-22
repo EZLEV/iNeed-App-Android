@@ -24,7 +24,7 @@
     </group>
 
     <group
-        android:id="@+id/menuTwo" android:checkableBehavior="none">
+        android:id="@+id/menuTwo" android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_help"
             android:title="@string/help" />

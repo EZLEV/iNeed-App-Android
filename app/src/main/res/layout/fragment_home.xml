@@ -39,7 +39,6 @@
                     android:id="@+id/recyclerHomeCategories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginLeft="32dp"
                     android:layout_marginRight="32dp"
                     android:layout_marginTop="32dp" />
@@ -51,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/editSearchProductsHomeFragment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -62,8 +61,6 @@
                 android:background="@drawable/edittext_search"
                 android:drawableLeft="@drawable/ic_search"
                 android:drawableStart="@drawable/ic_search"
-                android:ems="10"
-                android:editable="false"
                 android:focusable="false"
                 android:hint="@string/search_edit"
                 android:inputType="textPersonName"

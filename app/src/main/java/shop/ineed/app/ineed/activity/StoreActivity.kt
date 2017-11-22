@@ -35,6 +35,7 @@ import kotlinx.android.synthetic.main.content_store.*
 import kotlinx.android.synthetic.main.fragment_details_product.*
 import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.adapter.SlideAdapter
 import shop.ineed.app.ineed.domain.Store
@@ -101,22 +102,27 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         })
 
         btnSendMessageStore.setOnClickListener {
-            Log.d("STORE", "btnSendMessageProduct")
-            val userIds = ArrayList<String>()
-            userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
-            userIds.add(mStore?.id!!)
 
-            if (PreferenceUtils.getConnected(this)) {
-                CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), this)
-            }
+            if (LibraryClass.isUserLogged(this)) {
+                Log.d("STORE", "btnSendMessageProduct")
+                val userIds = ArrayList<String>()
+                userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
+                userIds.add(mStore?.id!!)
 
-            GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
-                if (e != null) {
-                    snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
+                if (PreferenceUtils.getConnected(this)) {
+                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), this)
                 }
-                Log.i("SEND", userIds[1] + "_" + userIds[0])
-                Log.i("SEND",  groupChannel.name)
-                startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
+
+                GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
+                    if (e != null) {
+                        snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
+                    }
+                    Log.i("SEND", userIds[1] + "_" + userIds[0])
+                    Log.i("SEND", groupChannel.name)
+                    startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
+                }
+            } else {
+                toast("Nao logado")
             }
         }
 
@@ -133,8 +139,12 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         }
 
         btnRatingsStore.setOnClickListener {
-            Log.i("idStore", "CommentsActivity: " + mStore?.id)
-            startActivity<CommentsActivity>("idStore" to mStore!!.id)
+            if (LibraryClass.isUserLogged(this)) {
+                Log.i("idStore", "CommentsActivity: " + mStore?.id)
+                startActivity<CommentsActivity>("idStore" to mStore!!.id)
+            } else {
+                toast("Nao logado")
+            }
         }
 
 
@@ -210,7 +220,7 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
         googleMap.isMyLocationEnabled = true
 
-        if(mStore != null){
+        if (mStore != null) {
             val location = LatLng(mStore!!.location.lat!!, mStore!!.location.lng!!)
 
             val update = CameraUpdateFactory.newLatLngZoom(location, 13f)
