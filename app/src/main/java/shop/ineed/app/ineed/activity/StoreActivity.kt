@@ -44,7 +44,6 @@ import shop.ineed.app.ineed.adapter.SlideAdapter
 import shop.ineed.app.ineed.domain.Store
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
-import shop.ineed.app.ineed.activity.PhotoViewerActivity
 import shop.ineed.app.ineed.adapter.BusinessTimesAdapter
 import shop.ineed.app.ineed.adapter.PaymentMethodsAdapter
 import shop.ineed.app.ineed.domain.PaymentMethods
@@ -54,7 +53,7 @@ import java.util.ArrayList
 
 class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
 
-    private lateinit var mStore: Store
+    private var mStore: Store? = null
     private var googleMap: GoogleMap? = null
     private lateinit var uid: String
     private val TAG = DetailsProductFragment.javaClass.simpleName
@@ -107,7 +106,7 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
             Log.d("STORE", "btnSendMessageProduct")
             val userIds = ArrayList<String>()
             userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
-            userIds.add(mStore.id)
+            userIds.add(mStore?.id!!)
 
             GroupChannel.createChannelWithUserIds(userIds, true) { groupChannel, e ->
                 if (e != null) {
@@ -118,8 +117,8 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         }
 
         btnRouteStore.setOnClickListener {
-            val uri = Uri.parse("geo:0,0?z=21&q=" + mStore.location.lat + "," + mStore.location.lng + mStore.name)
-            Log.i(TAG, "Location: " + mStore.location.lat + "," + mStore.location.lng)
+            val uri = Uri.parse("geo:0,0?z=21&q=" + mStore?.location?.lat + "," + mStore?.location?.lng + mStore?.name)
+            Log.i(TAG, "Location: " + mStore?.location?.lat + "," + mStore?.location?.lng)
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.`package` = "com.google.android.apps.maps"
             if (intent.resolveActivity(packageManager) != null) {
@@ -130,22 +129,22 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         }
 
         btnRatingsStore.setOnClickListener {
-            Log.i("idStore", "CommentsActivity: " + mStore.id)
-            startActivity<CommentsActivity>("idStore" to mStore.id)
+            Log.i("idStore", "CommentsActivity: " + mStore?.id)
+            startActivity<CommentsActivity>("idStore" to mStore!!.id)
         }
 
 
     }
 
     fun initValue() {
-        txtNameContainerStore.text = mStore.name
-        txtDescriptionContainerStore.text = mStore.description
-        txtAddressContainerStore.text = mStore.location.address
-        txtPhoneContainerStore.text = mStore.phone
-        txtCellPhoneContainerStore.text = mStore.cellphone
+        txtNameContainerStore.text = mStore?.name
+        txtDescriptionContainerStore.text = mStore?.description
+        txtAddressContainerStore.text = mStore?.location?.address
+        txtPhoneContainerStore.text = mStore?.phone
+        txtCellPhoneContainerStore.text = mStore?.cellphone
 
 
-        val listPayment = PaymentMethods.getPaymentMethods(mStore.paymentWays)
+        val listPayment = PaymentMethods.getPaymentMethods(mStore?.paymentWays)
         listViewContainerStore.layoutManager = LinearLayoutManager(baseContext)
         val paymentMethodsAdapter = PaymentMethodsAdapter(listPayment)
         listViewContainerStore.setHasFixedSize(true)
@@ -153,7 +152,7 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
 
         listOperatingHoursContainerStore.layoutManager = LinearLayoutManager(baseContext)
-        val businessTimesAdapter = BusinessTimesAdapter(mStore.businessTimes)
+        val businessTimesAdapter = BusinessTimesAdapter(mStore!!.businessTimes)
         listOperatingHoursContainerStore.setHasFixedSize(true)
         listOperatingHoursContainerStore.adapter = businessTimesAdapter
     }
@@ -166,12 +165,12 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
     }
 
     private fun initSlide() {
-        sliderDetailsStore.adapter = SlideAdapter(baseContext, mStore.pictures, listener)
+        sliderDetailsStore.adapter = SlideAdapter(baseContext, mStore!!.pictures, listener)
         indicatorDetailsSlide.setViewPager(sliderDetailsStore)
         val density = resources.displayMetrics.density
         indicatorDetailsSlide.radius = 5 * density
 
-        NUM_PAGES = mStore.pictures.size
+        NUM_PAGES = mStore?.pictures!!.size
 
         val handler = Handler()
         val Update = {
@@ -207,17 +206,19 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
         googleMap.isMyLocationEnabled = true
 
-        val location = LatLng(mStore!!.location.lat!!, mStore!!.location.lng!!)
+        if(mStore != null){
+            val location = LatLng(mStore!!.location.lat!!, mStore!!.location.lng!!)
 
-        val update = CameraUpdateFactory.newLatLngZoom(location, 13f)
-        googleMap.moveCamera(update)
+            val update = CameraUpdateFactory.newLatLngZoom(location, 13f)
+            googleMap.moveCamera(update)
 
-        googleMap.addMarker(MarkerOptions()
-                .title(mStore.name)
-                .snippet(mStore.location.address)
-                .position(location))
+            googleMap.addMarker(MarkerOptions()
+                    .title(mStore!!.name)
+                    .snippet(mStore!!.location.address)
+                    .position(location))
 
-        googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -230,8 +231,8 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
     private val listener = RecyclerClickListener { view, position ->
         startActivity<PhotoViewerActivity>(
-                "url" to mStore.pictures[sliderDetailsStore.currentItem],
-                "title" to mStore.name)
+                "url" to mStore!!.pictures[sliderDetailsStore.currentItem],
+                "title" to mStore!!.name)
     }
 
     companion object {
