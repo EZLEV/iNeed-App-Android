@@ -5,12 +5,9 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.view.ViewCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -29,7 +26,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.sendbird.android.GroupChannel
 import com.squareup.picasso.Picasso
-import com.viewpagerindicator.CirclePageIndicator
 
 import java.util.Timer
 import java.util.TimerTask
@@ -49,6 +45,8 @@ import shop.ineed.app.ineed.adapter.PaymentMethodsAdapter
 import shop.ineed.app.ineed.domain.PaymentMethods
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.fragments.DetailsProductFragment
+import shop.ineed.app.ineed.fragments.DetailsProductFragment.Companion.EXTRA_NEW_CHANNEL_URL
+import shop.ineed.app.ineed.util.PreferenceUtils
 import java.util.ArrayList
 
 class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
@@ -108,11 +106,17 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
             userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
             userIds.add(mStore?.id!!)
 
-            GroupChannel.createChannelWithUserIds(userIds, true) { groupChannel, e ->
+            if (PreferenceUtils.getConnected(this)) {
+                CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), this)
+            }
+
+            GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
                 if (e != null) {
                     snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
                 }
-                startActivity<GroupChannelActivity>(DetailsProductFragment.EXTRA_NEW_CHANNEL_URL to groupChannel.url)
+                Log.i("SEND", userIds[1] + "_" + userIds[0])
+                Log.i("SEND",  groupChannel.name)
+                startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
             }
         }
 

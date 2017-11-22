@@ -25,6 +25,7 @@ import org.jetbrains.anko.design.snackbar
 
 import org.jetbrains.anko.startActivity
 import shop.ineed.app.ineed.R
+import shop.ineed.app.ineed.activity.CommonSubscriberActivity
 import shop.ineed.app.ineed.activity.GroupChannelActivity
 import shop.ineed.app.ineed.activity.PhotoViewerActivity
 import shop.ineed.app.ineed.activity.StoreActivity
@@ -34,6 +35,7 @@ import shop.ineed.app.ineed.domain.Store
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
+import shop.ineed.app.ineed.util.PreferenceUtils
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -81,7 +83,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
 
         // Store
         val referenceStore = LibraryClass.getFirebase().child("stores").child(product.store)
-        referenceStore.addValueEventListener(object : ValueEventListener {
+        referenceStore.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val store = dataSnapshot.getValue(Store::class.java)
                 Log.i("STORE", store!!.name)
@@ -186,16 +188,24 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
             snackbar(detailsProductFragment, "Removido dos produtos marcados como \"Gostei\"")
         }
 
+
+
         btnSendMessageProductDetails.setOnClickListener {
             Log.d("STORE", "btnSendMessageProduct")
             val userIds = ArrayList<String>()
-            userIds.add(LibraryClass.getUserLogged(activity, User.PROVIDER))
             userIds.add(product.store)
+            userIds.add(LibraryClass.getUserLogged(activity, User.PROVIDER))
 
-            GroupChannel.createChannelWithUserIds(userIds, true) { groupChannel, e ->
+            if (PreferenceUtils.getConnected(activity)) {
+                CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(activity), PreferenceUtils.getNickname(activity), activity)
+            }
+
+            GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
                 if (e != null) {
                     snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
                 }
+                Log.i("SEND", userIds[1] + "_" + userIds[0])
+                Log.i("SEND",  groupChannel.name)
                 activity.startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
             }
         }
