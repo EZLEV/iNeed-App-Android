@@ -2,6 +2,7 @@ package shop.ineed.app.ineed.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
@@ -12,6 +13,11 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.GroupChannelActivity;
@@ -41,7 +45,7 @@ import shop.ineed.app.ineed.util.Base64;
 /**
  *
  */
-public class AccountFragment extends BaseFragment {
+public class AccountFragment extends BaseFragment implements GoogleApiClient.OnConnectionFailedListener {
 
     private FirebaseAuth mAuth;
     private String uid;
@@ -51,12 +55,11 @@ public class AccountFragment extends BaseFragment {
     private AdapterSettingsAccount settingsAdapter;
     private AVLoadingIndicatorView progressAccount;
     private ListView listSettings;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-
         settingsList = new ArrayList<>();
     }
 
@@ -68,8 +71,25 @@ public class AccountFragment extends BaseFragment {
 
         uid = LibraryClass.getUserLogged(getActivity(), User.PROVIDER);
 
+        // Configuraçao do Google Login
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .enableAutoManage(getActivity() /* FragmentActivity */, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
         view.findViewById(R.id.ivLogOut).setOnClickListener(view1 -> {
-            mAuth.signOut();
+            FirebaseAuth.getInstance().signOut();
+
+            if(mGoogleApiClient.isConnected()){
+                // Google sign out
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+            }
+
             LibraryClass.saveUserLogged(getActivity(), User.PROVIDER, "");
 
             Intent intent = new Intent(getContext(), HomeActivity.class);
@@ -137,11 +157,7 @@ public class AccountFragment extends BaseFragment {
 
                 settingsList.add(new Settings(user.getName(), R.drawable.ic_account_circle, 0));
                 settingsList.add(new Settings(user.getEmail(), R.drawable.ic_email, 0));
-                if(user.getPhone() != null && user.getPhone().length() > 0){
-                    settingsList.add(new Settings(user.getPhone(), R.drawable.ic_phone, 0));
-                }
-                settingsList.add(new Settings("Mensagens", R.drawable.ic_message,  R.drawable.ic_chevron_right));
-                settingsList.add(new Settings(getActivity().getResources().getString(R.string.favorites), R.drawable.ic_heart, R.drawable.ic_chevron_right));
+                settingsList.add(new Settings("Mensagens", R.drawable.ic_message, R.drawable.ic_chevron_right));
                 settingsList.add(new Settings(getActivity().getResources().getString(R.string.password_recovery), R.drawable.ic_lock, R.drawable.ic_chevron_right));
                 settingsList.add(new Settings(getActivity().getResources().getString(R.string.help), R.drawable.ic_help_circle, R.drawable.ic_chevron_right));
 
@@ -158,5 +174,10 @@ public class AccountFragment extends BaseFragment {
                 FirebaseCrash.log(databaseError.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

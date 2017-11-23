@@ -33,7 +33,6 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private User mUser;
-    protected EditText email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +43,37 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
         getSupportActionBar().setHomeButtonEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = firebaseAuth -> {
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            if (currentUser == null || mUser.getUid() != null) {
-                return;
-            }
-            mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
-        };
+        mAuthStateListener = getFirebaseAuthResultHandler();
 
         validator = new Validator(this);
         validator.setValidationListener(this);
 
         initViews();
+    }
+
+    private FirebaseAuth.AuthStateListener getFirebaseAuthResultHandler() {
+        FirebaseAuth.AuthStateListener callback = firebaseAuth -> {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+            if (currentUser == null) {
+                return;
+            }
+
+            if (mUser.getUid() == null && isNameOk(mUser, currentUser)) {
+                mUser.setUid(currentUser.getUid());
+                Log.i("TAG", "Firebase GOOGLE" + currentUser.getUid());
+                mUser.setName(currentUser.getDisplayName());
+                mUser.setEmail(currentUser.getEmail());
+                mUser.updateUserLogged();
+            }
+
+        };
+        return (callback);
+    }
+
+    // Verifica o nome do usuario está ok
+    private boolean isNameOk(User user, FirebaseUser firebaseUser) {
+        return (user.getName() != null || firebaseUser.getDisplayName() != null);
     }
 
     public void btnSignIn(View view) {
@@ -92,11 +110,15 @@ public class SignInActivity extends CommonSubscriberActivity implements Validato
                             showSnackbar(findViewById(android.R.id.content), messageError);
                             return;
                         }
+                        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-                        PreferenceUtils.setUserId(getBaseContext(), email.getText().toString());
-                        PreferenceUtils.setNickname(getBaseContext(), email.getText().toString());
+                        mUser.saveProviderUserLogged(SignInActivity.this, currentUser.getUid());
 
-                        connectToSendBird(email.getText().toString(), email.getText().toString(), getBaseContext());
+                        PreferenceUtils.setUserId(getBaseContext(), currentUser.getUid());
+                        PreferenceUtils.setNickname(getBaseContext(), currentUser.getDisplayName());
+
+                        connectToSendBird(PreferenceUtils.getUserId(getBaseContext()), PreferenceUtils.getNickname(getBaseContext()), getBaseContext());
+
                         callHomeContainer();
                     }
                 })

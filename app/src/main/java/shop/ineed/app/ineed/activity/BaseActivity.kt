@@ -11,11 +11,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
+import org.jetbrains.anko.browse
 import org.jetbrains.anko.startActivity
 
 import shop.ineed.app.ineed.R
-import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.domain.util.LibraryClass
+import shop.ineed.app.ineed.util.PreferenceUtils
 
 /**
  * Created by jose on 9/8/17.
@@ -23,13 +24,14 @@ import shop.ineed.app.ineed.domain.util.LibraryClass
  * Class comum para todas as Activities
  */
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val TAG = this@BaseActivity.javaClass.simpleName
 
     var toolbar: Toolbar? = null
         private set
-    private var mDrawerLayout: DrawerLayout? = null
+    private var drawerLayout: DrawerLayout? = null
+
 
     protected fun enableToolbar() {
         toolbar = findViewById<View>(R.id.toolbar) as Toolbar
@@ -39,32 +41,22 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     protected fun setupNavigationDrawer() {
-        mDrawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
+        drawerLayout = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         val navigationView = findViewById<View>(R.id.nav_view) as NavigationView
-
-
-        val toggle = ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.about, R.string.about)
 
-        mDrawerLayout!!.addDrawerListener(toggle)
+        drawerLayout!!.addDrawerListener(toggle)
         toggle.syncState()
 
-        if (navigationView != null && mDrawerLayout != null) {
-            setNavViewValues(navigationView)
-
-            navigationView.setNavigationItemSelectedListener { item ->
-               // item.isChecked = true
-                mDrawerLayout!!.closeDrawers()
-                onNavDrawerItemSelected(item)
-                false
-            }
-        }
+        navigationView.setNavigationItemSelectedListener(this)
+        setNavViewValues(navigationView)
 
         navigationView.setCheckedItem(R.id.navigation_home)
     }
 
-    private fun onNavDrawerItemSelected(menuItem: MenuItem) {
-        when (menuItem.itemId) {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.navigation_home -> {
             }
             R.id.navigation_navigation -> {
@@ -76,8 +68,18 @@ abstract class BaseActivity : AppCompatActivity() {
             R.id.navigation_favorites -> {
                 startActivity<FavoritesActivity>()
             }
+            R.id.navigation_help ->{
+                browse("http://www.2need.store")
+            }
+            R.id.navigation_about -> {
+                browse("http://www.2need.store")
+            }
         }
+
+        drawerLayout?.closeDrawer(GravityCompat.START)
+        return false
     }
+
 
     // Atualiza os dados do header do Navigation Viewpublic
     private fun setNavViewValues(navView: NavigationView) {
@@ -101,29 +103,22 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home ->
-                // Trata o clique no botão que abre o menu
-                if (mDrawerLayout != null) {
-                    openDrawer()
-                    return true
-                }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    // Abre o menu lateral
-    protected fun openDrawer() {
-        if (mDrawerLayout != null) {
-            mDrawerLayout!!.openDrawer(GravityCompat.START)
+    override fun onBackPressed() {
+        if(drawerLayout != null){
+            if(drawerLayout!!.isDrawerOpen(GravityCompat.START)){
+                drawerLayout!!.closeDrawer(GravityCompat.START)
+            }else{
+                super.onBackPressed()
+            }
+        }else{
+            super.onBackPressed()
         }
     }
 
-    //Fecha o menu lateral
-    protected fun closeDrawer() {
-        if (mDrawerLayout != null) {
-            mDrawerLayout!!.closeDrawer(GravityCompat.START)
+    override fun onResume() {
+        super.onResume()
+        if (PreferenceUtils.getConnected(applicationContext)) {
+            CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(applicationContext), PreferenceUtils.getNickname(applicationContext), applicationContext)
         }
     }
 }

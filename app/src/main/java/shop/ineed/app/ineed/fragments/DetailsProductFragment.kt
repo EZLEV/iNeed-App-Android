@@ -1,10 +1,13 @@
 package shop.ineed.app.ineed.fragments
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
@@ -18,6 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.sendbird.android.GroupChannel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_details_product.*
@@ -26,7 +30,6 @@ import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import shop.ineed.app.ineed.R
-import shop.ineed.app.ineed.activity.CommonSubscriberActivity
 import shop.ineed.app.ineed.activity.GroupChannelActivity
 import shop.ineed.app.ineed.activity.PhotoViewerActivity
 import shop.ineed.app.ineed.activity.StoreActivity
@@ -36,7 +39,6 @@ import shop.ineed.app.ineed.domain.Store
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
-import shop.ineed.app.ineed.util.PreferenceUtils
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -50,6 +52,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
     private lateinit var reference: DatabaseReference
     lateinit var mStore: Store
     private val TAG = DetailsProductFragment.javaClass.simpleName
+    private val PERMISSION_LOCATION = 13
 
     private val listener = RecyclerClickListener { _, _ ->
         activity.startActivity<PhotoViewerActivity>(
@@ -100,7 +103,11 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         })
 
         buttonStore.setOnClickListener {
-            activity.startActivity<StoreActivity>("store" to product.store)
+            if (ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestLocationPermissions()
+            } else {
+                activity.startActivity<StoreActivity>("store" to product.store)
+            }
         }
 
         btnUpProductDetails.setOnClickListener {
@@ -206,16 +213,12 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
                 userIds.add(product.store)
                 userIds.add(LibraryClass.getUserLogged(activity, User.PROVIDER))
 
-                if (PreferenceUtils.getConnected(activity)) {
-                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(activity), PreferenceUtils.getNickname(activity), activity)
-                }
-
                 GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
                     if (e != null) {
                         snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
                     }
                     Log.i("SEND", userIds[1] + "_" + userIds[0])
-                    Log.i("SEND", groupChannel.name)
+                    //Log.i("SEND", groupChannel.name)
                     activity.startActivity<GroupChannelActivity>(EXTRA_NEW_CHANNEL_URL to groupChannel.url)
                 }
             } else {
@@ -346,5 +349,28 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
     override fun onDetach() {
         super.onDetach()
         reference.removeEventListener(eventUpdateData)
+    }
+
+    private fun requestLocationPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Permissao")
+                    .setContentText("Permissao de localizacao")
+                    .setCancelText("Cancelar")
+                    .setConfirmText("OK")
+                    .showCancelButton(true)
+                    .setCancelClickListener {
+                        it.cancel()
+                    }
+                    .setConfirmClickListener {
+                        requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                                PERMISSION_LOCATION)
+                        it.cancel()
+                    }
+                    .show()
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    PERMISSION_LOCATION)
+        }
     }
 }

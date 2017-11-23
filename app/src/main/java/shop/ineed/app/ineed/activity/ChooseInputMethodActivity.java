@@ -15,6 +15,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.internal.Logger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -68,9 +69,9 @@ public class ChooseInputMethodActivity extends CommonSubscriberActivity implemen
                 .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso).build();
 
+
+
         // Facebook
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -109,10 +110,12 @@ public class ChooseInputMethodActivity extends CommonSubscriberActivity implemen
 
             if (mUser.getUid() == null && isNameOk(mUser, userFirebase)) {
                 mUser.setUid(userFirebase.getUid());
+                Log.i(TAG, "Firebase GOOGLE" +  userFirebase.getUid());
                 mUser.setName(userFirebase.getDisplayName());
                 mUser.setEmail(userFirebase.getEmail());
-                mUser.saveUserLogged();
+                mUser.updateUserLogged();
             }
+
             callContainerActivity();
         };
         return (callback);

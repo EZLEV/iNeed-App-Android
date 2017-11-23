@@ -1,6 +1,7 @@
 package shop.ineed.app.ineed.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
 import com.sendbird.android.FileMessage;
@@ -50,6 +52,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.activity.GroupChannelActivity;
 import shop.ineed.app.ineed.adapter.GroupChatAdapter;
 import shop.ineed.app.ineed.util.FileUtils;
 import shop.ineed.app.ineed.activity.MediaPlayerActivity;
@@ -533,19 +536,29 @@ public class GroupChatFragment extends Fragment {
     private void requestStoragePermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example if the user has previously denied the permission.
-            Snackbar.make(mRootLayout, "Storage access permissions are required to upload/download files.",
-                    Snackbar.LENGTH_LONG)
-                    .setAction("Okay", new View.OnClickListener() {
+
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Permissao")
+                    .setContentText("As permissões de acesso ao armazenamento são necessárias para carregar / baixar arquivos.")
+                    .setCancelText("Cancelar")
+                    .setConfirmText("OK")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
-                        public void onClick(View view) {
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
                             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            sweetAlertDialog.cancel();
                         }
                     })
                     .show();
+
         } else {
             // Permission has not been granted yet. Request it directly.
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -598,12 +611,13 @@ public class GroupChatFragment extends Fragment {
             title = TextUtils.getGroupChannelTitle(mChannel);
         }
 
-        /*// Set action bar title to name of channel
+        // Set action bar title to name of channel
         if (getActivity() != null) {
             ((GroupChannelActivity) getActivity()).setActionBarTitle(title);
-        }*/
+        }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void sendUserMessageWithUrl(final String text, String url) {
         new WebUtils.UrlPreviewAsyncTask() {
             @Override

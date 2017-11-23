@@ -11,7 +11,6 @@ import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 
 import livroandroid.lib.utils.AndroidUtils;
 import shop.ineed.app.ineed.R;
-import shop.ineed.app.ineed.util.PreferenceUtils;
 
 /**
  * Execução de alguma lógica, verificar acesso a internet entre outros.
@@ -36,10 +35,6 @@ public class SplashScreenActivity extends BaseActivity {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if(user != null){
                 isLogged = true;
-
-                if(PreferenceUtils.getConnected(this)) {
-                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), getBaseContext());
-                }
 
                 Log.d(TAG, "SplashScreenActivity.Handler().showContainer");
             }else{

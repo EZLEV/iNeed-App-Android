@@ -47,7 +47,6 @@ import shop.ineed.app.ineed.domain.PaymentMethods
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.fragments.DetailsProductFragment
 import shop.ineed.app.ineed.fragments.DetailsProductFragment.Companion.EXTRA_NEW_CHANNEL_URL
-import shop.ineed.app.ineed.util.PreferenceUtils
 import java.util.ArrayList
 
 class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
@@ -109,10 +108,6 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
                 userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
                 userIds.add(mStore?.id!!)
 
-                if (PreferenceUtils.getConnected(this)) {
-                    CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(this), PreferenceUtils.getNickname(this), this)
-                }
-
                 GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
                     if (e != null) {
                         snackbar(detailsProductFragment, "Nao foi possivel abrir o chat. Occoreu algum erro, tente mais tarde!")
@@ -146,8 +141,6 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
                 toast("Nao logado")
             }
         }
-
-
     }
 
     fun initValue() {

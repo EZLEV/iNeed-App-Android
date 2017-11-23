@@ -1,13 +1,16 @@
 package shop.ineed.app.ineed.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 
@@ -34,18 +38,17 @@ import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.User;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.util.Base64;
-import shop.ineed.app.ineed.util.FormatFieldPhone;
 
 public class UpdatePersonalDataActivity extends CommonSubscriberActivity implements View.OnClickListener, Validator.ValidationListener {
 
     @NotEmpty(message = "Nome inválido")
     private EditText name;
-    private TextInputEditText phone;
-    private ImageView ivProfile;
+    private ImageView ivProfileUpdate;
 
     private Bitmap ivProfileBitmap;
     private AVLoadingIndicatorView progressSettingsUser;
     private ScrollView containerSettingsUser;
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 13;
 
     private String uid;
 
@@ -86,9 +89,8 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
 
                 name.setText(user.getName());
                 email.setText(user.getEmail());
-                phone.setText(user.getPhone());
                 if (user.getImage() != null) {
-                    ivProfile.setImageBitmap(Base64.convertToBitmap(user.getImage()));
+                    ivProfileUpdate.setImageBitmap(Base64.convertToBitmap(user.getImage()));
                 }
 
                 if (progressSettingsUser.getVisibility() == View.VISIBLE) {
@@ -97,6 +99,7 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
 
                 containerSettingsUser.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -107,10 +110,8 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
     protected void initViews() {
         email = (EditText) findViewById(R.id.emailUpdate);
         name = (EditText) findViewById(R.id.nameUpdate);
-        phone = (TextInputEditText) findViewById(R.id.phoneUpdate);
-        phone.addTextChangedListener(new FormatFieldPhone());
-        ivProfile = (ImageView) findViewById(R.id.ivProfileUpdate);
-        ivProfile.setOnClickListener(this);
+        ivProfileUpdate = (ImageView) findViewById(R.id.ivProfileUpdate);
+        ivProfileUpdate.setOnClickListener(this);
         progressSettingsUser = (AVLoadingIndicatorView) findViewById(R.id.progressSettingsUser);
         containerSettingsUser = (ScrollView) findViewById(R.id.containerSettingsUser);
 
@@ -121,7 +122,6 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
     protected void initUser() {
         mapUser = new HashMap<>();
         mapUser.put("email", email.getText().toString());
-        mapUser.put("phone", phone.getText().toString());
         mapUser.put("name", name.getText().toString());
         if (ivProfileBitmap != null) {
             mapUser.put("image", Base64.convertToBase64(ivProfileBitmap));
@@ -130,8 +130,13 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, RESULT_LOAD_IMAGE);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestStoragePermissions();
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, RESULT_LOAD_IMAGE);
+        }
     }
 
     @Override
@@ -153,7 +158,7 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
             Bitmap img = BitmapFactory.decodeFile(picturePath);
             ivProfileBitmap = Bitmap.createScaledBitmap(img, 300, 300, false);
 
-            ivProfile.setImageBitmap(ivProfileBitmap);
+            ivProfileUpdate.setImageBitmap(ivProfileBitmap);
             Log.d("IMAGE", picturePath);
         }
 
@@ -162,7 +167,7 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
@@ -186,7 +191,7 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
                 showToast(getBaseContext(), getResources().getString(R.string.update_success_account));
                 finish();
             } else {
-                showSnackbar(ivProfile, getResources().getString(R.string.update_error_account));
+                showSnackbar(ivProfileUpdate, getResources().getString(R.string.update_error_account));
             }
         });
     }
@@ -199,6 +204,39 @@ public class UpdatePersonalDataActivity extends CommonSubscriberActivity impleme
             if (view instanceof EditText) {
                 ((EditText) view).setError(message);
             }
+        }
+    }
+
+    private void requestStoragePermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Permissao")
+                    .setContentText("As permissões de acesso ao armazenamento são necessárias para carregar / baixar arquivos.")
+                    .setCancelText("Cancelar")
+                    .setConfirmText("OK")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            ActivityCompat.requestPermissions(UpdatePersonalDataActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            sweetAlertDialog.cancel();
+                        }
+                    })
+                    .show();
+
+        } else {
+            // Permission has not been granted yet. Request it directly.
+            ActivityCompat.requestPermissions(UpdatePersonalDataActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSION_WRITE_EXTERNAL_STORAGE);
         }
     }
 }

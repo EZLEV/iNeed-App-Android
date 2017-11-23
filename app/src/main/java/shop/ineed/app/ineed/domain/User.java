@@ -126,6 +126,12 @@ public class User {
         }
     }
 
+    private void setUidInMap(Map<String, Object> map){
+        if (getUid() != null) {
+            map.put("uid", getUid());
+        }
+    }
+
     public boolean isSocialNetworkLogged(Context context) {
         String token = getProviderUserLogged(context);
         return (token.contains("facebook") || token.contains("google"));
@@ -153,8 +159,10 @@ public class User {
         DatabaseReference firebase = LibraryClass.getFirebase().child("consumers").child(getUid());
 
         Map<String, Object> map = new HashMap<>();
+        setUidInMap(map);
         setEmailInMap(map);
         setNameInMap(map);
+
 
         if (map.isEmpty()) {
             return;

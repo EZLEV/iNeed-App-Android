@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 
 import shop.ineed.app.ineed.R;
+import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.fragments.DetailsProductFragment;
 import shop.ineed.app.ineed.fragments.GroupChannelListFragment;
 import shop.ineed.app.ineed.fragments.GroupChatFragment;
@@ -26,20 +27,26 @@ public class GroupChannelActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         }
 
         String channelUrl = getIntent().getStringExtra(DetailsProductFragment.Companion.getEXTRA_NEW_CHANNEL_URL());
 
-        if (savedInstanceState == null) {
-            // If started from launcher, load list of Open Channels
-            Fragment fragment = GroupChannelListFragment.newInstance();
 
-            FragmentManager manager = getSupportFragmentManager();
-            manager.popBackStack();
+        if(savedInstanceState == null){
+            if(LibraryClass.isUserLogged(getBaseContext())){
 
-            manager.beginTransaction()
-                    .replace(R.id.container_group_channel, fragment)
-                    .commit();
+            }else {
+                // If started from launcher, load list of Open Channels
+                Fragment fragment = GroupChannelListFragment.newInstance();
+
+                FragmentManager manager = getSupportFragmentManager();
+                manager.popBackStack();
+
+                manager.beginTransaction()
+                        .replace(R.id.container_group_channel, fragment)
+                        .commit();
+            }
         }
 
         if(channelUrl != null) {
