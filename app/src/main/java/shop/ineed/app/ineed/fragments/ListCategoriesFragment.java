@@ -1,116 +1,144 @@
 package shop.ineed.app.ineed.fragments;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import livroandroid.lib.utils.AndroidUtils;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.ProductsActivity;
-import shop.ineed.app.ineed.adapter.CategoriesViewHolder;
+import shop.ineed.app.ineed.adapter.CategoriesAdapter;
 import shop.ineed.app.ineed.domain.Category;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
 
 /**
- * Lista todas as categoria existente no Firebase iNeed.
+ * Created by jose on 11/6/17.
+ * <p>
+ * Lista de todas as categorias cadastradas
  */
+
 public class ListCategoriesFragment extends BaseFragment {
 
-    private List<Category> mCategories;
-    private RecyclerView mRecyclerView;
+    private String TAG = this.getClass().getSimpleName();
+
+    private DatabaseReference mDatabase;
+    private List<Category> mCategories = new ArrayList<>();
+    private CategoriesAdapter mAdapter;
     private AVLoadingIndicatorView mProgressListCategories;
-    FirebaseRecyclerAdapter<Category, CategoriesViewHolder> mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView mRecyclerViewCategories;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mCategories = new ArrayList<>();
+        mDatabase = LibraryClass.getFirebase();
+
     }
 
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_categories, container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View viewRoot = inflater.inflate(R.layout.fragment_list_categories, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerCategories);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        } else {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        }
+        initViews(viewRoot);
+        mRecyclerViewCategories.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new CategoriesAdapter(mCategories,R.layout.adapter_item_categories, onClickCategory());
+        //mRecyclerViewCategories.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        mRecyclerViewCategories.setHasFixedSize(true);
+        mRecyclerViewCategories.setAdapter(mAdapter);
 
-        mProgressListCategories = (AVLoadingIndicatorView) view.findViewById(R.id.progressListCategories);
+        // Swipe to Refresh
+        mSwipeRefreshLayout.setOnRefreshListener(onRefreshListener());
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark
+        );
 
-        return view;
+        return viewRoot;
     }
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener() {
+        return () -> {
+            // Valida se existe conexão ao fazer o gesto de Pull to Refresh
+            if (AndroidUtils.isNetworkAvailable(getActivity())) {
+                loadData();
+                mSwipeRefreshLayout.setRefreshing(false);
+            } else {
+                mSwipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(), "Não foi possivel acessar a internet", Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        loadData();
+    }
 
-        // Faz a chamada ao Firebase
-        DatabaseReference reference = LibraryClass.getFirebase().child("categories");
-        mAdapter = new FirebaseRecyclerAdapter<Category, CategoriesViewHolder>(
-                Category.class,
-                R.layout.adapter_item_categories,
-                CategoriesViewHolder.class,
-                reference
-        ) {
-            @Override
-            protected void populateViewHolder(CategoriesViewHolder viewHolder, Category model, int position) {
-                if(mProgressListCategories.getVisibility() == View.VISIBLE){
+    private ValueEventListener eventLoadData = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            for(DataSnapshot data : dataSnapshot.getChildren()){
+                Category category = data.getValue(Category.class);
+
+                category.setKey(data.getKey());
+                Log.d(TAG, category.getKey());
+                mCategories.add(category);
+
+                if (mProgressListCategories.getVisibility() == View.VISIBLE) {
                     mProgressListCategories.hide();
                 }
-                viewHolder.setDate(model);
-                DatabaseReference ref = mAdapter.getRef(position);
-                model.setKey(ref.getKey());
-                mCategories.add(model);
+                mAdapter.notifyDataSetChanged();
             }
+        }
 
-            @Override
-            public CategoriesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                CategoriesViewHolder holder = super.onCreateViewHolder(parent, viewType);
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Log.i(TAG, "Details:" + databaseError.getDetails() + ", " + "Message:" + databaseError.getMessage());
+        }
+    };
 
-                holder.setOnClickListener(new RecyclerClickListener() {
-                    @Override
-                    public void onClickRecyclerListener(View view, int position) {
-                        Category category = mCategories.get(position);
-                        Intent intent = new Intent(getContext(), ProductsActivity.class);
-                        intent.putExtra("category", Parcels.wrap(category));
-                        startActivity(intent);
-                    }
+    private void loadData() {
+        mCategories.clear();
+        mDatabase.child("categories")
+                .addListenerForSingleValueEvent(eventLoadData);
+    }
 
-                    @Override
-                    public void onClickRecyclerListener(View view, int position, View viewAnimation) {
-                        Toast.makeText(getActivity(), "asdas", Toast.LENGTH_LONG).show();
-                    }
-                });
+    private void initViews(View view) {
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeRefreshCategoriesFragment);
+        mProgressListCategories = view.findViewById(R.id.progressListCategoriesFragment);
+        mRecyclerViewCategories = view.findViewById(R.id.recyclerCategoriesFragment);
+    }
 
-                return holder;
-            }
-        };
-        mRecyclerView.setAdapter(mAdapter);
+    private RecyclerClickListener onClickCategory() {
+        return (view, position) -> getActivity().startActivity(new Intent(getContext(), ProductsActivity.class).putExtra("category", mCategories.get(position)));
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mAdapter.cleanup();
+    public void onDetach() {
+        super.onDetach();
+        mDatabase.removeEventListener(eventLoadData);
     }
 }

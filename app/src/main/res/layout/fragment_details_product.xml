@@ -5,19 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:id="@+id/detailsProductFragment"
     tools:context="shop.ineed.app.ineed.fragments.DetailsProductFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtTitleProduct"
+            android:id="@+id/txtTitleProductDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nome do produto dfgsdfgsdfgsdfg"
+            android:text=""
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -25,67 +25,104 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="4"
+            android:columnWidth="100dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:orientation="horizontal"
+            android:rowCount="2"
+            android:stretchMode="spacingWidthUniform"
+            android:verticalSpacing="10dp">
 
-            <ImageButton
-                android:id="@+id/btnUpProduct"
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnUpProductDetails"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="0dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/btnSharedProduct"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/thumb_up" />
+                app:srcCompat="@drawable/ic_thumb_up" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnDownProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_thumb_down" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnSendMessageProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_message" />
+
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/btnRouteProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_directions" />
 
             <TextView
-                android:id="@+id/textView5"
-                android:layout_width="32dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="0dp"
-                android:text="1244"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.428"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/textView6"
-                app:layout_constraintTop_toBottomOf="@+id/btnUpProduct"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <ImageButton
-                android:id="@+id/btnSharedProduct"
-                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/txtUpProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="171dp"
-                android:layout_marginTop="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/share" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center"
+                android:text="" />
+
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/txtDownProductDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_marginRight="174dp"
-                android:layout_marginTop="0dp"
-                android:text="Compartilhar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnSharedProduct"
-                app:layout_constraintVertical_bias="0.0" />
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="" />
 
-        </android.support.constraint.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/txtSendMessageProductDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/message" />
+
+
+            <TextView
+                android:id="@+id/txtRouteProductDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/route" />
+        </GridLayout>
     </LinearLayout>
 
     <View
@@ -100,10 +137,10 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/txtDescription"
+            android:id="@+id/txtDescriptionDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="asdfasbdfouosbdviubasoidfdvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvdfvv"
+            android:text=""
             android:textAlignment="inherit" />
 
         <View
@@ -111,19 +148,14 @@
             android:layout_height="10dp" />
 
         <TextView
-            android:id="@+id/txtPriceProduct"
+            android:id="@+id/txtPriceProductDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="R$ 8.00"
+            android:text=""
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -132,7 +164,7 @@
         android:padding="16dp">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/sliderDetailsProductFragment"
+            android:id="@+id/sliderProductDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             custom:auto_cycle="true"
@@ -141,7 +173,7 @@
             custom:pager_animation_span="1100" />
 
         <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicatorDetailsSlideFragment"
+            android:id="@+id/indicatorSlideProductDetails"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -162,18 +194,61 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#eeeeee"
+        android:gravity="center"
         android:orientation="vertical"
-        android:layout_margin="16dp">
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/help_product" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btnShareProductDetails"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_share" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/share_friends" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"
-            android:text="Tags" />
+            android:text="@string/tags"
+            android:textStyle="bold" />
 
         <me.gujun.android.taggroup.TagGroup
-            android:id="@+id/tag_group"
+            android:id="@+id/groupTags"
             style="@style/TagGroup"
             app:atg_backgroundColor="@color/colorAccent"
             app:atg_borderColor="@color/colorAccent"
@@ -181,5 +256,65 @@
             app:atg_textColor="@android:color/white" />
     </LinearLayout>
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/containerStoreDetailsProduct"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:background="@android:color/holo_red_dark">
 
+        <TextView
+            android:id="@+id/txtNameStoreProductDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/white"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivStoreProductDetails" />
+
+        <Button
+            android:id="@+id/buttonStore"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/button_flat"
+            android:text="@string/more"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txtNameStoreProductDetails"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivStoreProductDetails"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_facebook"
+            app:civ_border_color="#ffffff"
+            app:civ_border_width="2dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
 </LinearLayout>

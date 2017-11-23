@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.PropertyName;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import shop.ineed.app.ineed.domain.util.LibraryClass;
@@ -19,11 +21,20 @@ import shop.ineed.app.ineed.domain.util.LibraryClass;
 
 public class User {
 
-    public static String PROVIDER = "shop.ineed.app.ineed.domain.User.PROVIDER";
+    public static String PROVIDER = "shop.ineed.app.ineed.domain.User.USER";
 
     private String uid;
     private String name;
     private String email;
+    @PropertyName("liked-products")
+    private List<Product> likedProducts;
+    @PropertyName("liked-stores")
+    private List<Store> likedStores;
+    private String image;
+    private String phone;
+
+
+
     @Exclude
     private String password;
     @Exclude
@@ -51,6 +62,38 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Product> getLikedProducts() {
+        return likedProducts;
+    }
+
+    public void setLikedProducts(List<Product> likedProducts) {
+        this.likedProducts = likedProducts;
+    }
+
+    public List<Store> getLikedStores() {
+        return likedStores;
+    }
+
+    public void setLikedStores(List<Store> likedStores) {
+        this.likedStores = likedStores;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     @Exclude
@@ -83,6 +126,12 @@ public class User {
         }
     }
 
+    private void setUidInMap(Map<String, Object> map){
+        if (getUid() != null) {
+            map.put("uid", getUid());
+        }
+    }
+
     public boolean isSocialNetworkLogged(Context context) {
         String token = getProviderUserLogged(context);
         return (token.contains("facebook") || token.contains("google"));
@@ -110,8 +159,10 @@ public class User {
         DatabaseReference firebase = LibraryClass.getFirebase().child("consumers").child(getUid());
 
         Map<String, Object> map = new HashMap<>();
+        setUidInMap(map);
         setEmailInMap(map);
         setNameInMap(map);
+
 
         if (map.isEmpty()) {
             return;

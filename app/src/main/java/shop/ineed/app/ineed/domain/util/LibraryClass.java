@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import shop.ineed.app.ineed.domain.User;
+
 /**
  * Created by antonio on 8/16/17.
  *
@@ -52,5 +54,18 @@ public class LibraryClass {
     public static String getUserLogged(Context context, String key) {
         SharedPreferences sp = context.getSharedPreferences(PREF, Context.MODE_PRIVATE);
         return (sp.getString(key, ""));
+    }
+
+    /**
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isUserLogged(Context context){
+        if(getUserLogged(context, User.PROVIDER).equals("")){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

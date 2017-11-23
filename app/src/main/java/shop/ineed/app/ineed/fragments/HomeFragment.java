@@ -1,48 +1,67 @@
 package shop.ineed.app.ineed.fragments;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.github.florent37.viewanimator.ViewAnimator;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.wang.avi.AVLoadingIndicatorView;
+import com.google.firebase.database.ValueEventListener;
 
-import org.parceler.Parcels;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
+import livroandroid.lib.utils.AndroidUtils;
 import shop.ineed.app.ineed.R;
-import shop.ineed.app.ineed.activity.DetailsProductsActivity;
+import shop.ineed.app.ineed.activity.ListCategoriesActivity;
 import shop.ineed.app.ineed.activity.ProductsActivity;
-import shop.ineed.app.ineed.adapter.CategoriesViewHolder;
-import shop.ineed.app.ineed.adapter.ProductsViewHolder;
+import shop.ineed.app.ineed.activity.SearchActivity;
+import shop.ineed.app.ineed.adapter.CategoriesAdapter;
 import shop.ineed.app.ineed.domain.Category;
-import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener;
+import shop.ineed.app.ineed.util.Base64;
 
-import static shop.ineed.app.ineed.activity.ProductsActivity.EXTRA_PRODUCT_IMAGE_TRANSITION_NAME;
 
-public class HomeFragment extends BaseFragment {
+public class HomeFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, ValueEventListener {
+
+    private String TAG = this.getClass().getSimpleName();
 
     private RecyclerView mRecyclerViewCategories;
-    private AVLoadingIndicatorView mProgressCategories;
-    private FirebaseRecyclerAdapter<Category, CategoriesViewHolder> mAdapterCategory;
-    private RecyclerView mRecyclerViewProducts;
-    private AVLoadingIndicatorView mProgressProducts;
-    private FirebaseRecyclerAdapter<Product, ProductsViewHolder> mAdapterProducts;
+    private LinearLayout mContentHome;
+    private SwipeRefreshLayout mSwipeToRefreshHome;
+    private EditText mEditSearch;
+
+    private CategoriesAdapter mAdapterCategory;
+    private List<Category> mCategories;
+    private DatabaseReference mDatabase;
 
     public HomeFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mDatabase = LibraryClass.getFirebase();
+        mCategories = new ArrayList<>();
     }
 
     @Override
@@ -50,22 +69,31 @@ public class HomeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View viewRoot = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Categories
-        mRecyclerViewCategories = (RecyclerView) viewRoot.findViewById(R.id.recyclerHomeCategories);
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerViewCategories.setLayoutManager(layoutManager);
-        mProgressCategories = (AVLoadingIndicatorView) viewRoot.findViewById(R.id.progressCategories);
+        initViews(viewRoot);
 
-        // Products
-        mRecyclerViewProducts = (RecyclerView) viewRoot.findViewById(R.id.recyclerHomeProducts);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mRecyclerViewProducts.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        } else {
-            mRecyclerViewProducts.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        }
-        mRecyclerViewProducts.setNestedScrollingEnabled(false);
-        mProgressProducts = (AVLoadingIndicatorView) viewRoot.findViewById(R.id.progressProducts);
+        //Categories
+        mRecyclerViewCategories.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mAdapterCategory = new CategoriesAdapter(mCategories, R.layout.adapter_recycler_categories_home, onClickCategory);
+        //mRecyclerViewCategories.addItemDecoration(new ItemOffsetDecoration(2));
+        mRecyclerViewCategories.setNestedScrollingEnabled(false);
+        mRecyclerViewCategories.setAdapter(mAdapterCategory);
+
+
+        // Swipe to Refresh
+        mSwipeToRefreshHome.setOnRefreshListener(this);
+        mSwipeToRefreshHome.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark
+        );
+        mSwipeToRefreshHome.setRefreshing(true);
+
+        mEditSearch.setOnClickListener(view -> {
+            getActivity().startActivity(new Intent(getContext(), SearchActivity.class));
+            Log.i(TAG, "editSearchProductsHomeFragment");
+        });
+
+        ViewCompat.setElevation(mEditSearch, 10);
 
         return viewRoot;
     }
@@ -74,80 +102,85 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        loadCategories();
+    }
 
-        DatabaseReference referenceCategories = LibraryClass.getFirebase().child("categories");
-        mAdapterCategory = new FirebaseRecyclerAdapter<Category, CategoriesViewHolder>(
-                Category.class,
-                R.layout.adapter_recycler_categories_home,
-                CategoriesViewHolder.class,
-                referenceCategories
-        ) {
-            @Override
-            protected void populateViewHolder(CategoriesViewHolder viewHolder, final Category model, int position) {
-                viewHolder.setDate(model);
-                if (mProgressCategories.getVisibility() == View.VISIBLE) {
-                    mProgressCategories.hide();
-                }
+    private void initViews(View view) {
+        mRecyclerViewCategories = view.findViewById(R.id.recyclerHomeCategories);
+        mContentHome = view.findViewById(R.id.contentHome);
+        mSwipeToRefreshHome = view.findViewById(R.id.swipeToRefreshHome);
+        mEditSearch = view.findViewById(R.id.editSearchProductsHomeFragment);
+    }
 
-                DatabaseReference ref = mAdapterCategory.getRef(position);
-                model.setKey(ref.getKey());
+    private void loadCategories() {
+        mCategories.clear();
+        mDatabase.child("categories").limitToFirst(5).addListenerForSingleValueEvent(this);
+    }
 
-                viewHolder.setOnClickListener(new RecyclerClickListener() {
-                    @Override
-                    public void onClickRecyclerListener(View view, int position) {
-                        Intent intent = new Intent(getActivity(), ProductsActivity.class);
-                        intent.putExtra("category", Parcels.wrap(model));
-                        startActivity(intent);
-                    }
 
-                    @Override
-                    public void onClickRecyclerListener(View view, int position, View viewAnimation) {
-                    }
-                });
+    private RecyclerClickListener onClickCategory = new RecyclerClickListener() {
+        @Override
+        public void onClickRecyclerListener(View view, int position) {
+            if (position == 5) {
+                getActivity().startActivity(new Intent(getContext(), ListCategoriesActivity.class));
+            } else {
+                getActivity().startActivity(new Intent(getContext(), ProductsActivity.class).putExtra("category", mCategories.get(position)));
             }
-        };
-        mRecyclerViewCategories.setAdapter(mAdapterCategory);
+        }
+    };
 
-        DatabaseReference referenceProducts = LibraryClass.getFirebase().child("products");
-        mAdapterProducts = new FirebaseRecyclerAdapter<Product, ProductsViewHolder>(
-                Product.class,
-                R.layout.adapter_item_products,
-                ProductsViewHolder.class,
-                referenceProducts
-        ) {
-            @Override
-            protected void populateViewHolder(ProductsViewHolder viewHolder, final Product model, int position) {
-                viewHolder.setData(model);
-                if (mProgressProducts.getVisibility() == View.VISIBLE) {
-                    mProgressProducts.hide();
-                }
 
-                viewHolder.setOnClickListener(new RecyclerClickListener() {
-                    @Override
-                    public void onClickRecyclerListener(View view, int position) {
-
-                    }
-
-                    @Override
-                    public void onClickRecyclerListener(View view, int position, View viewAnimation) {
-                        Toast.makeText(getActivity(), "Position:" + position, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getActivity(), DetailsProductsActivity.class);
-                        intent.putExtra("product", Parcels.wrap(model));
-                        intent.putExtra(EXTRA_PRODUCT_IMAGE_TRANSITION_NAME, ViewCompat.getTransitionName(viewAnimation));
-
-                        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), viewAnimation, ViewCompat.getTransitionName(viewAnimation));
-                        ActivityCompat.startActivity(getActivity(), intent, optionsCompat.toBundle());
-                    }
-                });
-            }
-        };
-        mRecyclerViewProducts.setAdapter(mAdapterProducts);
+    @Override
+    public void onRefresh() {
+        if (AndroidUtils.isNetworkAvailable(getActivity())) {
+            mCategories.clear();
+            loadCategories();
+            mSwipeToRefreshHome.setRefreshing(false);
+        } else {
+            mSwipeToRefreshHome.setRefreshing(false);
+            //snack("Não foi possivel acessar a internet");
+        }
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mAdapterCategory.cleanup();
-        mAdapterProducts.cleanup();
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        //Iterator<DataSnapshot> iterator = dataSnapshot.getChildren().iterator();
+        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            Category category = snapshot.getValue(Category.class);
+
+            Log.d(TAG, category.getValue());
+            category.setKey(snapshot.getKey());
+            mCategories.add(category);
+
+            mContentHome.setVisibility(View.VISIBLE);
+            mSwipeToRefreshHome.setRefreshing(false);
+        }
+
+        Category plus = new Category();
+        plus.setKey("plus");
+        plus.setValue(getActivity().getResources().getString(R.string.more_categories));
+
+
+        String s = Base64.convertToBase64(Base64.convertDrawableToBitmap(getActivity(), R.drawable.ic_plus));
+
+        Log.i(TAG, s);
+
+        plus.setIcon(s);
+
+        mCategories.add(plus);
+
+        mAdapterCategory.notifyDataSetChanged();
+
+        ViewAnimator
+                .animate(mRecyclerViewCategories)
+                .dp().translationY(200, 0)
+                .accelerate()
+                .start();
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        FirebaseCrash.log(databaseError.getMessage());
     }
 }

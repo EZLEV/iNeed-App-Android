@@ -12,7 +12,5 @@ import android.view.View;
 public interface RecyclerClickListener {
     // Clique simples
     void onClickRecyclerListener(View view, int position);
-    // Clique com animação de transição
-    void onClickRecyclerListener(View view,  int position, View viewAnimation);
 }
 

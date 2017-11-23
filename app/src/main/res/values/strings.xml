@@ -4,10 +4,25 @@
     <string name="app_name">iNeed</string>
     <string name="account">Minha conta</string>
     <string name="about">Sobre</string>
+    <string name="assessments">Avaliações</string>
+    <string name="all_categories">Todas as categorias</string>
+
+    <!-- B -->
+
+    <!-- C -->
+    <string name="contact_information">Informações de contato</string>
+    <string name="cancel">Cancelar</string>
+
+    <!-- D -->
+    <string name="dialog_ok">OK</string>
 
     <!-- E -->
     <string name="email">E-Mail</string>
     <string name="error_connection_google_services">Erro na conexão com o Google Play services.</string>
+    <string name="update_error_account">Erro na atualização</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="enter_or_register">ENTRAR OU CADASTRAR</string>
+    <string name="enter_or_register_text">Entre ou cadastre-se para ver suas lojas favoritas e recomendações</string>
 
     <!-- F -->
     <string name="favorites">Favoritos</string>
@@ -16,9 +31,52 @@
     <string name="firebase_password_invalid">A senha deve ter no mínimo 6 caracteres alpha numéricos e um caractere especial.</string>
     <string name="firebase_other">Não foi possível completar a ação. Tente novamente!</string>
 
+    <!-- G -->
+
     <!-- H -->
     <string name="home">Home</string>
     <string name="help">Ajuda</string>
+    <string name="how_to_get">Como chegar?</string>
+    <string name="help_product">Ajude a divulgar esse produto</string>
+
+    <!-- I -->
+    <string name="incorrect_email">E-mail incorreto</string>
+
+    <!-- J -->
+
+    <!-- K -->
+
+    <!-- L -->
+    <string name="log_out">Sair do iNeed</string>
+
+    <!-- M -->
+    <string name="message">Mensagem</string>
+    <string name="more">Mais</string>
+    <string name="more_categories">Mais Categorias</string>
+
+    <!-- N -->
+    <string name="full_name">Nome completo</string>
+    <string name="next">Próximo</string>
+    <string name="name">Nome</string>
+    <string name="navigation">Navegar</string>
+
+    <!-- O -->
+    <string name="or">OU</string>
+
+    <!-- P -->
+    <string name="products">Produtos</string>
+    <string name="password">Senha</string>
+    <string name="password_recovery">Recuperação de senha</string>
+    <string name="payment_methods">Formas de Pagamento</string>
+    <string name="personal_data">Dados pessoais</string>
+    <string name="phone">Telefone</string>
+
+    <!-- Q -->
+
+    <!-- R -->
+    <string name="reset_password">Esqueceu a senha?</string>
+    <string name="route">Rota</string>
+    <string name="rate_this_store">Avalie esta loja</string>
 
     <!-- S -->
     <string name="splash_title">iNeed - 2017</string>
@@ -35,34 +93,82 @@
     <string name="sign_in_with_google">Entrar com o Google</string>
     <string name="sign_in_as_guest">Entrar como convidado</string>
     <string name="store">Lojas</string>
+    <string name="send">Enviar</string>
+    <string name="share_friends">Compartilhe com os seus amigos!!</string>
+    <string name="search_powered_by_algolia">Search powered by Algolia</string>
+    <string name="update_success_account">Sucesso na atualização!</string>
+    <string name="search_edit">Procure por produtos, lojas....</string>
 
-    <!-- N -->
-    <string name="full_name">Nome completo</string>
-    <string name="next">Próximo</string>
-
-    <!-- P -->
-    <string name="products">Produtos</string>
-    <string name="password">Senha</string>
-
-    <string name="or">OU</string>
-
-    <string name="terms_of_use">Termos de uso</string>
-
-    <string name="incorrect_email">E-mail incorreto</string>
-
-    <string name="wait">Aguarde...</string>
-
-    <string name="reset_password">Esqueceu a senha?</string>
-    <string name="password_recovery">Recuperação de senha</string>
+    <!-- T -->
     <string name="text_recovery_password">Preencha seu endereço de email no campo abaixo para receber as
         instruções necessárias na sua caixa de e-mail e criar uma nova senha na iNeed.</string>
-    <string name="send">Enviar</string>
+    <string name="terms_of_use">Termos de uso</string>
+    <string name="tags">Tags</string>
 
-    <!-- Strings de configurações -->
-    <string name="facebook_app_id">1957695561168827</string>
-    <string name="fb_login_protocol_scheme">fb1957695561168827</string>
+    <!-- U -->
+
+    <!-- V -->
+
+    <!-- W -->
+    <string name="wait">Aguarde...</string>
+
+    <!-- X -->
+
+    <!-- Y -->
+    <string name="your_reviews">Suas resenhas são públicas e \n vinculadas à sua conta.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Z -->
+
+
+    <!-- all -->
+    <string name="all_app_version">Sample UI v%1$s / SDK v%2$s</string>
+
+    <string name="all_create">Create</string>
+    <string name="all_invite">Invite</string>
+
+    <string name="all_group_channels">Todas as conversas</string>
+    <string name="all_open_channels">Open Channels</string>
+
+    <!-- main -->
+    <string name="main_drawer_open">Open navigation drawer</string>
+    <string name="main_drawer_close">Close navigation drawer</string>
+    <string name="select_channel_type">Select channel type</string>
+
+    <!-- login -->
+    <string name="login_user_id">User ID</string>
+    <string name="login_user_nickname">Nickname</string>
+    <string name="login_connect">Connect</string>
+
+    <!-- Open Channel List -->
+    <string name="open_channel_list_participant_count">%1$d participants</string>
+
+    <string name="create_open_channel">Create Open Channel</string>
+    <string name="participant_list">Participants</string>
+
+    <!-- Group Channel List -->
+    <string name="group_channel_list_file_message_text">%1$s has uploaded a file.</string>
+
+    <string name="create_group_channel">Create Group Channel</string>
+    <string name="member_list">Members</string>
+    <string name="invite_member">Invite members</string>
+
+    <!-- Content descriptions -->
+    <string name="open_channel_chat_content_desc_profile">Profile image</string>
+
+    <!-- Menu actions -->
+    <string name="action_create_channel">Create channel</string>
+
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="resend_message">Resend</string>
+    <string name="delete_message">Delete</string>
+
+    <!-- Message Status -->
+    <string name="message_sending">Sending</string>
+    <string name="message_failed">Failed</string>
+    <string name="title_activity_comments">Comentários</string>
 
 </resources>

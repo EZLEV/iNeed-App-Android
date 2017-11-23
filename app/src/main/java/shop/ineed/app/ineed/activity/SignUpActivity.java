@@ -1,24 +1,19 @@
 package shop.ineed.app.ineed.activity;
 
-import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
-import com.mobsandgeeks.saripaar.annotation.Password;
 
 import java.util.List;
 
@@ -50,6 +45,7 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
             if (firebaseUser == null || mUser.getUid() != null) {
                 return;
             }
+
             mUser.setUid(firebaseUser.getUid());
             mUser.saveUserLogged(SignUpActivity.this);
         };
@@ -69,8 +65,12 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
         ).addOnCompleteListener(task -> {
             closeProgressDialog();
             if (task.isSuccessful()) {
-                showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
-                finish();
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (user != null) {
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(mUser.getName()).build();
+                    user.updateProfile(profileUpdates);
+                }
             } else {
                 String messageError = FirebaseError.verify(SignUpActivity.this, task);
                 showSnackbar(findViewById(android.R.id.content), messageError);
@@ -83,9 +83,11 @@ public class SignUpActivity extends CommonSubscriberActivity implements Database
 
     @Override
     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-        FirebaseCrash.log(TAG + ":onComplete");
         mAuth.signOut();
+        FirebaseCrash.log(TAG + ":onComplete");
+        showToast(getBaseContext(), "Usuário cadastrado com sucesso!");
         closeProgressDialog();
+        finish();
     }
 
     public void btnSignUp(View view) {

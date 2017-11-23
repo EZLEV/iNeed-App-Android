@@ -1,19 +1,29 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshStoresFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="shop.ineed.app.ineed.fragments.StoresFragment">
+    tools:context="shop.ineed.app.ineed.fragments.ListCategoriesFragment">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerStoresFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-</FrameLayout>
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/progressListStoresFragment"
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:indicatorColor="@color/colorAccent"
+            app:indicatorName="BallClipRotateMultipleIndicator" />
+    </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
