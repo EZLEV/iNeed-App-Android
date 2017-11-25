@@ -10,13 +10,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_details_products.*
 
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.domain.Product
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.fragments.DetailsProductFragment
+import shop.ineed.app.ineed.util.ImageUtils
 
 class DetailsProductsActivity : BaseActivity(), AppBarLayout.OnOffsetChangedListener {
 
@@ -62,12 +62,7 @@ class DetailsProductsActivity : BaseActivity(), AppBarLayout.OnOffsetChangedList
     }
 
     private fun initViews() {
-        Picasso.with(this).load(mImageProduct).into(ivProductDetailsProduct)
-
-        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            String imageTransitionName = getIntent().getExtras().getString(ProductsActivity.EXTRA_PRODUCT_IMAGE_TRANSITION_NAME);
-            ivProduct.setTransitionName(imageTransitionName);
-        }*/
+        ImageUtils.displayImageFromUrl(this, mImageProduct, ivProductDetailsProduct)
     }
 
     private fun loadProduct() {

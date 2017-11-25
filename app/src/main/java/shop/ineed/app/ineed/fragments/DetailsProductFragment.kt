@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.ontbee.legacyforks.cn.pedant.SweetAlert.SweetAlertDialog
 import com.sendbird.android.GroupChannel
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_details_product.*
 import org.jetbrains.anko.design.snackbar
 
@@ -39,6 +38,7 @@ import shop.ineed.app.ineed.domain.Store
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
+import shop.ineed.app.ineed.util.ImageUtils
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -91,7 +91,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val store = dataSnapshot.getValue(Store::class.java)
                 Log.i("STORE", store!!.name)
-                Picasso.with(context).load(store.pictures[0]).into(ivStoreProductDetails)
+                ImageUtils.displayImageFromUrl(context, store.pictures[0], ivStoreProductDetails)
                 txtNameStoreProductDetails.text = store.name
                 containerStoreDetailsProduct.setBackgroundColor(Color.parseColor(store.color))
                 mStore = store

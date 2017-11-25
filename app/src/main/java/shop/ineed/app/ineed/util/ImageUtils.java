@@ -12,17 +12,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 
 
 public class ImageUtils {
 
-    // Prevent instantiation
-    private ImageUtils() {
-
-    }
+    /**
+     * Classe de utilidade, não pode ser instanciada.
+     * Todos os métodos são estáticos, chamada direta através do nome da classe.
+     * Construtor vazio.
+     */
+    private ImageUtils() {}
 
     /**
-     * Crops image into a circle that fits within the ImageView.
+     * Coloca a imagem em um círculo que se encaixa no ImageView.
+     *
+     * @param context
+     * @param url
+     * @param imageView
      */
     public static void displayRoundImageFromUrl(final Context context, final String url, final ImageView imageView) {
         RequestOptions myOptions = new RequestOptions()
@@ -44,18 +51,48 @@ public class ImageUtils {
                 });
     }
 
+    /**
+     * Sobrecarga do método displayImageFromUrl(): void
+     * Faz o download da imagem sem o listener de monitoramento.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param placeholderDrawable
+     */
     public static void displayImageFromUrl(final Context context, final String url,
                                            final ImageView imageView, Drawable placeholderDrawable) {
         displayImageFromUrl(context, url, imageView, placeholderDrawable, null);
     }
 
     /**
-     * Displays an image from a URL in an ImageView.
+     * Sobrecarga do método displayImageFromUrl(): void
+     * Faz o download da imagem sem o listener de monitoramento.
+     * Não passa a imagem de pré-carregamento.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     */
+    public static void displayImageFromUrl(final Context context, final String url,
+                                           final ImageView imageView) {
+        displayImageFromUrl(context, url, imageView, null, null);
+    }
+
+    /**
+     * Exibe uma imagem de um URL em um ImageView.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param placeholderDrawable
+     * @param listener
      */
     public static void displayImageFromUrl(final Context context, final String url,
                                            final ImageView imageView, Drawable placeholderDrawable, RequestListener listener) {
         RequestOptions myOptions = new RequestOptions()
                 .dontAnimate()
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .placeholder(placeholderDrawable);
 
@@ -74,11 +111,30 @@ public class ImageUtils {
         }
     }
 
+    /**
+     * Sobrecarga do método displayRoundImageFromUrlWithoutCache(): void
+     * Faz o download da imagem sem o listener de monitoramento.
+     * Imagem com bordas respondas.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     */
     public static void displayRoundImageFromUrlWithoutCache(final Context context, final String url,
                                                             final ImageView imageView) {
         displayRoundImageFromUrlWithoutCache(context, url, imageView, null);
     }
 
+    /**
+     * Responsável pelo carregamento de uma imagem através da URL.
+     * Espera um listener de evento para o monitoramento do carregamento da imagem.
+     * Pode fazer o download da imagem sem ser monitorada.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param listener
+     */
     public static void displayRoundImageFromUrlWithoutCache(final Context context, final String url,
                                                             final ImageView imageView, RequestListener listener) {
         RequestOptions myOptions = new RequestOptions()
@@ -118,8 +174,13 @@ public class ImageUtils {
     }
 
     /**
-     * Displays an image from a URL in an ImageView.
-     * If the image is loading or nonexistent, displays the specified placeholder image instead.
+     * Exibe uma imagem de um URL em um ImageView.
+     * Se a imagem estiver sendo carregada ou inexistente, exibe a imagem de espaço reservado especificada.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param placeholderResId
      */
     public static void displayImageFromUrlWithPlaceHolder(final Context context, final String url,
                                                           final ImageView imageView,
@@ -136,7 +197,13 @@ public class ImageUtils {
     }
 
     /**
-     * Displays an image from a URL in an ImageView.
+     * Exibe uma imagem de um URL em um ImageView.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param placeholderDrawable
+     * @param listener
      */
     public static void displayGifImageFromUrl(Context context, String url, ImageView imageView, Drawable placeholderDrawable, RequestListener listener) {
         RequestOptions myOptions = new RequestOptions()
@@ -162,7 +229,13 @@ public class ImageUtils {
     }
 
     /**
-     * Displays an GIF image from a URL in an ImageView.
+     * Exibe uma imagem GIF de um URL em um ImageView.
+     *
+     * @param context
+     * @param url
+     * @param imageView
+     * @param thumbnailUrl
+     * @param placeholderDrawable
      */
     public static void displayGifImageFromUrl(Context context, String url, ImageView imageView, String thumbnailUrl, Drawable placeholderDrawable) {
         RequestOptions myOptions = new RequestOptions()

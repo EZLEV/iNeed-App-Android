@@ -1,5 +1,6 @@
 package shop.ineed.app.ineed.activity
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -25,7 +26,6 @@ import com.google.firebase.database.DatabaseError
 
 import com.google.firebase.database.ValueEventListener
 import com.sendbird.android.GroupChannel
-import com.squareup.picasso.Picasso
 
 import java.util.Timer
 import java.util.TimerTask
@@ -47,6 +47,7 @@ import shop.ineed.app.ineed.domain.PaymentMethods
 import shop.ineed.app.ineed.domain.User
 import shop.ineed.app.ineed.fragments.DetailsProductFragment
 import shop.ineed.app.ineed.fragments.DetailsProductFragment.Companion.EXTRA_NEW_CHANNEL_URL
+import shop.ineed.app.ineed.util.ImageUtils
 import java.util.ArrayList
 
 class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
@@ -80,7 +81,10 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
                 mStore = store!!
                 initSlide()
                 Log.i("STORE", store.name)
-                Picasso.with(baseContext).load(store.pictures[0]).into(ivStoreDetails)
+
+                ImageUtils.displayImageFromUrl(baseContext, store.pictures[0], ivStoreDetails)
+
+                //Picasso.with(baseContext).load(store.pictures[0]).into(ivStoreDetails)
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     window.statusBarColor = Color.parseColor(store.color)
@@ -208,6 +212,7 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
     }
 
+    @SuppressLint("MissingPermission")
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
 

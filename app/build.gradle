@@ -66,8 +66,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.0.0'
 
     // Picasso
-    compile 'com.github.florent37:picassopalette:2.0.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+
 
     // Geolocation
     compile 'com.google.android.gms:play-services-maps:11.6.0'

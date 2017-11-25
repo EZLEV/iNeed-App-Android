@@ -12,15 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-
 import java.util.Collection;
 
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.DetailsProductsActivity;
 import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.util.HighlightRenderer;
+import shop.ineed.app.ineed.util.ImageUtils;
 
 /**
  * Created by jose on 10/27/17.
@@ -63,7 +61,7 @@ public class ProductSearchAdapter extends ArrayAdapter<Product> {
         txtName.setText(highlightRenderer.renderHighlights(result.getName()));
         txtDescription.setText(result.getDescription());
         txtPriceProductSearch.setText("R$ " + result.getPrice());
-        Picasso.with(context).load(result.getPictures().get(0)).into(ivProductSearch);
+        ImageUtils.displayImageFromUrl(context, result.getPictures().get(0), ivProductSearch);
 
         // OnClick -> Chamada para activity de detalhe do produto
         cell.setOnClickListener(view -> {
