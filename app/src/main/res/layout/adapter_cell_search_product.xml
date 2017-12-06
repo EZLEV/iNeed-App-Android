@@ -5,7 +5,7 @@
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/ivProductSearch"
+        android:id="@+id/ivProductSearchAdapter"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
@@ -16,14 +16,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txtNameProductSearch"
+            android:id="@+id/txtNameProductSearchAdapter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="4dip"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txtDescriptionProductSearch"
+            android:id="@+id/txtDescriptionProductSearchAdapter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="4dip"
@@ -33,14 +33,12 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/txtPriceProductSearch"
+            android:id="@+id/txtPriceProductSearchAdapter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:padding="4dip"
             android:textSize="20sp"
             android:layout_gravity="bottom|right"
             android:textStyle="bold" />
-
-
     </LinearLayout>
 </LinearLayout>

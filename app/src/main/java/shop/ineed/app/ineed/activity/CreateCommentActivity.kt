@@ -1,49 +1,100 @@
 package shop.ineed.app.ineed.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
+import android.widget.RatingBar
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_create_comment.*
-import org.jetbrains.anko.design.snackbar
+import com.google.firebase.auth.FirebaseUser
+import com.mobsandgeeks.saripaar.ValidationError
+import com.mobsandgeeks.saripaar.Validator
+import com.mobsandgeeks.saripaar.annotation.NotEmpty
 import org.jetbrains.anko.toast
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.domain.Comments
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.util.DateUtils
 
-class CreateCommentActivity : AppCompatActivity() {
+class CreateCommentActivity : BaseActivity(), Validator.ValidationListener {
 
-    lateinit var mAuth: FirebaseAuth
+    @NotEmpty(message = "Conteúdo não pode ser vazio")
+    private lateinit var editBody: EditText
+    @NotEmpty(message = "Título inválido")
+    private lateinit var editTitle: EditText
+    private lateinit var rating: RatingBar
+
+    private lateinit var validator: Validator
+    private lateinit var auth: FirebaseAuth
     private lateinit var idStore:String
+    private lateinit var currentUser: FirebaseUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_comment)
 
+        enableToolbar()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         idStore = intent.getStringExtra("idStore")
 
-        mAuth = FirebaseAuth.getInstance()
-        val currentUser = mAuth.currentUser
+        auth = FirebaseAuth.getInstance()
+        currentUser = auth.currentUser!!
 
+        initValues()
 
-        btnSendCreatorComment.setOnClickListener {
-            Log.i("idStore", "CreateCommentActivity: " + idStore)
-            val reference = LibraryClass.getFirebase().child("stores").child(idStore).child("feedbacks").push()
+        validator = Validator(this)
+        validator.setValidationListener(this)
+    }
 
-            val comment = Comments()
-            comment.uidAuthor = currentUser?.uid
-            comment.author = currentUser?.displayName
-            comment.date = DateUtils.formatDate(System.currentTimeMillis())
-            comment.body = editBodyCreatorComment.text.toString()
-            comment.title = editTitleCreatorComment.text.toString()
-            comment.rating = ratingCreatorComment.rating.toInt()
+    private fun initValues(){
+        editBody = findViewById(R.id.editBodyCreatorComment)
+        editTitle = findViewById(R.id.editTitleCreatorComment)
+        rating = findViewById(R.id.ratingCreatorComment)
+    }
 
-            reference.setValue(comment).addOnCompleteListener {
-                toast("Comentario enviado")
-                finish()
+    fun onClickSendComment(view: View){
+        validator.validate()
+    }
+
+    override fun onValidationFailed(errors: MutableList<ValidationError>?) {
+        for (error in errors!!) {
+            val view = error.view
+            val message = error.getCollatedErrorMessage(this)
+
+            // Display error messages ;)
+            if (view is EditText) {
+                (view as EditText).error = message
+            } else {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
             }
-
         }
+    }
+
+    override fun onValidationSucceeded() {
+        Log.i("idStore", "CreateCommentActivity: " + idStore)
+        val reference = LibraryClass.getFirebase().child("stores").child(idStore).child("feedbacks").push()
+
+        val comment = Comments()
+        comment.uidAuthor = currentUser.uid
+        comment.author = currentUser.displayName
+        comment.date = DateUtils.formatDate(System.currentTimeMillis())
+        comment.body = editBody.text.toString()
+        comment.title = editTitle.text.toString()
+        comment.rating = rating.rating.toInt()
+
+        reference.setValue(comment).addOnCompleteListener {
+            toast(resources.getString(R.string.send_comment_toast))
+            finish()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

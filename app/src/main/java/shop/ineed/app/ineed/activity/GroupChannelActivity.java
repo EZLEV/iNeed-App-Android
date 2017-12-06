@@ -8,10 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.domain.util.LibraryClass;
 import shop.ineed.app.ineed.fragments.DetailsProductFragment;
+import shop.ineed.app.ineed.fragments.DisconnectedFromAccountFragment;
 import shop.ineed.app.ineed.fragments.GroupChannelListFragment;
 import shop.ineed.app.ineed.fragments.GroupChatFragment;
 
@@ -23,22 +23,26 @@ public class GroupChannelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_channel);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_group_channel);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         }
 
         String channelUrl = getIntent().getStringExtra(DetailsProductFragment.Companion.getEXTRA_NEW_CHANNEL_URL());
 
-
         if(savedInstanceState == null){
             if(LibraryClass.isUserLogged(getBaseContext())){
-
-            }else {
-                // If started from launcher, load list of Open Channels
                 Fragment fragment = GroupChannelListFragment.newInstance();
+
+                FragmentManager manager = getSupportFragmentManager();
+                manager.popBackStack();
+
+                manager.beginTransaction()
+                        .replace(R.id.container_group_channel, fragment)
+                        .commit();
+            }else {
+                DisconnectedFromAccountFragment fragment = new DisconnectedFromAccountFragment();
 
                 FragmentManager manager = getSupportFragmentManager();
                 manager.popBackStack();

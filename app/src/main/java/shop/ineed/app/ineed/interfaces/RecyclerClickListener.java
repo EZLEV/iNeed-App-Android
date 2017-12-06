@@ -8,7 +8,6 @@ import android.view.View;
  * Interface que define os métodos de clique no RecyclerView.
  */
 
-
 public interface RecyclerClickListener {
     // Clique simples
     void onClickRecyclerListener(View view, int position);

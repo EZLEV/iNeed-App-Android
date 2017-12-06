@@ -7,13 +7,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
-import android.view.Window
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -21,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.crash.FirebaseCrash
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 
@@ -50,67 +48,64 @@ import shop.ineed.app.ineed.fragments.DetailsProductFragment.Companion.EXTRA_NEW
 import shop.ineed.app.ineed.util.ImageUtils
 import java.util.ArrayList
 
-class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
+class StoreActivity : BaseActivity(), ViewPager.OnPageChangeListener, OnMapReadyCallback {
 
-    private var mStore: Store? = null
+    private var store: Store? = null
     private var googleMap: GoogleMap? = null
     private lateinit var uid: String
-    private val TAG = DetailsProductFragment.javaClass.simpleName
 
+    companion object {
+        private var CURRENT_PAGE = 0
+        private var NUM_PAGES = 0
+        private val TAG = DetailsProductFragment.javaClass.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         setContentView(R.layout.activity_store)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        enableToolbar()
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val store = intent.getStringExtra("store")
+        val storeIntent = intent.getStringExtra("store")
         uid = LibraryClass.getUserLogged(baseContext, User.PROVIDER)
 
-        val reference = LibraryClass.getFirebase().child("stores").child(store)
+        val reference = LibraryClass.getFirebase().child("stores").child(storeIntent)
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val store = dataSnapshot.getValue(Store::class.java)
+                val storeCurrent = dataSnapshot.getValue(Store::class.java)
+                storeCurrent?.id = dataSnapshot.key
+                store = storeCurrent!!
 
-                store?.id = dataSnapshot.key
-
-                mStore = store!!
                 initSlide()
-                Log.i("STORE", store.name)
 
-                ImageUtils.displayImageFromUrl(baseContext, store.pictures[0], ivStoreDetails)
-
-                //Picasso.with(baseContext).load(store.pictures[0]).into(ivStoreDetails)
-
+                ImageUtils.displayImageFromUrl(baseContext, storeCurrent.pictures[0], ivStoreDetails)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    window.statusBarColor = Color.parseColor(store.color)
+                    window.statusBarColor = Color.parseColor(storeCurrent.color)
                 }
-
-                txtNameStore.text = store.name
-                txtDescriptionStore.text = store.description
-                txtNameStoreToolbar.text = store.name
-                appBar.setBackgroundColor(Color.parseColor(store.color))
-                toolbarLayout.setContentScrimColor(Color.parseColor(store.color))
-                toolbarLayout.setStatusBarScrimColor(Color.parseColor(store.color))
+                // Update Values
+                txtNameStore.text = storeCurrent.name
+                txtDescriptionStore.text = storeCurrent.description
+                txtNameStoreToolbar.text = storeCurrent.name
+                appBar.setBackgroundColor(Color.parseColor(storeCurrent.color))
+                toolbarLayout.setContentScrimColor(Color.parseColor(storeCurrent.color))
+                toolbarLayout.setStatusBarScrimColor(Color.parseColor(storeCurrent.color))
 
                 initValue()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
+                FirebaseCrash.log(databaseError.message)
             }
         })
 
         btnSendMessageStore.setOnClickListener {
-
             if (LibraryClass.isUserLogged(this)) {
                 Log.d("STORE", "btnSendMessageProduct")
                 val userIds = ArrayList<String>()
                 userIds.add(LibraryClass.getUserLogged(baseContext, User.PROVIDER))
-                userIds.add(mStore?.id!!)
+                userIds.add(store?.id!!)
 
                 GroupChannel.createChannelWithUserIds(userIds, true, userIds[0] + "_" + userIds[1], "", "") { groupChannel, e ->
                     if (e != null) {
@@ -126,8 +121,8 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         }
 
         btnRouteStore.setOnClickListener {
-            val uri = Uri.parse("geo:0,0?z=21&q=" + mStore?.location?.lat + "," + mStore?.location?.lng + mStore?.name)
-            Log.i(TAG, "Location: " + mStore?.location?.lat + "," + mStore?.location?.lng)
+            val uri = Uri.parse("geo:0,0?z=21&q=" + store?.location?.lat + "," + store?.location?.lng + store?.name)
+            Log.i(TAG, "Location: " + store?.location?.lat + "," + store?.location?.lng)
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.`package` = "com.google.android.apps.maps"
             if (intent.resolveActivity(packageManager) != null) {
@@ -139,52 +134,108 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
 
         btnRatingsStore.setOnClickListener {
             if (LibraryClass.isUserLogged(this)) {
-                Log.i("idStore", "CommentsActivity: " + mStore?.id)
-                startActivity<CommentsActivity>("idStore" to mStore!!.id)
+                Log.i("idStore", "CommentsActivity: " + store?.id)
+                startActivity<CommentsActivity>("idStore" to store!!.id)
             } else {
                 toast("Nao logado")
             }
         }
+
+        addReviewsContainerStore.setOnClickListener {
+            if (LibraryClass.isUserLogged(this)) {
+                Log.i("idStore", "CommentsActivity: " + store?.id)
+                startActivity<CreateCommentActivity>("idStore" to store!!.id)
+            } else {
+                toast("Nao logado")
+            }
+        }
+
+        swipeRefreshContainerStore.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark
+        )
+        swipeRefreshContainerStore.isRefreshing = true
+    }
+
+    private fun disableToRefresh() {
+        swipeRefreshContainerStore.isRefreshing = false
+        swipeRefreshContainerStore.isEnabled = false
     }
 
     fun initValue() {
-        txtNameContainerStore.text = mStore?.name
-        txtDescriptionContainerStore.text = mStore?.description
-        txtAddressContainerStore.text = mStore?.location?.address
-        txtPhoneContainerStore.text = mStore?.phone
-        txtCellPhoneContainerStore.text = mStore?.cellphone
+        // Valores
+        txtNameContainerStore.text = store?.name
+        txtDescriptionContainerStore.text = store?.description
+        txtAddressContainerStore.text = store?.location?.address
+        txtPhoneContainerStore.text = store?.phone
+        txtCellPhoneContainerStore.text = store?.cellphone
 
-
-        val listPayment = PaymentMethods.getPaymentMethods(mStore?.paymentWays)
+        // Lista de pagamento
+        val listPayment = PaymentMethods.getPaymentMethods(store?.paymentWays)
         listViewContainerStore.layoutManager = LinearLayoutManager(baseContext)
         val paymentMethodsAdapter = PaymentMethodsAdapter(listPayment)
         listViewContainerStore.setHasFixedSize(true)
         listViewContainerStore.adapter = paymentMethodsAdapter
 
-
+        // Lista de horarios
         listOperatingHoursContainerStore.layoutManager = LinearLayoutManager(baseContext)
-        val businessTimesAdapter = BusinessTimesAdapter(mStore!!.businessTimes)
+        val businessTimesAdapter = BusinessTimesAdapter(store!!.businessTimes)
         listOperatingHoursContainerStore.setHasFixedSize(true)
         listOperatingHoursContainerStore.adapter = businessTimesAdapter
+
+        disableToRefresh()
     }
 
     override fun onResume() {
         super.onResume()
-
         val mapContainerStore = supportFragmentManager.findFragmentById(R.id.mapContainerStore) as SupportMapFragment
         mapContainerStore.getMapAsync(this)
     }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        this.googleMap = googleMap
+
+        googleMap.isMyLocationEnabled = true
+
+        if (store != null) {
+            val location = LatLng(store!!.location.lat!!, store!!.location.lng!!)
+
+            val update = CameraUpdateFactory.newLatLngZoom(location, 13f)
+            googleMap.moveCamera(update)
+
+            googleMap.addMarker(MarkerOptions()
+                    .title(store!!.name)
+                    .snippet(store!!.location.address)
+                    .position(location))
+
+            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
+    }
+
+    private val listener = RecyclerClickListener { _, _ ->
+        startActivity<PhotoViewerActivity>(
+                "url" to store!!.pictures[sliderDetailsStore.currentItem],
+                "title" to store!!.name)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initSlide() {
-        sliderDetailsStore.adapter = SlideAdapter(baseContext, mStore!!.pictures, listener)
+        sliderDetailsStore.adapter = SlideAdapter(baseContext, store!!.pictures, listener)
         indicatorDetailsSlide.setViewPager(sliderDetailsStore)
         val density = resources.displayMetrics.density
         indicatorDetailsSlide.radius = 5 * density
 
-        NUM_PAGES = mStore?.pictures!!.size
+        NUM_PAGES = store?.pictures!!.size
 
         val handler = Handler()
-        val Update = {
+        val update = {
             if (CURRENT_PAGE == NUM_PAGES) {
                 CURRENT_PAGE = 0
             }
@@ -193,7 +244,7 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
         val swipeTimer = Timer()
         swipeTimer.schedule(object : TimerTask() {
             override fun run() {
-                handler.post(Update)
+                handler.post(update)
             }
         }, 4000, 4000)
 
@@ -205,50 +256,8 @@ class StoreActivity : AppCompatActivity(), ViewPager.OnPageChangeListener, OnMap
     }
 
     override fun onPageSelected(position: Int) {
-
     }
 
     override fun onPageScrollStateChanged(state: Int) {
-
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
-
-        googleMap.isMyLocationEnabled = true
-
-        if (mStore != null) {
-            val location = LatLng(mStore!!.location.lat!!, mStore!!.location.lng!!)
-
-            val update = CameraUpdateFactory.newLatLngZoom(location, 13f)
-            googleMap.moveCamera(update)
-
-            googleMap.addMarker(MarkerOptions()
-                    .title(mStore!!.name)
-                    .snippet(mStore!!.location.address)
-                    .position(location))
-
-            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
-    private val listener = RecyclerClickListener { view, position ->
-        startActivity<PhotoViewerActivity>(
-                "url" to mStore!!.pictures[sliderDetailsStore.currentItem],
-                "title" to mStore!!.name)
-    }
-
-    companion object {
-        private var CURRENT_PAGE = 0
-        private var NUM_PAGES = 0
     }
 }

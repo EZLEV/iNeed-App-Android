@@ -2,22 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/ivIconPaymentMethodsAdapter"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:src="@drawable/ic_card" />
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/ic_card"
+        android:tint="@color/grey_600" />
 
     <TextView
         android:id="@+id/txtNamePaymentMethodsAdapter"
         android:layout_width="0dp"
-        android:text="card"
-        android:layout_marginLeft="8dp"
-        android:layout_gravity="center"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_weight="1"
-        android:layout_marginStart="8dp" />
+        android:text="card" />
 </LinearLayout>

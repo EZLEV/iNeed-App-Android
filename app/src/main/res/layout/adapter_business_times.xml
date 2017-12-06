@@ -12,6 +12,7 @@
         android:id="@+id/txtDayAdapterBusinessTimes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="2"
         android:text="Segunda" />
 
     <TextView
@@ -25,7 +26,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:gravity="center"
         android:text="-" />
 

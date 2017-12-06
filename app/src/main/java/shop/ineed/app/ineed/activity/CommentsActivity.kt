@@ -5,6 +5,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.MenuItem
 import com.google.firebase.crash.FirebaseCrash
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,25 +23,27 @@ import shop.ineed.app.ineed.domain.Comments
 import shop.ineed.app.ineed.domain.util.LibraryClass
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
 
-class CommentsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class CommentsActivity : BaseActivity(), SwipeRefreshLayout.OnRefreshListener {
 
 
     private val idStore by lazy { intent.getStringExtra("idStore") }
     private var comments = ArrayList<Comments>()
     lateinit var commentsAdapter: CommentsAdapter
-    lateinit var mDatabase: DatabaseReference
+    lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comments)
-        setSupportActionBar(toolbar)
+
+        enableToolbar()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         fab.setOnClickListener { view ->
             Log.i("idStore", "CommentsActivity: " + idStore)
             startActivity<CreateCommentActivity>("idStore" to idStore)
         }
 
-        mDatabase = LibraryClass.getFirebase().child("stores").child(idStore).child("feedbacks")
+        database = LibraryClass.getFirebase().child("stores").child(idStore).child("feedbacks")
 
         listComments.layoutManager = LinearLayoutManager(baseContext)
         commentsAdapter = CommentsAdapter(comments, listener)
@@ -59,7 +62,7 @@ class CommentsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         swipeToRefreshComments.isRefreshing = true
     }
 
-    private val listener = RecyclerClickListener { view, position ->
+    private val listener = RecyclerClickListener { _, _ ->
 
     }
 
@@ -75,12 +78,12 @@ class CommentsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
     }
 
     private fun loadComments() {
-        comments.clear()
-        mDatabase.addValueEventListener(eventUpdateData)
+        database.addValueEventListener(eventUpdateData)
     }
 
     private val eventUpdateData = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
+            comments.clear()
             for (c in dataSnapshot.children) {
                 val comment = c.getValue(Comments::class.java)
 
@@ -97,8 +100,15 @@ class CommentsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListen
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item?.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        mDatabase.removeEventListener(eventUpdateData)
+        database.removeEventListener(eventUpdateData)
     }
 }

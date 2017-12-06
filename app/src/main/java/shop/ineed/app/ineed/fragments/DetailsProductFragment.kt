@@ -29,6 +29,7 @@ import org.jetbrains.anko.design.snackbar
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import shop.ineed.app.ineed.R
+import shop.ineed.app.ineed.activity.DetailsProductsActivity
 import shop.ineed.app.ineed.activity.GroupChannelActivity
 import shop.ineed.app.ineed.activity.PhotoViewerActivity
 import shop.ineed.app.ineed.activity.StoreActivity
@@ -50,15 +51,17 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
     private lateinit var product: Product
     private lateinit var uid: String
     private lateinit var reference: DatabaseReference
-    lateinit var mStore: Store
-    private val TAG = DetailsProductFragment.javaClass.simpleName
-    private val PERMISSION_LOCATION = 13
+    private lateinit var store: Store
 
-    private val listener = RecyclerClickListener { _, _ ->
-        activity.startActivity<PhotoViewerActivity>(
-                "url" to product.pictures[sliderProductDetails.currentItem],
-                "title" to product.name)
+    companion object {
+        private var CURRENT_PAGE = 0
+        private var NUM_PAGES = 0
+        val EXTRA_NEW_CHANNEL_URL = "EXTRA_NEW_CHANNEL_URL"
+        val EXTRA_GROUP_CHANNEL_URL = "GROUP_CHANNEL_URL"
+        private val PERMISSION_LOCATION = 13
+        private val TAG = DetailsProductFragment.javaClass.simpleName
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,23 +81,18 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        txtTitleProductDetails.text = product.name
-        txtDescriptionDetails.text = product.description
-        groupTags.setTags(product.categories)
-
-        txtUpProductDetails.text = product.upVotesCount.toString()
-        txtDownProductDetails.text = product.downVotesCount.toString()
+        initValues()
 
         // Store
         val referenceStore = LibraryClass.getFirebase().child("stores").child(product.store)
         referenceStore.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val store = dataSnapshot.getValue(Store::class.java)
-                Log.i("STORE", store!!.name)
-                ImageUtils.displayImageFromUrl(context, store.pictures[0], ivStoreProductDetails)
-                txtNameStoreProductDetails.text = store.name
-                containerStoreDetailsProduct.setBackgroundColor(Color.parseColor(store.color))
-                mStore = store
+                val storeCurrent = dataSnapshot.getValue(Store::class.java)
+                Log.i("STORE", storeCurrent!!.name)
+                ImageUtils.displayImageFromUrl(context, storeCurrent.pictures[0], ivStoreProductDetails)
+                txtNameStoreProductDetails.text = storeCurrent.name
+                containerStoreDetailsProduct.setBackgroundColor(Color.parseColor(storeCurrent.color))
+                store = storeCurrent
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -205,7 +203,6 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         }
 
 
-
         btnSendMessageProductDetails.setOnClickListener {
             if (LibraryClass.isUserLogged(activity)) {
                 Log.d("STORE", "btnSendMessageProduct")
@@ -227,8 +224,8 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         }
 
         btnRouteProductDetails.setOnClickListener {
-            val uri = Uri.parse("geo:0,0?z=21&q=" + mStore.location.lat + "," + mStore.location.lng + mStore.name)
-            Log.i(TAG, "Location: " + mStore.location.lat + "," + mStore.location.lng)
+            val uri = Uri.parse("geo:0,0?z=21&q=" + store.location.lat + "," + store.location.lng + store.name)
+            Log.i(TAG, "Location: " + store.location.lat + "," + store.location.lng)
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.`package` = "com.google.android.apps.maps"
             if (intent.resolveActivity(activity.packageManager) != null) {
@@ -238,12 +235,37 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
             }
         }
 
+        btnShareProductDetails.setOnClickListener {
+            val intent = Intent()
+            intent.action = Intent.ACTION_SEND
+            intent.putExtra(Intent.EXTRA_TITLE, product.name)
+            intent.putExtra(Intent.EXTRA_TEXT, product.description)
+            intent.putExtra(Intent.EXTRA_STREAM, ImageUtils.getLocalBitmapUri(ivStoreProductDetails))
+            intent.type = "image/*"
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+            activity.startActivity(intent)
+        }
+
+        // Para o carregamento da pagina
+        (activity as DetailsProductsActivity).disableToRefresh()
+
+        // Inicia os valores de voto
         initSlide()
         updateValues()
     }
 
+    private fun initValues() {
+        txtTitleProductDetails.text = product.name
+        txtDescriptionDetails.text = product.description
+        groupTags.setTags(product.categories)
+
+        txtUpProductDetails.text = product.upVotesCount.toString()
+        txtDownProductDetails.text = product.downVotesCount.toString()
+    }
+
     /**
-     *
+     * Faz a veridicidade do voto.
      */
     private fun verifyUpVotes() {
         if (product.upVotes != null) {
@@ -255,7 +277,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
     }
 
     /**
-     *
+     * Faz a veridicidade do voto.
      */
     private fun verifyDownVotes() {
         if (product.downVotes != null) {
@@ -266,17 +288,11 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         }
     }
 
-
-    /**
-     *
-     */
     private fun updateValues() {
         reference.addValueEventListener(eventUpdateData)
     }
 
-    /**
-     *
-     */
+    // Atualiza os valores dos elementos na tela
     private val eventUpdateData = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             val productUpdate = dataSnapshot.getValue(Product::class.java)
@@ -290,7 +306,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
             verifyUpVotes()
             verifyDownVotes()
 
-            Log.i("TAGFIREBASE", "update")
+            Log.i(TAG, "update")
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -298,22 +314,17 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         }
     }
 
-
-    /**
-     *
-     */
+    // Responsavel pelo Slide
     private fun initSlide() {
-        sliderProductDetails.adapter = SlideAdapter(activity, product.pictures, listener)
+        sliderProductDetails.adapter = SlideAdapter(activity, product.pictures, onClickListenerSLide)
         indicatorSlideProductDetails.setViewPager(sliderProductDetails)
-
         val density = resources.displayMetrics.density
 
         indicatorSlideProductDetails.radius = 5 * density
-
         NUM_PAGES = product.pictures.size
 
         val handler = Handler()
-        val Update = Runnable {
+        val update = Runnable {
             if (CURRENT_PAGE == NUM_PAGES) {
                 CURRENT_PAGE = 0
             }
@@ -324,11 +335,17 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
         val swipeTimer = Timer()
         swipeTimer.schedule(object : TimerTask() {
             override fun run() {
-                handler.post(Update)
+                handler.post(update)
             }
         }, 4000, 4000)
 
         indicatorSlideProductDetails.setOnPageChangeListener(this)
+    }
+
+    private val onClickListenerSLide = RecyclerClickListener { _, _ ->
+        activity.startActivity<PhotoViewerActivity>(
+                "url" to product.pictures[sliderProductDetails.currentItem],
+                "title" to product.name)
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -339,18 +356,7 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
 
     override fun onPageScrollStateChanged(state: Int) {}
 
-    companion object {
-        private var CURRENT_PAGE = 0
-        private var NUM_PAGES = 0
-        val EXTRA_NEW_CHANNEL_URL = "EXTRA_NEW_CHANNEL_URL"
-        val EXTRA_GROUP_CHANNEL_URL = "GROUP_CHANNEL_URL"
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        reference.removeEventListener(eventUpdateData)
-    }
-
+    // Solicitação da permissão de localização.
     private fun requestLocationPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
             SweetAlertDialog(activity, SweetAlertDialog.WARNING_TYPE)
@@ -372,5 +378,10 @@ class DetailsProductFragment : BaseFragment(), ViewPager.OnPageChangeListener {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                     PERMISSION_LOCATION)
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        reference.removeEventListener(eventUpdateData)
     }
 }

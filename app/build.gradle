@@ -67,7 +67,6 @@ dependencies {
 
     // Picasso
 
-
     // Geolocation
     compile 'com.google.android.gms:play-services-maps:11.6.0'
     compile 'com.google.android.gms:play-services-location:11.6.0'
@@ -109,6 +108,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile "org.jetbrains.anko:anko-commons:$anko_version"
     compile "org.jetbrains.anko:anko-design:$anko_version"
+
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
 
     implementation project(':sweetAlert  ')
 }

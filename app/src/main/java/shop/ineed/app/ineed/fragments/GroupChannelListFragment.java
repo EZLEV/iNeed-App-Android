@@ -1,11 +1,9 @@
 package shop.ineed.app.ineed.fragments;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sendbird.android.BaseChannel;
@@ -46,7 +43,6 @@ public class GroupChannelListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private GroupChannelListAdapter mChannelListAdapter;
-    private FloatingActionButton mCreateChannelFab;
     private GroupChannelListQuery mChannelListQuery;
     private SwipeRefreshLayout mSwipeRefresh;
 
@@ -82,7 +78,6 @@ public class GroupChannelListFragment extends Fragment {
         ((GroupChannelActivity) getActivity()).setActionBarTitle(getResources().getString(R.string.all_group_channels));
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_group_channel_list);
-        mCreateChannelFab = (FloatingActionButton) rootView.findViewById(R.id.fab_group_channel_list);
         mSwipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_layout_group_channel_list);
 
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -93,13 +88,6 @@ public class GroupChannelListFragment extends Fragment {
             }
         });
 
-        mCreateChannelFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Intent intent = new Intent(getContext(), CreateGroupChannelActivity.class);
-                startActivityForResult(intent, INTENT_REQUEST_NEW_GROUP_CHANNEL);*/
-            }
-        });
 
         setUpRecyclerView();
         setUpChannelListAdapter();
