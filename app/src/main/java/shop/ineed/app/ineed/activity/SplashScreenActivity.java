@@ -90,8 +90,8 @@ public class SplashScreenActivity extends BaseActivity {
     private void showMSGErrorConnection() {
         final SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE);
         dialog.setTitleText("Atenção")
-               .setContentText("Fé é como WI-FI: invisível, mas tem o poder de te conectar com o que você precisa. iNeed s2\n Tente estabelecer uma conexão com a internet")
-               .setCustomImage(R.drawable.ic_portable_wifi_off)
+               .setContentText("sua conexão com a internet está inativa.\nToque no OK para tentar novamente.")
+               .setCustomImage(R.drawable.ic_wifi_off)
                .setConfirmClickListener(sweetAlertDialog -> {
                    dialog.dismiss();
                    verifyMethod();

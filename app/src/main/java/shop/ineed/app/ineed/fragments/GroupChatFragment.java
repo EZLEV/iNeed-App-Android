@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -27,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +79,7 @@ public class GroupChatFragment extends Fragment {
     private GroupChatAdapter mChatAdapter;
     private LinearLayoutManager mLayoutManager;
     private EditText mMessageEditText;
-    private Button mMessageSendButton;
+    private ImageView mMessageSendButton;
     private ImageButton mFileUploadButton;
     private View mCurrentEventLayout;
     private TextView mCurrentEventText;
@@ -138,7 +138,7 @@ public class GroupChatFragment extends Fragment {
         mCurrentEventText = (TextView) rootView.findViewById(R.id.text_group_chat_current_event);
 
         mMessageEditText = (EditText) rootView.findViewById(R.id.edittext_group_chat_message);
-        mMessageSendButton = (Button) rootView.findViewById(R.id.button_group_chat_send);
+        mMessageSendButton = (ImageView) rootView.findViewById(R.id.button_group_chat_send);
         mFileUploadButton = (ImageButton) rootView.findViewById(R.id.button_group_chat_upload);
 
         mMessageSendButton.setOnClickListener(new View.OnClickListener() {

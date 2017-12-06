@@ -13,7 +13,7 @@ import shop.ineed.app.ineed.interfaces.RecyclerClickListener
 /**
  * Created by silva on 21/11/17.
  */
-class CommentsAdapter(val comments: List<Comments>, var onClick: RecyclerClickListener) : RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder>() {
+class CommentsAdapter(private val comments: List<Comments>, var onClick: RecyclerClickListener) : RecyclerView.Adapter<CommentsAdapter.CommentsViewHolder>() {
 
     override fun onBindViewHolder(holder: CommentsAdapter.CommentsViewHolder, position: Int) {
         val comment = this.comments[position]

@@ -9,10 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.slide_adapter.view.*
 
-import com.squareup.picasso.Picasso
-
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
+import shop.ineed.app.ineed.util.ImageUtils
 
 /**
  * Created by jose on 9/9/17.
@@ -34,7 +33,10 @@ class SlideAdapter(private val mContext: Context, private val mImages: List<Stri
         val view = LayoutInflater.from(mContext).inflate(R.layout.slide_adapter, container, false)
 
         with(view){
-            Picasso.with(mContext).load(mImages[position]).into(imageSlideViewPhotoAdapter)
+           // Picasso.with(mContext).load(mImages[position]).into(imageSlideViewPhotoAdapter)
+
+            ImageUtils.displayImageFromUrl(mContext, mImages[position], imageSlideViewPhotoAdapter)
+
             Log.d("SLIDE", mImages[position])
 
             setOnClickListener{ onClick.onClickRecyclerListener(view, position) }

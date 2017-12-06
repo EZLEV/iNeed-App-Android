@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_group_chat_root"
     android:layout_width="match_parent"
@@ -9,55 +8,68 @@
 
     <LinearLayout
         android:id="@+id/layout_group_chat_chatbox"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:minHeight="48dp">
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:minHeight="48dp"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/button_group_chat_upload"
-            app:srcCompat="@drawable/ic_add_black_24dp"
-            android:background="?attr/selectableItemBackground"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="Upload file"
-            android:layout_gravity="bottom"/>
+            android:layout_gravity="bottom"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/upload_file"
+            android:tint="@color/grey_600"
+            app:srcCompat="@drawable/ic_paperclip" />
 
         <EditText
             android:id="@+id/edittext_group_chat_message"
-            android:hint="Enter message"
-            android:background="@android:color/transparent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="16dp"
-            android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:maxLines="6"/>
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_message"
+            android:maxLines="6"
+            android:layout_marginEnd="16dp" />
 
-        <Button
-            android:id="@+id/button_group_chat_send"
-            android:text="SEND"
-            android:textSize="14dp"
-            android:textColor="#000000"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:gravity="center"
-            android:layout_gravity="bottom" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="84dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_layout"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/button_group_chat_send"
+                android:layout_width="30dp"
+                android:layout_height="35dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:clickable="true"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_send" />
+        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 
     <View
-        android:layout_above="@id/layout_group_chat_chatbox"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#DfDfDf"/>
+        android:layout_height="1dp"
+        android:layout_above="@id/layout_group_chat_chatbox"
+        android:background="#DfDfDf" />
 
     <LinearLayout
-        android:layout_above="@id/layout_group_chat_chatbox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/deep_purple_50"
+        android:layout_above="@id/layout_group_chat_chatbox"
         android:orientation="vertical">
 
         <android.support.v7.widget.RecyclerView
@@ -65,8 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingBottom="4dp"
             android:clipToPadding="false"
+            android:paddingBottom="4dp"
             android:scrollbars="vertical">
 
         </android.support.v7.widget.RecyclerView>
@@ -81,15 +93,12 @@
 
             <TextView
                 android:id="@+id/text_group_chat_current_event"
-                android:text="Terry and Harry are typing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"/>
-
+                android:layout_gravity="center_vertical"
+                android:text="" />
         </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>
 
 

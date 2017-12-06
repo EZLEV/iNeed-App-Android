@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
+            android:layout_margin="16dp"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -253,6 +254,7 @@
             app:atg_backgroundColor="@color/colorAccent"
             app:atg_borderColor="@color/colorAccent"
             app:atg_checkedTextColor="@color/black"
+            app:atg_pressedBackgroundColor="@color/colorAccent"
             app:atg_textColor="@android:color/white" />
     </LinearLayout>
 

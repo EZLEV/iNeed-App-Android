@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
@@ -24,7 +24,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +31,6 @@ import java.util.List;
 import shop.ineed.app.ineed.R;
 import shop.ineed.app.ineed.activity.GroupChannelActivity;
 import shop.ineed.app.ineed.activity.HomeActivity;
-import shop.ineed.app.ineed.activity.FavoritesActivity;
 import shop.ineed.app.ineed.activity.ResetPasswordActivity;
 import shop.ineed.app.ineed.activity.UpdatePersonalDataActivity;
 import shop.ineed.app.ineed.adapter.AdapterSettingsAccount;
@@ -47,20 +45,19 @@ import shop.ineed.app.ineed.util.Base64;
  */
 public class AccountFragment extends BaseFragment implements GoogleApiClient.OnConnectionFailedListener {
 
-    private FirebaseAuth mAuth;
-    private String uid;
-    private User user;
-    private ImageView ivProfileUser;
-    private List<Settings> settingsList;
-    private AdapterSettingsAccount settingsAdapter;
-    private AVLoadingIndicatorView progressAccount;
-    private ListView listSettings;
+    private String mUid;
+    private User mUser;
+    private ImageView mIvProfileUser;
+    private List<Settings> mSettingsList;
+    private AdapterSettingsAccount mSettingsAdapter;
+    private ListView mListSettings;
     private GoogleApiClient mGoogleApiClient;
+    private SwipeRefreshLayout mSwipeRefreshAccount;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        settingsList = new ArrayList<>();
+        mSettingsList = new ArrayList<>();
     }
 
     @Override
@@ -69,7 +66,7 @@ public class AccountFragment extends BaseFragment implements GoogleApiClient.OnC
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_account, container, false);
 
-        uid = LibraryClass.getUserLogged(getActivity(), User.PROVIDER);
+        mUid = LibraryClass.getUserLogged(getActivity(), User.PROVIDER);
 
         // Configuraçao do Google Login
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -101,22 +98,27 @@ public class AccountFragment extends BaseFragment implements GoogleApiClient.OnC
         view.findViewById(R.id.ivSettings).setOnClickListener(view12 -> {
             Intent intent = new Intent(getContext(), UpdatePersonalDataActivity.class);
 
-            Log.d("TGA", uid);
+            Log.d("TGA", mUid);
 
-            intent.putExtra("profile", uid);
+            intent.putExtra("profile", mUid);
 
             getActivity().startActivity(intent);
         });
 
-        ivProfileUser = view.findViewById(R.id.ivProfileUser);
+        mIvProfileUser = view.findViewById(R.id.ivProfileUser);
+        mListSettings = view.findViewById(R.id.listSettingsAccount);
+        mSwipeRefreshAccount = view.findViewById(R.id.swipeRefreshAccount);
+        mSwipeRefreshAccount.setColorSchemeResources(
+                R.color.colorAccent,
+                R.color.colorPrimary,
+                R.color.colorPrimaryDark
+        );
+        mSwipeRefreshAccount.setRefreshing(true);
 
-        progressAccount = view.findViewById(R.id.progressAccount);
-
-        listSettings = (ListView) view.findViewById(R.id.listSettingsAccount);
-        ViewCompat.setNestedScrollingEnabled(listSettings, true);
-        settingsAdapter = new AdapterSettingsAccount(getContext(), settingsList);
-        listSettings.setAdapter(settingsAdapter);
-        listSettings.setOnItemClickListener(onClickSettings);
+        ViewCompat.setNestedScrollingEnabled(mListSettings, true);
+        mSettingsAdapter = new AdapterSettingsAccount(mSettingsList);
+        mListSettings.setAdapter(mSettingsAdapter);
+        mListSettings.setOnItemClickListener(onClickSettings);
 
 
         return view;
@@ -126,13 +128,12 @@ public class AccountFragment extends BaseFragment implements GoogleApiClient.OnC
     private AdapterView.OnItemClickListener onClickSettings = (adapterView, view, position, l) -> {
 
         switch (position) {
-            case 3:
+            case 2:
                 getActivity().startActivity(new Intent(getContext(), GroupChannelActivity.class));
                 break;
-            case 4:
-                getActivity().startActivity(new Intent(getContext(), FavoritesActivity.class));
+            case 3:
                 break;
-            case 5:
+            case 4:
                 getActivity().startActivity(new Intent(getContext(), ResetPasswordActivity.class));
                 break;
         }
@@ -143,30 +144,28 @@ public class AccountFragment extends BaseFragment implements GoogleApiClient.OnC
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        DatabaseReference reference = LibraryClass.getFirebase().child("consumers").child(uid);
+        DatabaseReference reference = LibraryClass.getFirebase().child("consumers").child(mUid);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                user = dataSnapshot.getValue(User.class);
+                mUser = dataSnapshot.getValue(User.class);
 
-                if (user.getImage() != null) {
-                    ivProfileUser.setImageBitmap(Base64.convertToBitmap(user.getImage()));
+                if (mUser.getImage() != null) {
+                    mIvProfileUser.setImageBitmap(Base64.convertToBitmap(mUser.getImage()));
                 }
 
-                settingsList.clear();
+                mSettingsList.clear();
+                mSettingsList.add(new Settings(mUser.getName(), R.drawable.ic_account_circle, 0));
+                mSettingsList.add(new Settings(mUser.getEmail(), R.drawable.ic_email, 0));
+                mSettingsList.add(new Settings("Mensagens", R.drawable.ic_message, R.drawable.ic_chevron_right));
+                mSettingsList.add(new Settings("Recuperação de senha", R.drawable.ic_lock, R.drawable.ic_chevron_right));
+                mSettingsList.add(new Settings("Ajuda", R.drawable.ic_help_circle, R.drawable.ic_chevron_right));
+                mSettingsAdapter.notifyDataSetChanged();
 
-                settingsList.add(new Settings(user.getName(), R.drawable.ic_account_circle, 0));
-                settingsList.add(new Settings(user.getEmail(), R.drawable.ic_email, 0));
-                settingsList.add(new Settings("Mensagens", R.drawable.ic_message, R.drawable.ic_chevron_right));
-                settingsList.add(new Settings(getActivity().getResources().getString(R.string.password_recovery), R.drawable.ic_lock, R.drawable.ic_chevron_right));
-                settingsList.add(new Settings(getActivity().getResources().getString(R.string.help), R.drawable.ic_help_circle, R.drawable.ic_chevron_right));
+                mListSettings.setVisibility(View.VISIBLE);
+                mSwipeRefreshAccount.setRefreshing(false);
+                mSwipeRefreshAccount.setEnabled(false);
 
-                settingsAdapter.notifyDataSetChanged();
-
-                if (progressAccount.getVisibility() == View.VISIBLE) {
-                    progressAccount.setVisibility(View.GONE);
-                    listSettings.setVisibility(View.VISIBLE);
-                }
             }
 
             @Override

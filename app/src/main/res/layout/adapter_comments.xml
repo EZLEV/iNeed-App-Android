@@ -16,7 +16,8 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_account" />
+            android:src="@drawable/ic_account"
+            android:tint="@color/grey_600" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -28,26 +29,26 @@
 
             <GridLayout
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
+                android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:layout_height="wrap_content">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/txtAuthorAdapterComment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Title"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <RatingBar
                     android:id="@+id/ratingAdapterComment"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="right"
-                    android:stepSize="1"
                     style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:numStars="5"
+                    android:stepSize="1"
                     tools:ignore="RtlHardcoded" />
 
             </GridLayout>
@@ -57,16 +58,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="00/22/2017"
-
+                android:text=""
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/txtBodyAdapterComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="habsdfoybasodufboasuydbfoasybdfuybdfuyasbdoufbasouydbfasydfyoasbdfoybasoudyfbsauybdfysaubdf" />
-
+                android:text="" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

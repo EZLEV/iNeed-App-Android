@@ -12,6 +12,7 @@
     <!-- C -->
     <string name="contact_information">Informações de contato</string>
     <string name="cancel">Cancelar</string>
+    <string name="content">Conteúdo</string>
 
     <!-- D -->
     <string name="dialog_ok">OK</string>
@@ -23,6 +24,8 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="enter_or_register">ENTRAR OU CADASTRAR</string>
     <string name="enter_or_register_text">Entre ou cadastre-se para ver suas lojas favoritas e recomendações</string>
+    <string name="evaluation">Avaliação</string>
+    <string name="enter_message">Insira a mensagem</string>
 
     <!-- F -->
     <string name="favorites">Favoritos</string>
@@ -59,9 +62,11 @@
     <string name="next">Próximo</string>
     <string name="name">Nome</string>
     <string name="navigation">Navegar</string>
+    <string name="new_comment">Novo Comentário</string>
 
     <!-- O -->
     <string name="or">OU</string>
+    <string name="opening_hours">Horários - funcionamento</string>
 
     <!-- P -->
     <string name="products">Produtos</string>
@@ -98,14 +103,18 @@
     <string name="search_powered_by_algolia">Search powered by Algolia</string>
     <string name="update_success_account">Sucesso na atualização!</string>
     <string name="search_edit">Procure por produtos, lojas....</string>
+    <string name="send_comment">Enviar comentário</string>
+    <string name="send_comment_toast">Comentário Enviado</string>
 
     <!-- T -->
     <string name="text_recovery_password">Preencha seu endereço de email no campo abaixo para receber as
         instruções necessárias na sua caixa de e-mail e criar uma nova senha na iNeed.</string>
     <string name="terms_of_use">Termos de uso</string>
     <string name="tags">Tags</string>
+    <string name="title">Título</string>
 
     <!-- U -->
+    <string name="upload_file">Subir arquivo</string>
 
     <!-- V -->
 
@@ -170,5 +179,6 @@
     <string name="message_sending">Sending</string>
     <string name="message_failed">Failed</string>
     <string name="title_activity_comments">Comentários</string>
+
 
 </resources>

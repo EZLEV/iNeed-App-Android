@@ -24,7 +24,7 @@ import shop.ineed.app.ineed.adapter.ProductSearchAdapter;
 import shop.ineed.app.ineed.domain.Product;
 import shop.ineed.app.ineed.domain.SearchResultsJsonParser;
 
-public class SearchActivity extends AppCompatActivity implements MaterialSearchView.OnQueryTextListener, AbsListView.OnScrollListener {
+public class SearchActivity extends BaseActivity implements MaterialSearchView.OnQueryTextListener, AbsListView.OnScrollListener {
 
     // Algolia -> Search product
     private MaterialSearchView searchViewProducts;
@@ -46,8 +46,8 @@ public class SearchActivity extends AppCompatActivity implements MaterialSearchV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        enableToolbar();
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         searchViewProducts = (MaterialSearchView) findViewById(R.id.searchViewProducts);

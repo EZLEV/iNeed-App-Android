@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-import com.squareup.picasso.Picasso
-
 import kotlinx.android.synthetic.main.adapter_item_stores.view.*
 import shop.ineed.app.ineed.R
 import shop.ineed.app.ineed.domain.Store
 import shop.ineed.app.ineed.interfaces.RecyclerClickListener
+import shop.ineed.app.ineed.util.ImageUtils
 
 /**
  * Created by jose on 11/3/17.
@@ -32,7 +31,7 @@ class StoresAdapter(private val stores: List<Store>, var onClick: RecyclerClickL
         with(view) {
             nameStoreAdapter.text = store.name
             txtDescriptionStoreAdapter.text = store.description
-            Picasso.with(context).load(store.pictures[0]).into(ivStoreDetailsAdapter)
+            ImageUtils.displayImageFromUrl(context, store.pictures[0], ivStoreDetailsAdapter)
 
             setOnClickListener { onClick.onClickRecyclerListener(view, position) }
         }

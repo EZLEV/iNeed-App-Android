@@ -17,9 +17,9 @@
             android:title="@string/search" />
 
         <item
-            android:id="@+id/navigation_favorites"
-            android:icon="@drawable/ic_heart"
-            android:title="@string/favorites" />
+            android:id="@+id/navigation_message"
+            android:icon="@drawable/ic_message"
+            android:title="@string/message" />
 
     </group>
 

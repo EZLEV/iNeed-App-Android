@@ -47,30 +47,30 @@ public class PaymentMethods {
         this.key = key;
     }
 
-    public static List<PaymentMethods> getPaymentMethods(List<String> paymentWays){
+    public static List<PaymentMethods> getPaymentMethods(List<String> paymentWays) {
         List<PaymentMethods> paymentMethods = new ArrayList<>();
 
-        Log.i("Payment", paymentWays.size() + " ");
+        if (paymentWays != null) {
+            Log.i("Payment", paymentWays.size() + " ");
 
-        for(int index = 0; index < paymentWays.size(); index++){
-            if(paymentWays.get(index).equals("bitcoin")){
-                paymentMethods.add(new PaymentMethods("bitcoin", "bitcoin", R.drawable.ic_bitcoin));
-            }else if(paymentWays.get(index).equals("check")){
-                paymentMethods.add(new PaymentMethods("check", "cheque", R.drawable.ic_check));
-            }else if(paymentWays.get(index).equals("credit")){
-                paymentMethods.add(new PaymentMethods("credit", "Credito", R.drawable.ic_card));
-            }else if(paymentWays.get(index).equals("debit")){
-                paymentMethods.add(new PaymentMethods("debit", "Debito", R.drawable.ic_card));
-            }else if(paymentWays.get(index).equals("money")){
-                paymentMethods.add(new PaymentMethods("money", "Dinheiro", R.drawable.ic_money));
-            }else if(paymentWays.get(index).equals("payment-slip")){
-                paymentMethods.add(new PaymentMethods("payment-slip", "Boleto", R.drawable.ic_payment_slip));
-            }else if(paymentWays.get(index).equals("paypal")){
-                paymentMethods.add(new PaymentMethods("paypal", "Paypal", R.drawable.ic_paypal));
+            for (int index = 0; index < paymentWays.size(); index++) {
+                if (paymentWays.get(index).equals("bitcoin")) {
+                    paymentMethods.add(new PaymentMethods("bitcoin", "bitcoin", R.drawable.ic_bitcoin));
+                } else if (paymentWays.get(index).equals("check")) {
+                    paymentMethods.add(new PaymentMethods("check", "cheque", R.drawable.ic_check));
+                } else if (paymentWays.get(index).equals("credit")) {
+                    paymentMethods.add(new PaymentMethods("credit", "Credito", R.drawable.ic_card));
+                } else if (paymentWays.get(index).equals("debit")) {
+                    paymentMethods.add(new PaymentMethods("debit", "Debito", R.drawable.ic_card));
+                } else if (paymentWays.get(index).equals("money")) {
+                    paymentMethods.add(new PaymentMethods("money", "Dinheiro", R.drawable.ic_money));
+                } else if (paymentWays.get(index).equals("payment-slip")) {
+                    paymentMethods.add(new PaymentMethods("payment-slip", "Boleto", R.drawable.ic_payment_slip));
+                } else if (paymentWays.get(index).equals("paypal")) {
+                    paymentMethods.add(new PaymentMethods("paypal", "Paypal", R.drawable.ic_paypal));
+                }
+                Log.i("Payment", paymentMethods.size() + " ");
             }
-
-
-            Log.i("Payment",  paymentMethods.size() + " ");
         }
         return paymentMethods;
     }

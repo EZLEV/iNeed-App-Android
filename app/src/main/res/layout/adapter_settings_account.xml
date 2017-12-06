@@ -7,14 +7,14 @@
     android:padding="16dp">
 
     <ImageView
-        android:id="@+id/ivIconSettings"
+        android:id="@+id/ivIconSettingsAdapter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/grey_600"
         app:srcCompat="@drawable/ic_account" />
 
     <TextView
-        android:id="@+id/txtSettings"
+        android:id="@+id/txtSettingsAdapter"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -22,7 +22,7 @@
         android:text="TextView" />
 
     <ImageView
-        android:id="@+id/ivIconMoreSettings"
+        android:id="@+id/ivIconMoreSettingsAdapter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:tint="@color/grey_600"

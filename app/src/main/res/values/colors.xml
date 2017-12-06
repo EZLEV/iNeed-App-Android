@@ -16,7 +16,9 @@
     <color name="black">#000000</color>
     <color name="background">#EEEEEE</color>
     <color name="grey_600">#757575</color>
-
+    <color name="grey_400">#BDBDBD</color>
+    <color name="grey_900">#212121</color>
+    <color name="deep_purple_50">#EDE7F6</color>
     <color name="textColorPrimary">#3a414d</color>
     <color name="textColorLight">#6f7c92</color>
 

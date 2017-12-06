@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.support.v4.content.ContextCompat;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -41,6 +40,11 @@ public class Base64 {
         return (BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
     }
 
+    /**
+     * Faz a conversão de um Bitmap para Base64.
+     * @param bitmap
+     * @return
+     */
     public static String convertToBase64(Bitmap bitmap){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
@@ -53,6 +57,12 @@ public class Base64 {
         return base64String;
     }
 
+    /**
+     * Converte um objeto Drawable para um Bitmap.
+     * @param context
+     * @param drawableID
+     * @return
+     */
     public static Bitmap convertDrawableToBitmap (Context context, int drawableID) {
 
             Drawable drawable = ContextCompat.getDrawable(context, drawableID);
@@ -66,6 +76,12 @@ public class Base64 {
 
     }
 
+    /**
+     * Recupera um objeto bitmap através do recebimento de um VectorDrawable.
+     *
+     * @param vectorDrawable
+     * @return
+     */
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -73,12 +89,5 @@ public class Base64 {
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         vectorDrawable.draw(canvas);
         return bitmap;
-    }
-
-    public static String encodeToBase64(Bitmap image, Bitmap.CompressFormat compressFormat, int quality)
-    {
-        ByteArrayOutputStream byteArrayOS = new ByteArrayOutputStream();
-        image.compress(compressFormat, quality, byteArrayOS);
-        return  android.util.Base64.encodeToString(byteArrayOS.toByteArray(), android.util.Base64.DEFAULT);
     }
 }

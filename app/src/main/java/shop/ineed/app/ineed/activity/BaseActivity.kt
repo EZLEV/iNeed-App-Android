@@ -1,5 +1,6 @@
 package shop.ineed.app.ineed.activity
 
+import android.content.Intent
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -65,8 +66,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             R.id.navigation_search -> {
                 startActivity<SearchActivity>()
             }
-            R.id.navigation_favorites -> {
-                startActivity<FavoritesActivity>()
+            R.id.navigation_message -> {
+                startActivity<GroupChannelActivity>()
             }
             R.id.navigation_help ->{
                 browse("http://www.2need.store")
@@ -120,5 +121,29 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         if (PreferenceUtils.getConnected(applicationContext)) {
             CommonSubscriberActivity.connectToSendBird(PreferenceUtils.getUserId(applicationContext), PreferenceUtils.getNickname(applicationContext), applicationContext)
         }
+    }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransitionExit()
+    }
+
+    override fun startActivity(intent: Intent) {
+        super.startActivity(intent)
+        overridePendingTransitionEnter()
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Enter" animation.
+     */
+    protected fun overridePendingTransitionEnter() {
+        overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left)
+    }
+
+    /**
+     * Overrides the pending Activity transition by performing the "Exit" animation.
+     */
+    protected fun overridePendingTransitionExit() {
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right)
     }
 }

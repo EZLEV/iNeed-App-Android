@@ -14,13 +14,7 @@ import shop.ineed.app.ineed.activity.SignInActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DisconnectedFromAccountFragment extends Fragment {
-
-
-    public DisconnectedFromAccountFragment() {
-        // Required empty public constructor
-    }
-
+public class DisconnectedFromAccountFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
